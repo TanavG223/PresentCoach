@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <meta name="description" content="PresentCoach is a private, local-first presentation coach using MediaPipe, whisper.cpp, and Ollama." />
+  <title>PresentCoach — evidence-based presentation practice</title>
+  <link rel="stylesheet" href="styles.css" />
+</head>
+<body>
+  <header>
+    <a class="brand" href="#top"><span>⌗</span><strong>PresentCoach</strong></a>
+    <nav><a href="#how">How it works</a><a href="#privacy">Privacy</a><a class="button small" href="https://github.com/TanavG223/PresentCoach">View source</a></nav>
+  </header>
+  <main id="top">
+    <section class="hero">
+      <div class="hero-copy"><p class="eyebrow">LOCAL • PRIVATE • OPEN SOURCE</p><h1>Practice the talk.<br /><em>See the evidence.</em></h1><p class="lede">A presentation coach that measures camera contact, movement, pace, pauses, and filler words—then ties every feedback claim to an exact number and moment.</p><div class="actions"><a class="button" href="https://github.com/TanavG223/PresentCoach">Get PresentCoach</a><a class="text-link" href="#how">Explore the system →</a></div><p class="note">Runs on your Apple-silicon Mac. The interactive coach is never hosted in the cloud.</p></div>
+      <div class="product" aria-label="PresentCoach interface preview"><div class="window-bar"><i></i><i></i><i></i><span>LOCAL SESSION • 04:32</span></div><div class="preview"><div class="face"><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b><b></b></div><span class="tracked">● FACE TRACKED</span><span class="fps">15.1 analysis FPS</span></div><div class="numbers"><span><small>CAMERA CONTACT</small><strong>82%</strong></span><span><small>PACE</small><strong>138</strong><small>WPM</small></span><span><small>FILLERS</small><strong>2</strong></span></div></div>
+    </section>
+    <section class="trust"><span>MediaPipe</span><span>whisper.cpp</span><span>Ollama</span><span>AES-256-GCM</span><span>macOS Keychain</span></section>
+    <section id="how" class="section"><p class="eyebrow">ONE LOCAL PIPELINE</p><h2>Measurements first.<br />Language model second.</h2><div class="steps"><article><b>01</b><h3>Watch and listen</h3><p>MediaPipe analyzes facial landmarks at 15+ FPS while a native local microphone stream captures your practice.</p></article><article><b>02</b><h3>Build the evidence</h3><p>whisper.cpp creates word timestamps. Python calculates pace windows, filler clusters, gaze breaks, movement, and quality flags.</p></article><article><b>03</b><h3>Verify every claim</h3><p>Ollama proposes feedback, but Python rejects or removes anything without an allowed metric, exact value, and timestamp.</p></article></div></section>
+    <section class="calibration"><div><p class="eyebrow">TRUST GATE</p><h2>No invented benchmarks.</h2><p>PresentCoach does not ship a universal definition of a “good speaker.” It asks you to inspect one baseline and complete two matched repeat recordings before AI feedback unlocks.</p></div><ol><li><b>1</b><span>Record and review a 30+ second baseline</span></li><li><b>2</b><span>Capture two nearly identical repeats</span></li><li><b>3</b><span>Unlock feedback only after repeatability passes</span></li></ol></section>
+    <section id="privacy" class="section privacy"><p class="eyebrow">PRIVATE BY ARCHITECTURE</p><h2>Your practice stays yours.</h2><div class="privacy-grid"><article><span>↯</span><h3>No cloud inference</h3><p>Camera, audio, Whisper, metrics, and Ollama execute on your Mac.</p></article><article><span>◇</span><h3>No raw-media archive</h3><p>Raw audio is discarded after transcription. Camera frames are analyzed in memory.</p></article><article><span>⌑</span><h3>Encrypted history</h3><p>Session records use authenticated encryption and a random key stored in macOS Keychain.</p></article><article><span>✓</span><h3>Adversarially evaluated</h3><p>30/30 synthetic cases passed, including missing data, excellent sessions, short recordings, and appearance bait.</p></article></div></section>
+    <section class="cta"><p class="eyebrow">MIT LICENSED</p><h2>Run it. Inspect it. Improve it.</h2><p>The local model recipe, backend, frontend, installer, tests, and full evaluation report are public.</p><a class="button light" href="https://github.com/TanavG223/PresentCoach">Open the GitHub repository</a></section>
+  </main>
+  <footer><span>PresentCoach</span><span>Evidence-based practice, entirely local.</span><a href="https://github.com/TanavG223/PresentCoach">Source</a></footer>
+</body>
+</html>

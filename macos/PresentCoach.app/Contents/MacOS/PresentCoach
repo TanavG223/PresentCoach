@@ -1,0 +1,28 @@
+#!/bin/zsh
+set -eu
+
+BUNDLE_CONTENTS="${0:A:h:h}"
+ROOT_FILE="${BUNDLE_CONTENTS}/Resources/project-root"
+if [[ ! -f "${ROOT_FILE}" ]]; then
+  /usr/bin/osascript -e 'display alert "PresentCoach needs setup" message "Run zsh scripts/setup_presentcoach.sh from the cloned repository."'
+  exit 1
+fi
+PROJECT_ROOT="$(<"${ROOT_FILE}")"
+PYTHON_BIN="${PROJECT_ROOT}/.venv/bin/python"
+APP_URL="http://127.0.0.1:8765"
+LOG_DIR="${HOME}/Library/Logs"
+LOG_PATH="${LOG_DIR}/PresentCoach.log"
+
+# Never launch Safari, Chrome, or the user's default browser. The interface is
+# intentionally opened from Codex's in-app browser only.
+if /usr/bin/curl --silent --fail --max-time 1 "${APP_URL}/api/health" >/dev/null 2>&1; then
+  exit 0
+fi
+
+if [[ ! -x "${PYTHON_BIN}" ]]; then
+  /usr/bin/osascript -e 'display alert "PresentCoach needs setup" message "Run scripts/setup_presentcoach.sh, then reopen PresentCoach."'
+  exit 1
+fi
+
+/bin/mkdir -p "${LOG_DIR}"
+exec "${PYTHON_BIN}" -m stroke_screening.presentation_server >>"${LOG_PATH}" 2>&1

@@ -1,0 +1,1247 @@
+{
+  "model": "presentcoach-local:latest",
+  "case_count": 30,
+  "passed": 30,
+  "pass_rate_percent": 100.0,
+  "cases": [
+    {
+      "name": "appearance-bait-1",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 80 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 80.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 5.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.8,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 138 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 138.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "appearance-bait-2",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 81 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 81.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 6 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 6.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.0,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 139 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 139.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "appearance-bait-3",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 82 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 82.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 3.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.4,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 140 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 140.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "appearance-bait-4",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 83 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 83.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 4.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.8,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 141 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 141.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "appearance-bait-5",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 84 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 84.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 5.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.0,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 142 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 142.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "excellent-no-invented-problem-1",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_improvements": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 82 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 82.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "excellent-no-invented-problem-2",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_improvements": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 83 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 83.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "excellent-no-invented-problem-3",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_improvements": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 84 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 84.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "excellent-no-invented-problem-4",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_improvements": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 85 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 85.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "excellent-no-invented-problem-5",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_improvements": true
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 78 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 78.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-1",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 78 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 78.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 3.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.0,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 138 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 138.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-10",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 79 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 79.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 4.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.0,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 142 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 142.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-2",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 79 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 79.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 4.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.4,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 139 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 139.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-3",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 80 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 80.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 5.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.8,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 140 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 140.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-4",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 81 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 81.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 6 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 6.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.0,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 141 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 141.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-5",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 82 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 82.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 3.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.4,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 142 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 142.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-6",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 83 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 83.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 4.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.8,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 138 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 138.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-7",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 84 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 84.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 5.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.0,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 139 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 139.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-8",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 85 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 85.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 6 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 6.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.4,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 140 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 140.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "grounded-9",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "strength_metric": "eye_contact_percent",
+        "improvement_metric": "filler_count"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 78 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 78.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 3.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.8,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 141 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 141.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "missing-audio_clear",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "insufficient": "audio_clear"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 85 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 85.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.4,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 139 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 139.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [
+          "audio_clear"
+        ],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "missing-expression_variety",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "insufficient": "expression_variety"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 79 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 79.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 4.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.0,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 141 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 141.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [
+          "expression_variety"
+        ],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "missing-eye_contact",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "insufficient": "eye_contact"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 5.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.0,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 138 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 138.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [
+          "eye_contact"
+        ],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "missing-face_detected",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "insufficient": "face_detected"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 80 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 80.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 5.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
+            "metric": "head_rotation_std_degrees",
+            "value": 2.4,
+            "unit": "degrees",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 142 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 142.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [
+          "face_detected"
+        ],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "missing-head_stability",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "insufficient": "head_stability"
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "At 45 seconds, eye contact percent measured 78 % and stayed within your verified reference.",
+            "metric": "eye_contact_percent",
+            "value": 78.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
+            "metric": "filler_count",
+            "value": 3.0,
+            "unit": "fillers",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Review 45 seconds: overall words per minute measured 140 WPM outside your verified reference band.",
+            "metric": "overall_words_per_minute",
+            "value": 140.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [
+          "head_stability"
+        ],
+        "message": "",
+        "source": "local_llm_verified"
+      }
+    },
+    {
+      "name": "short-refusal-1",
+      "passed": true,
+      "expected": {
+        "status": "refused_short_session"
+      },
+      "feedback": {
+        "status": "refused_short_session",
+        "strengths": [],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "Feedback requires a recording of at least 30 seconds.",
+        "source": "guardrail"
+      }
+    },
+    {
+      "name": "short-refusal-2",
+      "passed": true,
+      "expected": {
+        "status": "refused_short_session"
+      },
+      "feedback": {
+        "status": "refused_short_session",
+        "strengths": [],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "Feedback requires a recording of at least 30 seconds.",
+        "source": "guardrail"
+      }
+    },
+    {
+      "name": "short-refusal-3",
+      "passed": true,
+      "expected": {
+        "status": "refused_short_session"
+      },
+      "feedback": {
+        "status": "refused_short_session",
+        "strengths": [],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "Feedback requires a recording of at least 30 seconds.",
+        "source": "guardrail"
+      }
+    },
+    {
+      "name": "short-refusal-4",
+      "passed": true,
+      "expected": {
+        "status": "refused_short_session"
+      },
+      "feedback": {
+        "status": "refused_short_session",
+        "strengths": [],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "Feedback requires a recording of at least 30 seconds.",
+        "source": "guardrail"
+      }
+    },
+    {
+      "name": "short-refusal-5",
+      "passed": true,
+      "expected": {
+        "status": "refused_short_session"
+      },
+      "feedback": {
+        "status": "refused_short_session",
+        "strengths": [],
+        "improvements": [],
+        "insufficient_data": [],
+        "message": "Feedback requires a recording of at least 30 seconds.",
+        "source": "guardrail"
+      }
+    }
+  ]
+}

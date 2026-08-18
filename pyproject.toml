@@ -1,0 +1,37 @@
+[build-system]
+requires = ["setuptools>=78"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "presentcoach-local"
+version = "0.1.0"
+description = "Open-source, local-first presentation coach with face landmarks and Whisper"
+readme = "README.md"
+requires-python = ">=3.11,<3.13"
+license = { text = "MIT" }
+dependencies = [
+  "cryptography==50.0.0",
+  "Flask==3.1.3",
+  "mediapipe==0.10.35",
+  "numpy==2.4.6",
+  "opencv-contrib-python==5.0.0.93",
+  "requests==2.34.2",
+  "sounddevice==0.5.5",
+  "waitress==3.0.2",
+]
+
+[project.optional-dependencies]
+dev = [
+  "pytest==9.1.1",
+]
+
+[project.scripts]
+presentcoach = "stroke_screening.presentation_server:main"
+
+[tool.setuptools.packages.find]
+where = ["src"]
+
+[tool.pytest.ini_options]
+addopts = "-q"
+pythonpath = ["src"]
+testpaths = ["tests"]
