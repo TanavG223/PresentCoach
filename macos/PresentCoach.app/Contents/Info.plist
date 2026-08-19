@@ -12,7 +12,7 @@
   <key>CFBundleVersion</key><string>1</string>
   <key>LSMinimumSystemVersion</key><string>13.0</string>
   <key>LSUIElement</key><true/>
-  <key>NSCameraUsageDescription</key><string>PresentCoach analyzes facial landmarks locally while you practice. Video is not uploaded or stored.</string>
-  <key>NSMicrophoneUsageDescription</key><string>PresentCoach transcribes presentation practice locally. Raw audio is discarded after analysis.</string>
+  <key>NSCameraUsageDescription</key><string>PresentCoach analyzes facial landmarks locally and retains your practice video only as an encrypted local replay.</string>
+  <key>NSMicrophoneUsageDescription</key><string>PresentCoach transcribes locally; standalone raw audio is discarded, and session audio is retained only in the encrypted local replay.</string>
 </dict>
 </plist>

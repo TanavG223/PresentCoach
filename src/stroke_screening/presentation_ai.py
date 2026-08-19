@@ -31,7 +31,13 @@ class OllamaPresentationLLM:
             raise ValueError("Ollama model must be a non-empty token")
         self.model = model
         self._timeout = (connect_timeout_seconds, read_timeout_seconds)
-        self._session = session or requests.Session()
+        if session is None:
+            session = requests.Session()
+            # Requests otherwise honors HTTP_PROXY/HTTPS_PROXY from the
+            # environment, which could send private metrics away from the
+            # fixed loopback Ollama endpoint.
+            session.trust_env = False
+        self._session = session
 
     def complete_json(
         self, *, system: str, prompt: str, schema: dict[str, object]
