@@ -1,0 +1,184 @@
+{
+  "generated_at": "2026-08-19T12:42:23.220840Z",
+  "evaluation_only": true,
+  "used_for_training": false,
+  "case_count": 3,
+  "passed": 3,
+  "pass_rate_percent": 100.0,
+  "cases": [
+    {
+      "media_id": "tarun-short-distance",
+      "title": "Short, distant-face clip",
+      "passed": true,
+      "measurements": {
+        "duration_seconds": 8.61,
+        "analyzed_vision_fps": 14.9,
+        "face_presence_percent": 0.0,
+        "transcript_word_count": 3,
+        "quality_flags": {
+          "face_detected": "bad",
+          "eye_contact": "bad",
+          "head_stability": "bad",
+          "expression_variety": "bad",
+          "audio_clear": "good"
+        }
+      },
+      "checks": [
+        {
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "338f79f31397",
+          "expected": "SHA-256 matches manifest"
+        },
+        {
+          "label": "Video decoded",
+          "passed": true,
+          "actual": 8.61,
+          "expected": "duration > 0 seconds"
+        },
+        {
+          "label": "Vision throughput",
+          "passed": true,
+          "actual": 14.9,
+          "expected": ">= 14.5 analyzed FPS"
+        },
+        {
+          "label": "Short-session guardrail",
+          "passed": true,
+          "actual": 8.61,
+          "expected": "under 30 seconds"
+        },
+        {
+          "label": "Face data abstains",
+          "passed": true,
+          "actual": "bad",
+          "expected": "bad / insufficient"
+        }
+      ]
+    },
+    {
+      "media_id": "hawking-mixed-shot",
+      "title": "Mixed-shot NASA clip",
+      "passed": true,
+      "measurements": {
+        "duration_seconds": 41.16,
+        "analyzed_vision_fps": 15.0,
+        "face_presence_percent": 40.5,
+        "transcript_word_count": 14,
+        "quality_flags": {
+          "face_detected": "bad",
+          "eye_contact": "bad",
+          "head_stability": "bad",
+          "expression_variety": "bad",
+          "audio_clear": "good"
+        }
+      },
+      "checks": [
+        {
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "f342090520d2",
+          "expected": "SHA-256 matches manifest"
+        },
+        {
+          "label": "Video decoded",
+          "passed": true,
+          "actual": 41.16,
+          "expected": "duration > 0 seconds"
+        },
+        {
+          "label": "Vision throughput",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5 analyzed FPS"
+        },
+        {
+          "label": "Feedback-duration input",
+          "passed": true,
+          "actual": 41.16,
+          "expected": ">= 30 seconds"
+        },
+        {
+          "label": "Speech timestamped",
+          "passed": true,
+          "actual": 14,
+          "expected": ">= 10 words"
+        },
+        {
+          "label": "Quality flags produced",
+          "passed": true,
+          "actual": 5,
+          "expected": "5 per-metric flags"
+        }
+      ]
+    },
+    {
+      "media_id": "weekly-address",
+      "title": "Stable camera-facing address",
+      "passed": true,
+      "measurements": {
+        "duration_seconds": 281.36,
+        "analyzed_vision_fps": 15.0,
+        "face_presence_percent": 92.6,
+        "transcript_word_count": 602,
+        "quality_flags": {
+          "face_detected": "good",
+          "eye_contact": "good",
+          "head_stability": "good",
+          "expression_variety": "good",
+          "audio_clear": "good"
+        }
+      },
+      "checks": [
+        {
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "17127f6dcfbc",
+          "expected": "SHA-256 matches manifest"
+        },
+        {
+          "label": "Video decoded",
+          "passed": true,
+          "actual": 281.36,
+          "expected": "duration > 0 seconds"
+        },
+        {
+          "label": "Vision throughput",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5 analyzed FPS"
+        },
+        {
+          "label": "Sustained-duration input",
+          "passed": true,
+          "actual": 281.36,
+          "expected": ">= 240 seconds"
+        },
+        {
+          "label": "Face presence",
+          "passed": true,
+          "actual": 92.6,
+          "expected": ">= 90%"
+        },
+        {
+          "label": "Speech timestamped",
+          "passed": true,
+          "actual": 602,
+          "expected": ">= 400 words"
+        },
+        {
+          "label": "All metric inputs usable",
+          "passed": true,
+          "actual": {
+            "face_detected": "good",
+            "eye_contact": "good",
+            "head_stability": "good",
+            "expression_variety": "good",
+            "audio_clear": "good"
+          },
+          "expected": "all 5 flags good"
+        }
+      ]
+    }
+  ]
+}

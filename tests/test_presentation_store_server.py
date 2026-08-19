@@ -114,3 +114,46 @@ def test_uploaded_video_is_analyzed_locally_without_becoming_a_baseline(tmp_path
         )
         assert invalid.status_code == 415
         assert analyzer.calls == 1
+
+
+def test_test_lab_exposes_only_allowlisted_local_clips_and_reports(tmp_path: Path):
+    keys = MemoryKeys()
+    store = PresentationStore(data_dir=tmp_path / "data", key_store=keys)
+    media = tmp_path / "media"
+    reports = tmp_path / "reports"
+    media.mkdir()
+    reports.mkdir()
+    (media / "tarun-speaking-cc0.webm").write_bytes(b"webm-evidence")
+    (media / "private.webm").write_bytes(b"must-not-leak")
+    (reports / "presentcoach_video_eval.json").write_text(
+        '{"case_count":3,"passed":3,"pass_rate_percent":100,"cases":[]}',
+        encoding="utf-8",
+    )
+    (reports / "presentcoach_llm_eval.json").write_text(
+        '{"model":"fake","case_count":30,"passed":30,"pass_rate_percent":100}',
+        encoding="utf-8",
+    )
+    app = create_app(
+        store=store, llm=FakeLLM(), recorder=FakeRecorder(),
+        test_media_dir=media, reports_dir=reports, testing=True,
+    )
+    with app.test_client() as client:
+        lab = client.get("/api/bootstrap").get_json()["test_lab"]
+        assert lab["evaluation_only"] is True
+        assert lab["used_for_training"] is False
+        assert lab["video_eval"] == {
+            "case_count": 3, "generated_at": None, "pass_rate_percent": 100.0, "passed": 3,
+        }
+        assert lab["llm_eval"]["passed"] == 30
+        assert lab["clips"][0]["available"] is True
+        assert lab["clips"][1]["available"] is False
+        clip = client.get("/api/test-media/tarun-short-distance/video")
+        assert clip.status_code == 200
+        assert clip.data == b"webm-evidence"
+        assert client.get("/api/test-media/private/video").status_code == 404
+        assert client.get("/api/test-media/../private.webm/video").status_code == 404
+        denied = client.get(
+            "/api/test-media/tarun-short-distance/video",
+            headers={"Sec-Fetch-Site": "cross-site"},
+        )
+        assert denied.status_code == 403

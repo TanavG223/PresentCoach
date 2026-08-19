@@ -27,6 +27,7 @@ from .presentation_store import (
     PresentationStore,
     StoredPresentation,
 )
+from .presentation_test_lab import TEST_MEDIA_BY_ID, test_lab_payload
 from .presentation_video import (
     LocalVideoAnalyzer,
     MAX_UPLOAD_BYTES,
@@ -54,6 +55,8 @@ def create_app(
     llm: OllamaPresentationLLM | None = None,
     recorder: PresentationRecordingService | None = None,
     video_analyzer: LocalVideoAnalyzer | None = None,
+    test_media_dir: Path | None = None,
+    reports_dir: Path | None = None,
     testing: bool = False,
 ) -> Flask:
     static_dir = Path(__file__).resolve().parent / "static"
@@ -89,6 +92,9 @@ def create_app(
             )
     app.extensions["presentation_recorder"] = recorder
     app.extensions["presentation_video_analyzer"] = video_analyzer
+    root = _project_root()
+    app.extensions["presentation_test_media_dir"] = (test_media_dir or root / "test_media").resolve()
+    app.extensions["presentation_reports_dir"] = (reports_dir or root / "reports").resolve()
 
     @app.before_request
     def local_only():
@@ -217,7 +223,29 @@ def create_app(
             calibration=calibration,
             local_model=app.extensions["presentation_llm"].status(),
             whisper={"available": True, "engine": "whisper.cpp", "model": "base.en-q5_1"},
+            test_lab=test_lab_payload(
+                media_dir=app.extensions["presentation_test_media_dir"],
+                reports_dir=app.extensions["presentation_reports_dir"],
+            ),
             privacy="Camera, microphone, transcript, metrics, and AI stay on this Mac.",
+        )
+
+    @app.get("/api/test-media/<media_id>/video")
+    def test_media_video(media_id: str):
+        if request.headers.get("Sec-Fetch-Site", "same-origin") not in {"same-origin", "none"}:
+            return jsonify(error="Cross-site test media requests are not allowed"), 403
+        item = TEST_MEDIA_BY_ID.get(media_id)
+        if item is None:
+            return jsonify(error="Test clip not found"), 404
+        directory = app.extensions["presentation_test_media_dir"]
+        path = directory / item["filename"]
+        if not path.is_file():
+            return jsonify(error="Test clip is not installed locally"), 404
+        return send_from_directory(
+            directory,
+            item["filename"],
+            mimetype="video/webm",
+            conditional=True,
         )
 
     @app.post("/api/profiles")
