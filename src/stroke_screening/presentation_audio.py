@@ -58,6 +58,7 @@ class LocalAudioRecorder:
             self._chunks = []
             self._samples = 0
             self._error = None
+        stream: sd.InputStream | None = None
         try:
             stream = sd.InputStream(
                 samplerate=self.sample_rate,
@@ -67,24 +68,38 @@ class LocalAudioRecorder:
                 latency="low",
                 callback=self._callback,
             )
+            # Retain ownership before start: some PortAudio failures happen
+            # after allocating the native stream but before start returns.
+            self._stream = stream
             stream.start()
         except Exception as error:
+            if stream is not None:
+                self._abort_and_close(stream)
+            if self._stream is stream:
+                self._stream = None
+            self._discard_samples()
             raise AudioCaptureError(
                 "Microphone access is unavailable. Allow PresentCoach in "
                 "System Settings > Privacy & Security > Microphone."
             ) from error
-        self._stream = stream
 
     def stop(self) -> np.ndarray:
         stream = self._stream
         if stream is None:
             raise AudioCaptureError("The microphone is not recording")
-        self._stream = None
         try:
             stream.stop()
             stream.close()
         except Exception as error:
+            # stop() and close() can fail independently. Always attempt both
+            # abort and close before releasing our last native-stream handle.
+            self._abort_and_close(stream)
+            if self._stream is stream:
+                self._stream = None
+            self._discard_samples()
             raise AudioCaptureError("The microphone did not stop cleanly") from error
+        if self._stream is stream:
+            self._stream = None
         with self._lock:
             chunks = tuple(self._chunks)
             error = self._error
@@ -97,13 +112,24 @@ class LocalAudioRecorder:
 
     def cancel(self) -> None:
         stream = self._stream
-        self._stream = None
         if stream is not None:
-            try:
-                stream.abort()
-                stream.close()
-            except Exception:
-                pass
+            self._abort_and_close(stream)
+        if self._stream is stream:
+            self._stream = None
+        self._discard_samples()
+
+    @staticmethod
+    def _abort_and_close(stream: sd.InputStream) -> None:
+        try:
+            stream.abort()
+        except Exception:
+            pass
+        try:
+            stream.close()
+        except Exception:
+            pass
+
+    def _discard_samples(self) -> None:
         with self._lock:
             self._chunks = []
             self._samples = 0

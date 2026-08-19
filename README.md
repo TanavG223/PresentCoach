@@ -23,12 +23,27 @@ zsh scripts/setup_presentcoach.sh
 open "$HOME/Applications/PresentCoach.app"
 ```
 
-Then open `http://127.0.0.1:8765/` in the Codex browser. To run directly from
-source:
+PresentCoach does not open a personal browser. After it starts, read its private
+per-process launch URL:
+
+```bash
+cat "$HOME/Library/Application Support/PresentCoach/access-url"
+```
+
+Paste that complete URL into the Codex in-app browser. The first request
+authorizes only that browser session and redirects to the clean
+`http://127.0.0.1:8765/` address, removing the secret from the visible URL.
+Opening the base address directly shows a locked page and does not return
+profile or session data. Do not share or bookmark the private launch URL.
+
+To run directly from source:
 
 ```bash
 .venv/bin/python -m stroke_screening.presentation_server
 ```
+
+The same `access-url` file is created for a source run and removed when the
+server exits normally.
 
 Requirements are Python 3.11, Node/npm for rebuilding the React bundle,
 Homebrew `whisper-cpp`, and Ollama. `scripts/setup_presentcoach.sh` downloads
@@ -45,8 +60,9 @@ Vision is analyzed at 15 FPS and stored in one-second samples:
 - mouth/brow movement variation;
 - face-presence percentage and per-metric quality flags.
 
-Audio is captured locally at 16 kHz mono. Raw audio is discarded after
-transcription. Stored results include:
+Audio is captured locally at 16 kHz mono. The standalone raw audio buffer is
+discarded after transcription and, for a live run, local muxing into the
+encrypted replay. Stored results include:
 
 - full word-level transcript with timestamps;
 - strict `um`/`uh` counts plus separately tracked `like`, `you know`, and `so` phrases;
@@ -56,8 +72,35 @@ transcription. Stored results include:
 
 You can also choose **Upload video** to analyze an existing MP4, MOV, M4V, or
 WebM file. Imports use the same MediaPipe, Whisper, metric, encryption, and LLM
-guardrails as a live recording. Files are limited to 512 MB and 30 minutes;
-the temporary video copy and decoded raw audio are discarded after analysis.
+guardrails as a live recording. Files are limited to 512 MB and 30 minutes.
+The temporary import and decoded raw audio are removed after analysis; an
+authenticated encrypted H.264/yuv420p MP4 playback copy is retained locally for
+synchronized session review. Audio is converted to AAC only when the source has
+an audio stream; silent videos remain video-only. If this bounded local
+normalization fails, the measurements and coaching cues are still saved and the
+session is marked as having no replay.
+
+Imported vision frames pass through a two-thread local FFmpeg decoder capped at
+15 FPS and 960 pixels on either axis before landmark inference. Phone rotation
+metadata is applied before that size limit, and sources above 3840x2160-equivalent
+pixel area are rejected before decoding. The retained replay is capped at 30 FPS
+and 1920x1080, with each FFmpeg decoder, filter, and encoder stage limited to two
+threads so high-frame-rate or high-resolution sources cannot create an unbounded
+analysis workload.
+
+## Timestamped replay review
+
+After a live recording or upload, the Flask app presents a two-column review
+workspace: the retained local video on the left and a scrollable measured-coaching
+timeline on the right. Selecting a timed cue or transcript word seeks the
+replay to that measured timestamp; aggregate and capture-quality observations are
+labeled session-wide rather than attached to a false moment. Cues cover strict `um`/`uh` events, camera-contact
+breaks, face-tracking gaps, pace spikes, long transcript gaps, and measured
+mouth/brow movement. Quality failures appear as explicit insufficiency notes.
+
+The review UI does not infer emotion, confidence, nervousness, or whether a
+speaker was reading. It can report a prolonged camera-contact break or measured
+facial-landmark movement, but it cannot prove the hidden reason for either.
 
 The main public functions live in
 `src/stroke_screening/presentation_core.py`:
@@ -184,10 +227,22 @@ or personality rights.
 
 - Camera and microphone are owned by Python; Chromium `getUserMedia` is
   disabled to avoid the high-load browser camera path.
-- Requests are loopback-only, same-origin, CSRF-protected, and use a restrictive
-  Content Security Policy. No CORS endpoint is enabled.
+- Requests are loopback-only and use an unguessable per-process launch
+  capability stored in a user-only `0600` file. The capability is exchanged
+  for an HTTP-only, same-site browser session and stripped from the URL before
+  the app loads. Sensitive reads and writes require that authorized session;
+  writes are additionally CSRF-protected. No CORS endpoint is enabled.
+- Only health status and integrity-checked, allowlisted evaluation clips are
+  readable without the authorized session. They contain no profile, transcript,
+  recording, or retained-session data.
 - Session history is authenticated with AES-256-GCM, written atomically with
   private permissions, and keyed through macOS Keychain.
+- Session videos use independently authenticated 1 MiB encrypted chunks.
+  One-hour signed, same-origin playback grants are bound to the authorized
+  browser-session nonce and decrypt only requested ranges in memory. A copied
+  grant is rejected from another browser session, and every explicit HTTP range
+  response is capped at 4 MiB—there is no plaintext playback cache or
+  whole-video decrypt per seek.
 - Whisper is a pinned 57 MB local model verified by SHA-256.
 - Ollama receives structured metrics only—never camera frames or audio.
 

@@ -1,5 +1,7 @@
 from dataclasses import replace
 
+import pytest
+
 from stroke_screening.presentation_core import (
     TranscriptWord,
     VisionSample,
@@ -330,3 +332,109 @@ def test_python_corrects_llm_section_for_a_deterministic_strength():
         "overall_words_per_minute", "strict_filler_rate_per_minute",
     ]
     assert feedback.improvements == ()
+
+
+def personal_metrics_with_bad_visual_quality():
+    aggregate = {
+        "eye_contact_percent": 0.0,
+        "head_rotation_std_degrees": 0.0,
+        "head_position_std_percent": 0.0,
+        "expression_variety_index": 0.0,
+        "face_presence_percent": 0.0,
+        "overall_words_per_minute": 120.0,
+        "filler_count": 0,
+        "pauses_over_2_seconds": 0,
+    }
+    metrics = {
+        "duration_seconds": 40.0,
+        "aggregate": aggregate,
+        "quality_flags": {
+            "face_detected": "bad",
+            "eye_contact": "bad",
+            "head_stability": "bad",
+            "expression_variety": "bad",
+            "audio_clear": "good",
+        },
+        "insufficient_metrics": [
+            "face_detected",
+            "eye_contact",
+            "head_stability",
+            "expression_variety",
+        ],
+        "timeline": {},
+    }
+    baseline = {
+        **aggregate,
+        "eye_contact_percent": 90.0,
+        "face_presence_percent": 95.0,
+    }
+    return prepare_feedback_metrics(
+        metrics, {"ready": True, "baseline": baseline}
+    )
+
+
+class QualityAwarePersonalLLM:
+    def complete_json(self, **_kwargs):
+        return {
+            "strengths": [{
+                "text": "Speaking pace was 120 WPM at 40 seconds.",
+                "metric": "overall_words_per_minute",
+                "value": 120.0,
+                "unit": "WPM",
+                "timestamp_seconds": 40.0,
+            }],
+            "improvements": [],
+            "insufficient_data": [
+                "face_detected",
+                "eye_contact",
+                "head_stability",
+                "expression_variety",
+            ],
+        }
+
+
+def test_personal_feedback_uses_only_quality_approved_metrics():
+    feedback = generate_feedback(
+        personal_metrics_with_bad_visual_quality(), QualityAwarePersonalLLM()
+    )
+
+    assert feedback.status == "ready"
+    assert feedback.source == "local_llm_verified_personal_reference"
+    assert [claim.metric for claim in feedback.strengths] == [
+        "overall_words_per_minute"
+    ]
+    assert feedback.improvements == ()
+    assert feedback.insufficient_data == (
+        "expression_variety",
+        "eye_contact",
+        "face_detected",
+        "head_stability",
+    )
+
+
+class BadQualityPersonalClaimLLM:
+    def complete_json(self, **_kwargs):
+        return {
+            "strengths": [],
+            "improvements": [{
+                "text": "Camera contact was 0 % at 40 seconds.",
+                "metric": "eye_contact_percent",
+                "value": 0.0,
+                "unit": "%",
+                "timestamp_seconds": 40.0,
+            }],
+            "insufficient_data": [
+                "face_detected",
+                "eye_contact",
+                "head_stability",
+                "expression_variety",
+            ],
+        }
+
+
+def test_personal_feedback_verifier_rejects_a_quality_insufficient_claim():
+    with pytest.raises(ValueError, match="quality-insufficient metric"):
+        generate_feedback(
+            personal_metrics_with_bad_visual_quality(),
+            BadQualityPersonalClaimLLM(),
+        )

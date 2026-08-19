@@ -5,7 +5,7 @@ from __future__ import annotations
 from typing import Mapping, Sequence
 
 from .presentation_coaching import general_coaching_hints
-from .presentation_core import compute_metrics
+from .presentation_core import compute_metrics, feedback_metric_has_good_quality
 from .presentation_store import PresentationArchive, StoredPresentation
 
 
@@ -131,7 +131,12 @@ def prepare_feedback_metrics(
     prepared["feedback_mode"] = "personal_reference"
     reference = calibration.get("baseline", {})
     aggregate = metrics.get("aggregate", {})
-    if not isinstance(reference, Mapping) or not isinstance(aggregate, Mapping):
+    quality = metrics.get("quality_flags", {})
+    if (
+        not isinstance(reference, Mapping)
+        or not isinstance(aggregate, Mapping)
+        or not isinstance(quality, Mapping)
+    ):
         return prepared
     positive_high = {"eye_contact_percent", "face_presence_percent"}
     negative_low = {
@@ -140,7 +145,11 @@ def prepare_feedback_metrics(
     }
     role_hints: list[dict[str, object]] = []
     for metric, tolerance in REPEATABILITY_TOLERANCES.items():
-        if metric not in reference or metric not in aggregate:
+        if (
+            metric not in reference
+            or metric not in aggregate
+            or not feedback_metric_has_good_quality(metric, quality)
+        ):
             continue
         current = float(aggregate[metric])
         baseline = float(reference[metric])

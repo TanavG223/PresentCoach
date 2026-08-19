@@ -15,6 +15,7 @@ TEST_MEDIA = (
     {
         "id": "tarun-short-distance",
         "filename": "tarun-speaking-cc0.webm",
+        "sha256": "338f79f313972a57d064c835ca2b7c12421a034bd6e8529c3834ce20e7c13923",
         "title": "Short, distant-face clip",
         "license": "CC0 1.0",
         "source_url": "https://commons.wikimedia.org/wiki/File:Tarun_speaking_01.webm",
@@ -23,6 +24,7 @@ TEST_MEDIA = (
     {
         "id": "hawking-mixed-shot",
         "filename": "stephen-hawking-nasa-public-domain.webm",
+        "sha256": "f342090520d248594a6819d7bee45960eeab9efac9c3551a0c73c76511cb5091",
         "title": "Mixed-shot NASA clip",
         "license": "U.S. public domain (NASA)",
         "source_url": "https://commons.wikimedia.org/wiki/File:StephenHawking-videoselection-2018.webm",
@@ -31,6 +33,7 @@ TEST_MEDIA = (
     {
         "id": "weekly-address",
         "filename": "weekly-address-public-domain-full.webm",
+        "sha256": "17127f6dcfbc7e0913d42d75a01f4bba37a36c205047ffccd661bad5674e5ba2",
         "title": "Stable camera-facing address",
         "license": "U.S. federal public domain",
         "source_url": "https://commons.wikimedia.org/wiki/File:2015-11-21_President_Obama%27s_Weekly_Address.webm",

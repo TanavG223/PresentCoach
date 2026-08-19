@@ -103,3 +103,50 @@ def test_two_second_gap_is_measured_but_not_automatically_criticized():
     }
     hints = general_coaching_hints(metrics)
     assert not [hint for hint in hints if hint["role"] == "improvement"]
+
+
+def test_personal_reference_hints_exclude_quality_insufficient_metrics():
+    aggregate = {
+        "eye_contact_percent": 0.0,
+        "head_rotation_std_degrees": 0.0,
+        "head_position_std_percent": 0.0,
+        "expression_variety_index": 0.0,
+        "face_presence_percent": 0.0,
+        "overall_words_per_minute": 120.0,
+        "filler_count": 0,
+        "pauses_over_2_seconds": 0,
+    }
+    metrics = {
+        "duration_seconds": 40.0,
+        "aggregate": aggregate,
+        "quality_flags": {
+            "face_detected": "bad",
+            "eye_contact": "bad",
+            "head_stability": "bad",
+            "expression_variety": "bad",
+            "audio_clear": "good",
+        },
+        "insufficient_metrics": [
+            "face_detected",
+            "eye_contact",
+            "head_stability",
+            "expression_variety",
+        ],
+        "timeline": {},
+    }
+    baseline = {
+        **aggregate,
+        "eye_contact_percent": 90.0,
+        "face_presence_percent": 95.0,
+    }
+
+    prepared = prepare_feedback_metrics(
+        metrics, {"ready": True, "baseline": baseline}
+    )
+
+    assert prepared["feedback_mode"] == "personal_reference"
+    assert {hint["metric"] for hint in prepared["role_hints"]} == {
+        "overall_words_per_minute",
+        "filler_count",
+        "pauses_over_2_seconds",
+    }
