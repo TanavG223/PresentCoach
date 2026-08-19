@@ -9,6 +9,9 @@ models/face_landmarker.task
 models/whisper/
 *.presentcoach
 *.symmtrack
+/test_media/*.webm
+/test_media/*.mp4
+/test_media/*.mov
 
 # Unrelated research and device artifacts in the original working directory.
 /embedded/
@@ -30,6 +33,7 @@ models/whisper/
 !/scripts/setup_presentcoach.sh
 !/scripts/install_presentcoach_app.sh
 !/scripts/evaluate_presentcoach_llm.py
+!/scripts/download_test_videos.sh
 /models/*
 !/models/PresentCoach.Modelfile
 /reports/*

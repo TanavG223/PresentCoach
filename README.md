@@ -53,6 +53,11 @@ transcription. Stored results include:
 - words per minute in 15-second windows;
 - pauses longer than two seconds and total duration.
 
+You can also choose **Upload video** to analyze an existing MP4, MOV, M4V, or
+WebM file. Imports use the same MediaPipe, Whisper, metric, encryption, and LLM
+guardrails as a live recording. Files are limited to 512 MB and 30 minutes;
+the temporary video copy and decoded raw audio are discarded after analysis.
+
 The main public functions live in
 `src/stroke_screening/presentation_core.py`:
 
@@ -93,6 +98,21 @@ Run the 30-case adversarial evaluation:
 The machine-readable result is
 `reports/presentcoach_llm_eval.json` and includes grounded, excellent-session,
 missing-data, short-session, and appearance-bait cases.
+
+## Reproducible public-domain video tests
+
+Download the three pinned Wikimedia Commons test clips:
+
+```bash
+zsh scripts/download_test_videos.sh
+```
+
+The short CC0 clip exercises insufficient-face handling, the 41-second NASA
+public-domain clip exercises mixed-shot handling, and a public-domain White
+House weekly address provides a stable camera-facing speaker for the full
+duration and transcription path. Their source pages, licenses, exact download
+URLs, and SHA-256 digests are documented in `test_media/README.md`. The video
+binaries are deliberately excluded from Git.
 
 ## Privacy and security
 

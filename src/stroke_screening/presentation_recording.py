@@ -61,6 +61,10 @@ class PresentationRecordingService:
         if not owner or not secrets.compare_digest(owner, self._owner or ""):
             raise PresentationRecordingError("The presentation recording expired")
 
+    def is_active(self) -> bool:
+        with self._lock:
+            return self._owner is not None
+
     def start(self, *, session_kind: str = "practice", note: str | None = None) -> str:
         if session_kind not in {"baseline", "repeat", "practice"}:
             raise ValueError("session_kind must be baseline, repeat, or practice")

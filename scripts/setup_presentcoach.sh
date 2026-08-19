@@ -20,6 +20,9 @@ done
 if ! command -v whisper-cli >/dev/null 2>&1; then
   brew install whisper-cpp
 fi
+if ! command -v ffmpeg >/dev/null 2>&1 || ! command -v ffprobe >/dev/null 2>&1; then
+  brew install ffmpeg
+fi
 /bin/mkdir -p "${MODEL_DIR}"
 if [[ ! -f "${MODEL_PATH}" ]]; then
   curl --fail --location --retry 3 --output "${MODEL_PATH}" "${MODEL_URL}"

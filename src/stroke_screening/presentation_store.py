@@ -181,7 +181,7 @@ def _session_from_dict(raw: object) -> PresentationSession:
     )
     if session.duration_seconds < 0 or session.duration_seconds > 30 * 60 + 5:
         raise ValueError("Stored session duration is outside the limit")
-    if session.session_kind not in {"baseline", "repeat", "practice"}:
+    if session.session_kind not in {"baseline", "repeat", "practice", "imported"}:
         raise ValueError("Stored session kind is invalid")
     return session
 

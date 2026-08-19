@@ -7,10 +7,12 @@ import logging
 from pathlib import Path
 import secrets
 import sys
+import tempfile
 import time
 
 from flask import Flask, jsonify, request, send_from_directory, session, stream_with_context
 from waitress import serve
+from werkzeug.exceptions import RequestEntityTooLarge
 
 from .local_camera import LocalCamera
 from .presentation_ai import LocalPresentationAIError, OllamaPresentationLLM
@@ -24,6 +26,12 @@ from .presentation_store import (
     PresentationStorageError,
     PresentationStore,
     StoredPresentation,
+)
+from .presentation_video import (
+    LocalVideoAnalyzer,
+    MAX_UPLOAD_BYTES,
+    SUPPORTED_VIDEO_SUFFIXES,
+    VideoImportError,
 )
 
 
@@ -45,13 +53,14 @@ def create_app(
     store: PresentationStore | None = None,
     llm: OllamaPresentationLLM | None = None,
     recorder: PresentationRecordingService | None = None,
+    video_analyzer: LocalVideoAnalyzer | None = None,
     testing: bool = False,
 ) -> Flask:
     static_dir = Path(__file__).resolve().parent / "static"
     app = Flask(__name__, static_folder=None)
     app.config.update(
         SECRET_KEY=secrets.token_hex(32),
-        MAX_CONTENT_LENGTH=2 * 1024 * 1024,
+        MAX_CONTENT_LENGTH=MAX_UPLOAD_BYTES + 1024 * 1024,
         SESSION_COOKIE_HTTPONLY=True,
         SESSION_COOKIE_SAMESITE="Strict",
         SESSION_COOKIE_SECURE=False,
@@ -73,7 +82,13 @@ def create_app(
             model_path=root / "models" / "face_landmarker.task",
             transcriber=transcriber,
         )
+        if video_analyzer is None:
+            video_analyzer = LocalVideoAnalyzer(
+                model_path=root / "models" / "face_landmarker.task",
+                transcriber=transcriber,
+            )
     app.extensions["presentation_recorder"] = recorder
+    app.extensions["presentation_video_analyzer"] = video_analyzer
 
     @app.before_request
     def local_only():
@@ -98,7 +113,8 @@ def create_app(
         response.headers["Content-Security-Policy"] = (
             "default-src 'self'; base-uri 'none'; form-action 'self'; "
             "frame-ancestors 'none'; object-src 'none'; img-src 'self' data:; "
-            "connect-src 'self'; script-src 'self'; style-src 'self'; font-src 'self'"
+            "media-src 'self' blob:; connect-src 'self'; script-src 'self'; "
+            "style-src 'self'; font-src 'self'"
         )
         response.headers["X-Content-Type-Options"] = "nosniff"
         response.headers["X-Frame-Options"] = "DENY"
@@ -112,6 +128,55 @@ def create_app(
 
     def current_recorder() -> PresentationRecordingService:
         return app.extensions["presentation_recorder"]
+
+    def current_video_analyzer() -> LocalVideoAnalyzer:
+        analyzer = app.extensions.get("presentation_video_analyzer")
+        if analyzer is None:
+            root = _project_root()
+            analyzer = LocalVideoAnalyzer(
+                model_path=root / "models" / "face_landmarker.task",
+                transcriber=WhisperCppTranscriber(
+                    model_path=root / "models" / "whisper" / "ggml-base.en-q5_1.bin"
+                ),
+            )
+            app.extensions["presentation_video_analyzer"] = analyzer
+        return analyzer
+
+    def analyze_and_store(profile_id: str, presentation):
+        metrics = compute_metrics(presentation)
+        archive = current_store().load_profile(profile_id)
+        calibration = calibration_status(archive)
+        prepared = prepare_feedback_metrics(metrics, calibration)
+        try:
+            feedback = generate_feedback(
+                prepared, app.extensions["presentation_llm"]
+            ).to_dict()
+        except (LocalPresentationAIError, ValueError) as error:
+            LOGGER.warning("Local feedback failed closed: %s", error)
+            feedback = {
+                "status": "local_ai_unavailable",
+                "strengths": [],
+                "improvements": [],
+                "insufficient_data": list(metrics.get("insufficient_metrics", [])),
+                "message": "The measurements were saved, but local feedback failed verification.",
+                "source": "guardrail",
+            }
+        current_store().append(
+            profile_id,
+            StoredPresentation(presentation, metrics, feedback),
+        )
+        if presentation.session_kind == "baseline":
+            current_store().update_calibration(profile_id, {
+                "baseline_session_id": presentation.session_id,
+                "baseline_confirmed": False,
+            })
+        updated = current_store().load_profile(profile_id)
+        return {
+            "session": presentation.to_dict(),
+            "metrics": metrics,
+            "feedback": feedback,
+            "calibration": calibration_status(updated),
+        }
 
     def owner() -> str:
         value = session.get("presentation_owner")
@@ -194,6 +259,9 @@ def create_app(
             return jsonify(error="A JSON recording request is required"), 400
         profile_id = str(document.get("profile_id", ""))
         archive = current_store().load_profile(profile_id)
+        analyzer = current_video_analyzer()
+        if analyzer.is_active():
+            return jsonify(error="Wait for the imported video analysis to finish"), 409
         calibration = calibration_status(archive)
         stage = calibration["stage"]
         if stage == "review_baseline":
@@ -261,40 +329,26 @@ def create_app(
         presentation = current_recorder().stop(recording_owner)
         session.pop("presentation_owner", None)
         session.pop("presentation_profile", None)
-        metrics = compute_metrics(presentation)
-        archive = current_store().load_profile(profile_id)
-        calibration = calibration_status(archive)
-        prepared = prepare_feedback_metrics(metrics, calibration)
-        try:
-            feedback = generate_feedback(
-                prepared, app.extensions["presentation_llm"]
-            ).to_dict()
-        except (LocalPresentationAIError, ValueError) as error:
-            LOGGER.warning("Local feedback failed closed: %s", error)
-            feedback = {
-                "status": "local_ai_unavailable",
-                "strengths": [],
-                "improvements": [],
-                "insufficient_data": list(metrics.get("insufficient_metrics", [])),
-                "message": "The measurements were saved, but local feedback failed verification.",
-                "source": "guardrail",
-            }
-        current_store().append(
-            profile_id,
-            StoredPresentation(presentation, metrics, feedback),
-        )
-        if presentation.session_kind == "baseline":
-            current_store().update_calibration(profile_id, {
-                "baseline_session_id": presentation.session_id,
-                "baseline_confirmed": False,
-            })
-        updated = current_store().load_profile(profile_id)
-        return jsonify(
-            session=presentation.to_dict(),
-            metrics=metrics,
-            feedback=feedback,
-            calibration=calibration_status(updated),
-        ), 201
+        return jsonify(analyze_and_store(profile_id, presentation)), 201
+
+    @app.post("/api/videos/analyze")
+    def analyze_uploaded_video():
+        if current_recorder().is_active():
+            return jsonify(error="Stop the live recording before importing a video"), 409
+        profile_id = str(request.form.get("profile_id", ""))
+        current_store().load_profile(profile_id)
+        upload = request.files.get("video")
+        if upload is None or not upload.filename:
+            return jsonify(error="Choose a local video file first"), 400
+        suffix = Path(upload.filename).suffix.casefold()
+        if suffix not in SUPPORTED_VIDEO_SUFFIXES:
+            return jsonify(error="Use an MP4, MOV, M4V, or WebM video"), 415
+        note = str(request.form.get("note", ""))[:1000]
+        with tempfile.TemporaryDirectory(prefix="presentcoach-video-") as temporary:
+            local_path = Path(temporary) / f"import{suffix}"
+            upload.save(local_path)
+            presentation = current_video_analyzer().analyze(local_path, note=note)
+        return jsonify(analyze_and_store(profile_id, presentation)), 201
 
     @app.post("/api/recordings/cancel")
     def cancel_recording():
@@ -323,6 +377,15 @@ def create_app(
 
     app.register_error_handler(AudioCaptureError, audio_error)
     app.register_error_handler(TranscriptionError, audio_error)
+
+    @app.errorhandler(RequestEntityTooLarge)
+    def upload_too_large(_error):
+        return jsonify(error="Videos must be 512 MB or smaller"), 413
+
+    @app.errorhandler(VideoImportError)
+    def video_error(error):
+        LOGGER.warning("Local video import rejected: %s", error)
+        return jsonify(error=str(error)), 422
 
     def storage_error(_error):
         LOGGER.exception("Encrypted PresentCoach storage failed")

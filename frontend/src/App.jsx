@@ -14,6 +14,7 @@ function Icon({ name, size = 20 }) {
     clock: <><circle cx="12" cy="12" r="9" /><path d="M12 7v5l3 2" /></>,
     close: <path d="m6 6 12 12M18 6 6 18" />,
     play: <path d="m8 5 11 7-11 7z" fill="currentColor" stroke="none" />,
+    upload: <><path d="M12 16V4M7 9l5-5 5 5" /><path d="M5 14v5a1 1 0 0 0 1 1h12a1 1 0 0 0 1-1v-5" /></>,
     chart: <><path d="M4 19V9M10 19V4M16 19v-7M22 19H2" /></>,
   };
   return <svg aria-hidden="true" width={size} height={size} viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="1.8" strokeLinecap="round" strokeLinejoin="round">{paths[name]}</svg>;
@@ -22,7 +23,7 @@ function Icon({ name, size = 20 }) {
 async function api(path, options = {}, csrf = "") {
   const headers = new Headers(options.headers || {});
   if (options.method && options.method !== "GET") headers.set("X-CSRF-Token", csrf);
-  if (options.body) headers.set("Content-Type", "application/json");
+  if (options.body && !(options.body instanceof FormData)) headers.set("Content-Type", "application/json");
   const response = await fetch(path, { ...options, headers, credentials: "same-origin" });
   const document = await response.json().catch(() => ({ error: "The local app returned an unreadable response." }));
   if (!response.ok) throw new Error(document.error || `Local request failed (${response.status})`);
@@ -110,6 +111,49 @@ function RecordingModal({ profileId, csrf, calibration, onClose, onSaved }) {
   </section></div>;
 }
 
+function UploadVideoModal({ profileId, csrf, onClose, onSaved }) {
+  const [file, setFile] = useState(null);
+  const [previewUrl, setPreviewUrl] = useState("");
+  const [phase, setPhase] = useState("ready");
+  const [error, setError] = useState("");
+  useEffect(() => {
+    if (!file) { setPreviewUrl(""); return undefined; }
+    const url = URL.createObjectURL(file);
+    setPreviewUrl(url);
+    return () => URL.revokeObjectURL(url);
+  }, [file]);
+  function choose(event) {
+    const selected = event.target.files?.[0] || null;
+    setError("");
+    if (selected && selected.size > 512 * 1024 * 1024) {
+      setFile(null); setError("Choose a video that is 512 MB or smaller."); return;
+    }
+    setFile(selected);
+  }
+  async function analyze(event) {
+    event.preventDefault();
+    if (!file) { setError("Choose a video first."); return; }
+    setPhase("processing"); setError("");
+    const body = new FormData();
+    body.append("profile_id", profileId);
+    body.append("video", file, file.name);
+    try {
+      const result = await api("/api/videos/analyze", { method: "POST", body }, csrf);
+      setPhase("done"); onSaved(result);
+    } catch (caught) { setPhase("ready"); setError(caught.message); }
+  }
+  return <div className="modal-backdrop"><section className="record-modal upload-modal" role="dialog" aria-modal="true" aria-labelledby="upload-title">
+    <button className="icon-button close" aria-label="Close video importer" onClick={onClose} disabled={phase === "processing"}><Icon name="close" /></button>
+    <div className="record-head"><span className="eyebrow">SAVED VIDEO • LOCAL ANALYSIS</span><h2 id="upload-title">Analyze a video file</h2><p>Use an MP4, MOV, M4V, or WebM up to 512 MB and 30 minutes. The temporary copy is deleted after analysis.</p></div>
+    <form onSubmit={analyze}>
+      {!previewUrl ? <label className="upload-drop"><Icon name="upload" size={34} /><strong>Choose a presentation video</strong><span>Face landmarks, audio, and timestamps are processed on this Mac.</span><input type="file" accept="video/mp4,video/quicktime,video/webm,.m4v" onChange={choose} /></label> : <div className="upload-preview"><video src={previewUrl} controls preload="metadata" /><div><strong>{file.name}</strong><span>{(file.size / (1024 * 1024)).toFixed(1)} MB • ready for local analysis</span><button type="button" className="secondary" onClick={() => setFile(null)} disabled={phase === "processing"}>Choose another</button></div></div>}
+      {error && <div className="error" role="alert">{error}</div>}
+      <button className="primary record-action" type="submit" disabled={!file || phase === "processing"}>{phase === "processing" ? <><span className="spinner" /> MediaPipe + Whisper are analyzing…</> : <><Icon name="spark" /> Analyze saved video</>}</button>
+    </form>
+    <p className="local-note"><Icon name="lock" size={14} /> Nothing is uploaded to GitHub or an external AI service. Imported videos never become calibration baselines.</p>
+  </section></div>;
+}
+
 function Timeline({ item }) {
   const vision = item?.metrics?.timeline?.vision || [], pace = item?.metrics?.timeline?.pace_windows || [];
   const duration = Math.max(item?.session?.duration_seconds || 1, 1), x = time => 44 + (Number(time) / duration) * 812;
@@ -143,7 +187,7 @@ function SessionView({ item }) {
 }
 
 export default function App() {
-  const [data, setData] = useState(null), [error, setError] = useState(""), [recordOpen, setRecordOpen] = useState(false), [selectedId, setSelectedId] = useState(null), [toast, setToast] = useState("");
+  const [data, setData] = useState(null), [error, setError] = useState(""), [recordOpen, setRecordOpen] = useState(false), [uploadOpen, setUploadOpen] = useState(false), [selectedId, setSelectedId] = useState(null), [toast, setToast] = useState("");
   const csrf = data?.csrf_token || "";
   async function load(profileId = "") { try { const fresh = await api(`/api/bootstrap${profileId ? `?profile=${encodeURIComponent(profileId)}` : ""}`); setData(fresh); setError(""); if (!selectedId && fresh.sessions?.length) setSelectedId(fresh.sessions.at(-1).session.session_id); } catch (caught) { setError(caught.message); } }
   useEffect(() => { load(); }, []);
@@ -151,8 +195,10 @@ export default function App() {
   if (!data && error) return <main className="fatal"><div className="logo-mark"><Icon name="scan" /></div><h1>PresentCoach couldn’t start</h1><p>{error}</p><button className="primary" onClick={() => load()}>Try again</button></main>;
   if (!data) return <main className="loading"><span className="spinner dark" /><p>Opening the local coach…</p></main>;
   if (!data.profile) return <Onboarding csrf={csrf} onCreated={() => load()} />;
-  return <div className="app-shell"><header className="topbar"><a className="brand" href="/"><span className="logo-mark small"><Icon name="scan" /></span><span><strong>PresentCoach</strong><small>evidence-based practice</small></span></a><div className="status-row"><span className={data.whisper.available ? "status ready" : "status"}><i /> Whisper local</span><span className={data.local_model.available ? "status ready" : "status"}><i /> AI {data.local_model.available ? "ready" : "offline"}</span><button className="primary" onClick={() => setRecordOpen(true)} disabled={data.calibration.stage === "review_baseline"}><Icon name="record" /> {data.calibration.ready ? "New practice" : data.calibration.stage === "record_baseline" ? "Record baseline" : "Record repeat"}</button></div></header>
+  return <div className="app-shell"><header className="topbar"><a className="brand" href="/"><span className="logo-mark small"><Icon name="scan" /></span><span><strong>PresentCoach</strong><small>evidence-based practice</small></span></a><div className="status-row"><span className={data.whisper.available ? "status ready" : "status"}><i /> Whisper local</span><span className={data.local_model.available ? "status ready" : "status"}><i /> AI {data.local_model.available ? "ready" : "offline"}</span><button className="secondary top-action" onClick={() => setUploadOpen(true)}><Icon name="upload" /> Upload video</button><button className="primary top-action" onClick={() => setRecordOpen(true)} disabled={data.calibration.stage === "review_baseline"}><Icon name="record" /> {data.calibration.ready ? "New practice" : data.calibration.stage === "record_baseline" ? "Record baseline" : "Record repeat"}</button></div></header>
     <main className="dashboard"><section className="welcome"><div><span className="eyebrow">PRESENTATION LAB</span><h1>Welcome back, {data.profile.name}.</h1><p>Every observation below is tied to a measured number and a moment in your recording.</p></div><div className="privacy"><Icon name="lock" /><span><strong>Runs entirely on this Mac</strong><small>Python • MediaPipe • whisper.cpp • Ollama</small></span></div></section><CalibrationPanel calibration={data.calibration} csrf={csrf} profileId={data.profile.id} onChanged={() => load(data.profile.id)} /><SessionView item={selected} />
     {!!sessions.length && <section className="history"><div className="section-head"><div><span className="eyebrow">SESSION HISTORY</span><h2>Compare your runs</h2></div><strong>{sessions.length} saved locally</strong></div><div className="history-list">{[...sessions].reverse().map(item => <button key={item.session.session_id} className={selected?.session.session_id === item.session.session_id ? "selected" : ""} onClick={() => setSelectedId(item.session.session_id)}><span className={`kind ${item.session.session_kind}`}>{item.session.session_kind}</span><strong>{new Date(item.session.start_time).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</strong><small>{new Date(item.session.start_time).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })} • {formatTime(item.session.duration_seconds)}</small><div><span>{item.metrics.aggregate.eye_contact_percent}% contact</span><span>{item.metrics.aggregate.overall_words_per_minute} WPM</span><span>{item.metrics.aggregate.filler_count} fillers</span></div><Icon name="play" size={15} /></button>)}</div></section>}<footer><span><Icon name="lock" size={14} /> Encrypted session history</span><span>Descriptive feedback only—never a score or grade of you.</span></footer></main>
-    {recordOpen && <RecordingModal profileId={data.profile.id} csrf={csrf} calibration={data.calibration} onClose={() => setRecordOpen(false)} onSaved={result => { setRecordOpen(false); setSelectedId(result.session.session_id); setToast("Session analyzed and encrypted locally."); load(data.profile.id); setTimeout(() => setToast(""), 4000); }} />}{toast && <div className="toast" role="status"><Icon name="check" /> {toast}</div>}</div>;
+    {recordOpen && <RecordingModal profileId={data.profile.id} csrf={csrf} calibration={data.calibration} onClose={() => setRecordOpen(false)} onSaved={result => { setRecordOpen(false); setSelectedId(result.session.session_id); setToast("Session analyzed and encrypted locally."); load(data.profile.id); setTimeout(() => setToast(""), 4000); }} />}
+    {uploadOpen && <UploadVideoModal profileId={data.profile.id} csrf={csrf} onClose={() => setUploadOpen(false)} onSaved={result => { setUploadOpen(false); setSelectedId(result.session.session_id); setToast("Saved video analyzed and encrypted locally."); load(data.profile.id); setTimeout(() => setToast(""), 4000); }} />}
+    {toast && <div className="toast" role="status"><Icon name="check" /> {toast}</div>}</div>;
 }
