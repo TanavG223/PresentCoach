@@ -188,6 +188,88 @@ def test_vision_quality_requires_fourteen_analyzed_frames_per_second():
     assert recomputed["quality_flags"]["eye_contact"] == "bad"
 
 
+def test_camera_contact_quality_requires_most_detected_frames_to_be_eligible():
+    mostly_invalid_gaze = [
+        replace(
+            sample,
+            contact_eligible_frame_count=1,
+            contact_frame_count=1,
+        )
+        for sample in vision_samples()
+    ]
+    session = analyze_session(
+        mostly_invalid_gaze,
+        {"words": [], "duration_seconds": 40, "waveform_rms": 0},
+    )
+
+    assert session.quality_flags["face_detected"] == "good"
+    assert session.quality_flags["eye_contact"] == "bad"
+    assert compute_metrics(session)["quality_flags"]["eye_contact"] == "bad"
+
+
+def test_head_stability_abstains_when_detected_faces_have_no_finite_pose():
+    missing_pose = [
+        replace(
+            sample,
+            yaw_degrees=None,
+            pitch_degrees=float("nan"),
+            roll_degrees=float("inf"),
+            face_center_x=None,
+            face_center_y=None,
+        )
+        for sample in vision_samples()
+    ]
+    session = analyze_session(
+        missing_pose,
+        {"words": [], "duration_seconds": 40, "waveform_rms": 0},
+    )
+    metrics = compute_metrics(session)
+
+    assert session.quality_flags["head_stability"] == "bad"
+    assert metrics["quality_flags"]["face_detected"] == "good"
+    assert metrics["quality_flags"]["head_stability"] == "bad"
+    assert "head_stability" in metrics["insufficient_metrics"]
+    assert metrics["aggregate"]["head_rotation_std_degrees"] == 0.0
+    assert metrics["aggregate"]["head_position_std_percent"] == 0.0
+
+
+def test_expression_variety_requires_finite_coverage_across_detected_faces():
+    sparse_expression = [
+        sample
+        if index < 8
+        else replace(
+            sample,
+            mouth_activity=None,
+            brow_activity=float("nan"),
+            expression_change=None,
+        )
+        for index, sample in enumerate(vision_samples())
+    ]
+    session = analyze_session(
+        sparse_expression,
+        {"words": [], "duration_seconds": 40, "waveform_rms": 0},
+    )
+    metrics = compute_metrics(session)
+
+    assert session.quality_flags["expression_variety"] == "bad"
+    assert metrics["quality_flags"]["head_stability"] == "good"
+    assert metrics["quality_flags"]["expression_variety"] == "bad"
+    assert "expression_variety" in metrics["insufficient_metrics"]
+
+
+def test_expression_change_remains_a_legacy_quality_fallback():
+    legacy_expression = [
+        replace(sample, mouth_activity=None, brow_activity=None)
+        for sample in vision_samples()
+    ]
+    session = analyze_session(
+        legacy_expression,
+        {"words": [], "duration_seconds": 40, "waveform_rms": 0},
+    )
+
+    assert compute_metrics(session)["quality_flags"]["expression_variety"] == "good"
+
+
 def test_legacy_bucket_only_vision_abstains_from_percentage_coaching():
     legacy = [
         replace(

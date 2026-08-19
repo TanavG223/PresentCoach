@@ -35,10 +35,12 @@ models/whisper/
 !/scripts/evaluate_presentcoach_llm.py
 !/scripts/download_test_videos.sh
 !/scripts/evaluate_presentcoach_videos.py
+!/scripts/evaluate_face_tracking.py
 /models/*
 !/models/PresentCoach.Modelfile
 /reports/*
 !/reports/presentcoach_llm_eval.json
 !/reports/presentcoach_video_eval.json
+!/reports/presentcoach_tracking_eval.json
 /macos/*
 !/macos/PresentCoach.app/

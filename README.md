@@ -121,20 +121,64 @@ The machine-readable result is
 missing-data, short-session, and appearance/accent/confidence/reading/posture
 inference-bait cases. Expected and returned metric sets must match exactly.
 
-## Reproducible public-domain video tests
+## Reproducible licensed-video evaluation
 
-Download the three pinned Wikimedia Commons test clips:
+The [downloader](scripts/download_test_videos.sh) fetches and verifies 11
+pinned Wikimedia Commons files: the three original pipeline-test clips and
+eight additional presentation/interview clips used by the tracking benchmark.
 
 ```bash
 zsh scripts/download_test_videos.sh
 ```
 
-The short CC0 clip exercises insufficient-face handling, the 41-second NASA
-public-domain clip exercises mixed-shot handling, and a public-domain White
-House weekly address provides a stable camera-facing speaker for the full
-duration and transcription path. Their source pages, licenses, exact download
-URLs, and SHA-256 digests are documented in `test_media/README.md`. The video
-binaries are deliberately excluded from Git.
+The original three still exercise the complete video pipeline: a short CC0
+distant-face clip, a 41-second NASA public-domain mixed-shot clip, and a
+public-domain White House address with a stable camera-facing speaker. Their
+existing end-to-end result remains in
+[`reports/presentcoach_video_eval.json`](reports/presentcoach_video_eval.json).
+All media binaries are excluded from Git; source pages, licenses, reuse notes,
+and exact digests are in the [test-media documentation](test_media/README.md).
+
+### Frozen anonymous face-tracking benchmark
+
+Run the benchmark after the clips and pinned face model have been installed:
+
+```bash
+.venv/bin/python scripts/evaluate_face_tracking.py
+```
+
+The frozen [12-case manifest](test_media/face_tracking_manifest.json) contains
+three regression cases, four development cases, four holdout-designated cases,
+and one derived case. It combines the three existing clips, eight new Commons
+presentations/interviews, and an in-memory two-face challenge made by
+duplicating a fixed crop from the already licensed public-domain address. No
+twelfth recording is downloaded or created.
+
+The checked-in [tracking report](reports/presentcoach_tracking_eval.json)
+records **12/12 cases passed (100%)**. Every case ran twice, and its
+rounded deterministic aggregate tracking metrics matched exactly across both
+runs. The benchmark
+checks input and model digests, analyzed cadence, valid single-face frames,
+contiguous dropouts, timestamped reacquisition, normalized rigid-landmark
+jitter in defensibly stable segments, and multi-face abstention. Media
+timestamps—not CPU speed—drive smoothing. Passing means the declared checks
+held for these exact artifacts and excerpts; it is not a claim of universal
+face-tracking accuracy.
+
+This benchmark is evaluation-only. It does not perform identity recognition,
+persist landmark arrays or face templates, or retrain/fine-tune the pinned
+MediaPipe Face Landmarker. A real training claim would require a separate
+consented dataset, locked labels and splits, a documented training procedure,
+and independent held-out evaluation.
+
+The downloaded media is not covered by PresentCoach's MIT license. Each clip
+retains the license on its Commons source page: CC BY material requires credit,
+CC BY-SA material also carries share-alike conditions for modified media, and
+U.S. federal public-domain status can vary outside the United States. The VOA
+source also carries a warning about episodic third-party elements. The project
+therefore distributes only the manifest, attribution, and downloader—not the
+video binaries—and does not treat a copyright license as clearance of privacy
+or personality rights.
 
 ## Privacy and security
 

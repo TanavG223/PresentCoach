@@ -1,0 +1,1693 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-19T19:47:35.811702Z",
+  "manifest_sha256": "b9f6aae74c2dbcff93e50a47c4497015acb69336db4106b6f3c518afdb6cb825",
+  "evaluation_only": true,
+  "used_for_training": false,
+  "identity_recognition": false,
+  "landmarks_persisted": false,
+  "partial_run": false,
+  "repeatability_runs_per_case": 2,
+  "target_fps": 15.0,
+  "mediapipe_version": "0.10.35",
+  "opencv_version": "5.0.0.93",
+  "model": {
+    "filename": "face_landmarker.task",
+    "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+    "matches_manifest": true
+  },
+  "dataset_roles": {
+    "regression": 3,
+    "development": 4,
+    "holdout": 4,
+    "derived": 1
+  },
+  "metric_definitions": {
+    "analyzed_fps": "sampled frames divided by evaluated media duration; not wall-clock render FPS",
+    "valid_face_frame_ratio": "frames containing exactly one face and valid landmarks divided by analyzed frames",
+    "dropout_run": "contiguous analyzed frames without a valid single-face landmark track",
+    "reacquisition_seconds": "time from the first invalid frame in a bracketed dropout to the next valid frame",
+    "landmark_jitter": "frame-to-frame RMS movement of rigid landmarks after eye-line alignment and inter-eye normalization, only in stable runs",
+    "multi_face_abstention": "frames with more than one detected face must expose no landmarks to downstream scoring"
+  },
+  "case_count": 12,
+  "passed": 12,
+  "pass_rate_percent": 100.0,
+  "cases": [
+    {
+      "media_id": "stable-address-tracking",
+      "filename": "weekly-address-public-domain-full.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:2015-11-21_President_Obama%27s_Weekly_Address.webm",
+      "source_sha1": null,
+      "license": "U.S. federal public domain",
+      "purpose": "Measures sustained single-face tracking and normalized landmark stability on a fixed-camera presentation excerpt.",
+      "dataset_role": "regression",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 15.0,
+      "evaluation_duration_seconds": 20.0,
+      "measurements": {
+        "analyzed_frame_count": 300,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 300,
+        "valid_face_frame_ratio": 1.0,
+        "no_face_frame_count": 0,
+        "no_face_frame_ratio": 0.0,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 0,
+        "dropout_runs": [],
+        "longest_dropout_seconds": 0.0,
+        "reacquisition_event_count": 0,
+        "mean_reacquisition_seconds": null,
+        "max_reacquisition_seconds": null,
+        "stable_segment_count": 1,
+        "stable_transition_count": 299,
+        "landmark_jitter_median": 0.009611,
+        "landmark_jitter_p95": 0.028434,
+        "mean_inference_ms": 4.145,
+        "p95_inference_ms": 5.171,
+        "wall_clock_seconds": 1.406,
+        "processing_throughput_fps": 213.425
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "17127f6dcfbc7e0913d42d75a01f4bba37a36c205047ffccd661bad5674e5ba2",
+          "expected": "17127f6dcfbc7e0913d42d75a01f4bba37a36c205047ffccd661bad5674e5ba2"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "min_valid_face_frame_ratio",
+          "label": "Valid single-face frames",
+          "passed": true,
+          "actual": 1.0,
+          "expected": ">= 0.9"
+        },
+        {
+          "id": "max_dropout_run_count",
+          "label": "Tracking dropout runs",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 5"
+        },
+        {
+          "id": "max_longest_dropout_seconds",
+          "label": "Longest tracking dropout",
+          "passed": true,
+          "actual": 0.0,
+          "expected": "<= 0.5"
+        },
+        {
+          "id": "min_stable_transition_count",
+          "label": "Defensible stable-landmark transitions",
+          "passed": true,
+          "actual": 299,
+          "expected": ">= 150"
+        },
+        {
+          "id": "max_landmark_jitter_p95",
+          "label": "Stable-segment landmark jitter p95",
+          "passed": true,
+          "actual": 0.028434,
+          "expected": "<= 0.04"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "mixed-shot-reacquisition",
+      "filename": "stephen-hawking-nasa-public-domain.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:StephenHawking-videoselection-2018.webm",
+      "source_sha1": null,
+      "license": "U.S. public domain (NASA)",
+      "purpose": "Exercises dropouts and reacquisition across edits and changing shot composition.",
+      "dataset_role": "regression",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 0.0,
+      "evaluation_duration_seconds": 41.0,
+      "measurements": {
+        "analyzed_frame_count": 615,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 227,
+        "valid_face_frame_ratio": 0.369106,
+        "no_face_frame_count": 388,
+        "no_face_frame_ratio": 0.630894,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 12,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.011,
+            "end_seconds": 10.471,
+            "duration_seconds": 10.5267,
+            "frame_count": 158,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 10.872,
+            "end_seconds": 15.994,
+            "duration_seconds": 5.1887,
+            "frame_count": 78,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 5.188
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 16.461,
+            "end_seconds": 16.794,
+            "duration_seconds": 0.3997,
+            "frame_count": 6,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 17.662,
+            "end_seconds": 18.997,
+            "duration_seconds": 1.4017,
+            "frame_count": 21,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.401
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 19.264,
+            "end_seconds": 19.264,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.066
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 19.664,
+            "end_seconds": 20.064,
+            "duration_seconds": 0.4667,
+            "frame_count": 7,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.467
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 20.398,
+            "end_seconds": 20.465,
+            "duration_seconds": 0.1337,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.133
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 25.136,
+            "end_seconds": 28.072,
+            "duration_seconds": 3.0027,
+            "frame_count": 45,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 3.003
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 29.674,
+            "end_seconds": 29.741,
+            "duration_seconds": 0.1337,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.133
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 31.593,
+            "end_seconds": 31.659,
+            "duration_seconds": 0.1327,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.133
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 32.126,
+            "end_seconds": 32.994,
+            "duration_seconds": 0.9347,
+            "frame_count": 14,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.935
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 37.532,
+            "end_seconds": 40.935,
+            "duration_seconds": 3.4697,
+            "frame_count": 52,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 10.5267,
+        "reacquisition_event_count": 10,
+        "mean_reacquisition_seconds": 1.1859,
+        "max_reacquisition_seconds": 5.188,
+        "stable_segment_count": 5,
+        "stable_transition_count": 193,
+        "landmark_jitter_median": 0.014361,
+        "landmark_jitter_p95": 0.044294,
+        "mean_inference_ms": 4.352,
+        "p95_inference_ms": 10.345,
+        "wall_clock_seconds": 3.631,
+        "processing_throughput_fps": 169.377
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "f342090520d248594a6819d7bee45960eeab9efac9c3551a0c73c76511cb5091",
+          "expected": "f342090520d248594a6819d7bee45960eeab9efac9c3551a0c73c76511cb5091"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "min_dropout_run_count",
+          "label": "Expected tracking dropout runs",
+          "passed": true,
+          "actual": 12,
+          "expected": ">= 1"
+        },
+        {
+          "id": "min_reacquisition_event_count",
+          "label": "Track reacquisition events",
+          "passed": true,
+          "actual": 10,
+          "expected": ">= 1"
+        },
+        {
+          "id": "max_reacquisition_seconds",
+          "label": "Track reacquisition time",
+          "passed": true,
+          "actual": 5.188,
+          "expected": "<= 20"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "distant-face-abstention",
+      "filename": "tarun-speaking-cc0.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Tarun_speaking_01.webm",
+      "source_sha1": null,
+      "license": "CC0 1.0",
+      "purpose": "Verifies that a small distant face is not turned into unsupported landmark measurements.",
+      "dataset_role": "regression",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 0.0,
+      "evaluation_duration_seconds": 8.5,
+      "measurements": {
+        "analyzed_frame_count": 128,
+        "analyzed_fps": 15.059,
+        "valid_face_frame_count": 0,
+        "valid_face_frame_ratio": 0.0,
+        "no_face_frame_count": 128,
+        "no_face_frame_ratio": 1.0,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 1,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.011,
+            "end_seconds": 8.469,
+            "duration_seconds": 8.5247,
+            "frame_count": 128,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 8.5247,
+        "reacquisition_event_count": 0,
+        "mean_reacquisition_seconds": null,
+        "max_reacquisition_seconds": null,
+        "stable_segment_count": 0,
+        "stable_transition_count": 0,
+        "landmark_jitter_median": null,
+        "landmark_jitter_p95": null,
+        "mean_inference_ms": 1.059,
+        "p95_inference_ms": 1.574,
+        "wall_clock_seconds": 0.211,
+        "processing_throughput_fps": 605.327
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "338f79f313972a57d064c835ca2b7c12421a034bd6e8529c3834ce20e7c13923",
+          "expected": "338f79f313972a57d064c835ca2b7c12421a034bd6e8529c3834ce20e7c13923"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.059,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "max_valid_face_frame_ratio",
+          "label": "Expected difficult-face abstention",
+          "passed": true,
+          "actual": 0.0,
+          "expected": "<= 0.1"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "derived-two-face-abstention",
+      "filename": "weekly-address-public-domain-full.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:2015-11-21_President_Obama%27s_Weekly_Address.webm",
+      "source_sha1": null,
+      "license": "U.S. federal public domain",
+      "purpose": "Duplicates a fixed crop from the licensed source in memory to verify that multiple faces cause abstention.",
+      "dataset_role": "derived",
+      "transform": {
+        "type": "duplicate_fixed_crop",
+        "crop_normalized": [
+          0.36,
+          0.05,
+          0.72,
+          0.75
+        ]
+      },
+      "passed": true,
+      "start_seconds": 20.0,
+      "evaluation_duration_seconds": 3.0,
+      "measurements": {
+        "analyzed_frame_count": 46,
+        "analyzed_fps": 15.333,
+        "valid_face_frame_count": 0,
+        "valid_face_frame_ratio": 0.0,
+        "no_face_frame_count": 0,
+        "no_face_frame_ratio": 0.0,
+        "multi_face_frame_count": 46,
+        "multi_face_frame_ratio": 1.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 1,
+        "dropout_runs": [
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 0.0,
+            "end_seconds": 2.99,
+            "duration_seconds": 3.0567,
+            "frame_count": 46,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 3.0567,
+        "reacquisition_event_count": 0,
+        "mean_reacquisition_seconds": null,
+        "max_reacquisition_seconds": null,
+        "stable_segment_count": 0,
+        "stable_transition_count": 0,
+        "landmark_jitter_median": null,
+        "landmark_jitter_p95": null,
+        "mean_inference_ms": 7.62,
+        "p95_inference_ms": 9.926,
+        "wall_clock_seconds": 0.389,
+        "processing_throughput_fps": 118.201
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "17127f6dcfbc7e0913d42d75a01f4bba37a36c205047ffccd661bad5674e5ba2",
+          "expected": "17127f6dcfbc7e0913d42d75a01f4bba37a36c205047ffccd661bad5674e5ba2"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.333,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "min_multi_face_frame_ratio",
+          "label": "Multiple-face challenge frames",
+          "passed": true,
+          "actual": 1.0,
+          "expected": ">= 0.8"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "elsie-compressed-closeup",
+      "filename": "elsie-kanza-voa-240p.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Elsie_Kanza_Director,_Head_of_Africa_on_Grow_Africa.webm",
+      "source_sha1": "67c462d848bbea8d7d5a9dbc439bd1748ee284a5",
+      "license": "U.S. public domain (VOA; see source-page warning)",
+      "purpose": "Development case for a stable close face inside a compressed broadcast inset with graphics.",
+      "dataset_role": "development",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 0.0,
+      "evaluation_duration_seconds": 35.8,
+      "measurements": {
+        "analyzed_frame_count": 537,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 537,
+        "valid_face_frame_ratio": 1.0,
+        "no_face_frame_count": 0,
+        "no_face_frame_ratio": 0.0,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 0,
+        "dropout_runs": [],
+        "longest_dropout_seconds": 0.0,
+        "reacquisition_event_count": 0,
+        "mean_reacquisition_seconds": null,
+        "max_reacquisition_seconds": null,
+        "stable_segment_count": 1,
+        "stable_transition_count": 536,
+        "landmark_jitter_median": 0.000386,
+        "landmark_jitter_p95": 0.001198,
+        "mean_inference_ms": 5.115,
+        "p95_inference_ms": 7.964,
+        "wall_clock_seconds": 2.994,
+        "processing_throughput_fps": 179.383
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "1c989395bb9d1fbd2b317ede458d34d818781fa9f6f690daa2dba58378d44d52",
+          "expected": "1c989395bb9d1fbd2b317ede458d34d818781fa9f6f690daa2dba58378d44d52"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "min_valid_face_frame_ratio",
+          "label": "Valid single-face frames",
+          "passed": true,
+          "actual": 1.0,
+          "expected": ">= 0.9"
+        },
+        {
+          "id": "max_dropout_run_count",
+          "label": "Tracking dropout runs",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 5"
+        },
+        {
+          "id": "min_stable_transition_count",
+          "label": "Defensible stable-landmark transitions",
+          "passed": true,
+          "actual": 536,
+          "expected": ">= 300"
+        },
+        {
+          "id": "max_landmark_jitter_p95",
+          "label": "Stable-segment landmark jitter p95",
+          "passed": true,
+          "actual": 0.001198,
+          "expected": "<= 0.06"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "niosh-scene-reacquisition-holdout",
+      "filename": "niosh-sudha-240p.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Science_Speaks_-_Talking_to_Women_in_Science_(Sudha,_Medical_Officer).webm",
+      "source_sha1": "d72dfee4cdca61e03932e1212635d79f69069464",
+      "license": "U.S. federal public domain (NIOSH)",
+      "purpose": "Holdout-designated close-speaker and no-face title-card test with real scene transitions.",
+      "dataset_role": "holdout",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 40.0,
+      "evaluation_duration_seconds": 60.0,
+      "measurements": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 661,
+        "valid_face_frame_ratio": 0.734444,
+        "no_face_frame_count": 239,
+        "no_face_frame_ratio": 0.265556,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 3,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 2.453,
+            "end_seconds": 6.858,
+            "duration_seconds": 4.4717,
+            "frame_count": 67,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 4.472
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 29.747,
+            "end_seconds": 36.588,
+            "duration_seconds": 6.9077,
+            "frame_count": 104,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 6.907
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 45.53,
+            "end_seconds": 50.001,
+            "duration_seconds": 4.5377,
+            "frame_count": 68,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 4.538
+          }
+        ],
+        "longest_dropout_seconds": 6.9077,
+        "reacquisition_event_count": 3,
+        "mean_reacquisition_seconds": 5.3057,
+        "max_reacquisition_seconds": 6.907,
+        "stable_segment_count": 4,
+        "stable_transition_count": 656,
+        "landmark_jitter_median": 0.011136,
+        "landmark_jitter_p95": 0.029731,
+        "mean_inference_ms": 3.429,
+        "p95_inference_ms": 5.201,
+        "wall_clock_seconds": 3.389,
+        "processing_throughput_fps": 265.538
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "aeb16967d03321455fd29569c8a4da7809c799d7b85caa7b883ff792c18aa3e8",
+          "expected": "aeb16967d03321455fd29569c8a4da7809c799d7b85caa7b883ff792c18aa3e8"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "min_valid_face_frame_ratio",
+          "label": "Valid single-face frames",
+          "passed": true,
+          "actual": 0.734444,
+          "expected": ">= 0.5"
+        },
+        {
+          "id": "min_dropout_run_count",
+          "label": "Expected tracking dropout runs",
+          "passed": true,
+          "actual": 3,
+          "expected": ">= 1"
+        },
+        {
+          "id": "min_reacquisition_event_count",
+          "label": "Track reacquisition events",
+          "passed": true,
+          "actual": 3,
+          "expected": ">= 1"
+        },
+        {
+          "id": "max_reacquisition_seconds",
+          "label": "Track reacquisition time",
+          "passed": true,
+          "actual": 6.907,
+          "expected": "<= 20"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "picnic-portrait-multiple-people",
+      "filename": "white-house-picnic-240p.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:President_Trump_welcomes_members_of_the_House,_Senate_for_the_annual_Congressional_Picnic.webm",
+      "source_sha1": "163dca06a19af04b857ddaa296cc7c6fcce93a69",
+      "license": "U.S. federal public domain (White House)",
+      "purpose": "Development case for distant-group abstention in portrait framing.",
+      "dataset_role": "development",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 0.0,
+      "evaluation_duration_seconds": 35.3,
+      "measurements": {
+        "analyzed_frame_count": 530,
+        "analyzed_fps": 15.014,
+        "valid_face_frame_count": 0,
+        "valid_face_frame_ratio": 0.0,
+        "no_face_frame_count": 530,
+        "no_face_frame_ratio": 1.0,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 1,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.006,
+            "end_seconds": 35.25,
+            "duration_seconds": 35.3107,
+            "frame_count": 530,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 35.3107,
+        "reacquisition_event_count": 0,
+        "mean_reacquisition_seconds": null,
+        "max_reacquisition_seconds": null,
+        "stable_segment_count": 0,
+        "stable_transition_count": 0,
+        "landmark_jitter_median": null,
+        "landmark_jitter_p95": null,
+        "mean_inference_ms": 0.812,
+        "p95_inference_ms": 1.041,
+        "wall_clock_seconds": 0.515,
+        "processing_throughput_fps": 1029.043
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "ef7de53bbe9f16750de49c7b029076c6fcd70d858ffe95f1b3692fff53e86aba",
+          "expected": "ef7de53bbe9f16750de49c7b029076c6fcd70d858ffe95f1b3692fff53e86aba"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.014,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "max_valid_face_frame_ratio",
+          "label": "Expected difficult-face abstention",
+          "passed": true,
+          "actual": 0.0,
+          "expected": "<= 0.25"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "ala-distant-speaker-holdout",
+      "filename": "ala-jodi-jill-240p.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:ALA_2025_Speaker_Jodi_Jill,_Founder_of_National_Puzzle_Day_and_Puzzle_Month_talks_about_Puzzles_in_Libraries.webm",
+      "source_sha1": "190794b60696dd6357cd22335c75db35c68ffb7e",
+      "license": "CC0 1.0",
+      "purpose": "Holdout-designated pillarboxed distant-speaker case that should abstain instead of inventing face detail.",
+      "dataset_role": "holdout",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 30.0,
+      "evaluation_duration_seconds": 60.0,
+      "measurements": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 0,
+        "valid_face_frame_ratio": 0.0,
+        "no_face_frame_count": 900,
+        "no_face_frame_ratio": 1.0,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 1,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.008,
+            "end_seconds": 59.934,
+            "duration_seconds": 59.9927,
+            "frame_count": 900,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 59.9927,
+        "reacquisition_event_count": 0,
+        "mean_reacquisition_seconds": null,
+        "max_reacquisition_seconds": null,
+        "stable_segment_count": 0,
+        "stable_transition_count": 0,
+        "landmark_jitter_median": null,
+        "landmark_jitter_p95": null,
+        "mean_inference_ms": 0.809,
+        "p95_inference_ms": 0.95,
+        "wall_clock_seconds": 0.947,
+        "processing_throughput_fps": 950.147
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "c5fb48107684fd0409e01b20c0f22a7c4358d35f4a342dbec6a4479a8ada1bb9",
+          "expected": "c5fb48107684fd0409e01b20c0f22a7c4358d35f4a342dbec6a4479a8ada1bb9"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "max_valid_face_frame_ratio",
+          "label": "Expected difficult-face abstention",
+          "passed": true,
+          "actual": 0.0,
+          "expected": "<= 0.25"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "immersion-occlusion-holdout",
+      "filename": "immersion-weekend-240p.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:About_Immersion_Weekend-10698293.webm",
+      "source_sha1": "597823336bb35073c8ee060056571e25a5c4cb63",
+      "license": "CC BY-SA 3.0 (Tricia Fulks Kelley)",
+      "purpose": "Holdout-designated low-resolution montage with motion, occlusion, groups, and no-face intervals.",
+      "dataset_role": "holdout",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 20.0,
+      "evaluation_duration_seconds": 60.0,
+      "measurements": {
+        "analyzed_frame_count": 899,
+        "analyzed_fps": 14.983,
+        "valid_face_frame_count": 235,
+        "valid_face_frame_ratio": 0.261402,
+        "no_face_frame_count": 622,
+        "no_face_frame_ratio": 0.69188,
+        "multi_face_frame_count": 42,
+        "multi_face_frame_ratio": 0.046719,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 14,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.02,
+            "end_seconds": 0.621,
+            "duration_seconds": 0.6677,
+            "frame_count": 10,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 0.821,
+            "end_seconds": 9.63,
+            "duration_seconds": 8.8757,
+            "frame_count": 133,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 8.875
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 12.165,
+            "end_seconds": 12.699,
+            "duration_seconds": 0.6007,
+            "frame_count": 9,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.601
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 12.833,
+            "end_seconds": 14.034,
+            "duration_seconds": 1.2677,
+            "frame_count": 19,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.268
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 14.234,
+            "end_seconds": 14.835,
+            "duration_seconds": 0.6677,
+            "frame_count": 10,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.668
+          },
+          {
+            "kind": "mixed_or_invalid",
+            "start_seconds": 14.968,
+            "end_seconds": 33.654,
+            "duration_seconds": 18.7527,
+            "frame_count": 281,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 18.752
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 33.787,
+            "end_seconds": 35.255,
+            "duration_seconds": 1.5347,
+            "frame_count": 23,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.535
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 37.858,
+            "end_seconds": 40.46,
+            "duration_seconds": 2.6687,
+            "frame_count": 40,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 2.669
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 43.263,
+            "end_seconds": 47.801,
+            "duration_seconds": 4.6047,
+            "frame_count": 69,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 4.605
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 50.671,
+            "end_seconds": 52.673,
+            "duration_seconds": 2.0687,
+            "frame_count": 31,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 2.068
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 54.074,
+            "end_seconds": 54.074,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.067
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 54.675,
+            "end_seconds": 54.741,
+            "duration_seconds": 0.1327,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.133
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 54.875,
+            "end_seconds": 54.875,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.067
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 57.678,
+            "end_seconds": 59.947,
+            "duration_seconds": 2.3357,
+            "frame_count": 35,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 18.7527,
+        "reacquisition_event_count": 12,
+        "mean_reacquisition_seconds": 3.4423,
+        "max_reacquisition_seconds": 18.752,
+        "stable_segment_count": 7,
+        "stable_transition_count": 217,
+        "landmark_jitter_median": 0.007225,
+        "landmark_jitter_p95": 0.019165,
+        "mean_inference_ms": 2.947,
+        "p95_inference_ms": 6.779,
+        "wall_clock_seconds": 2.811,
+        "processing_throughput_fps": 319.805
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "dfa91f14ff24e3de45d91e3d14177f79c22d1b57977d292ff01e202593dc3f10",
+          "expected": "dfa91f14ff24e3de45d91e3d14177f79c22d1b57977d292ff01e202593dc3f10"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 14.983,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "max_valid_face_frame_ratio",
+          "label": "Expected difficult-face abstention",
+          "passed": true,
+          "actual": 0.261402,
+          "expected": "<= 0.5"
+        },
+        {
+          "id": "min_dropout_run_count",
+          "label": "Expected tracking dropout runs",
+          "passed": true,
+          "actual": 14,
+          "expected": ">= 1"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "brianna-stage-motion",
+      "filename": "wikimania-brianna-240p.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Wikimania_2008_-_Brianna_Laugher_-_Segment_of_State_of_Commons.ogv",
+      "source_sha1": "e554b8501c1e7e63f4a7e8f5663514c912d7281b",
+      "license": "CC BY-SA 3.0 (Cary Bass)",
+      "purpose": "Development case proving that a distant, partly occluded stage face abstains instead of producing unreliable landmarks.",
+      "dataset_role": "development",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 0.0,
+      "evaluation_duration_seconds": 58.4,
+      "measurements": {
+        "analyzed_frame_count": 876,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 0,
+        "valid_face_frame_ratio": 0.0,
+        "no_face_frame_count": 876,
+        "no_face_frame_ratio": 1.0,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 1,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.014,
+            "end_seconds": 58.347,
+            "duration_seconds": 58.3997,
+            "frame_count": 876,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 58.3997,
+        "reacquisition_event_count": 0,
+        "mean_reacquisition_seconds": null,
+        "max_reacquisition_seconds": null,
+        "stable_segment_count": 0,
+        "stable_transition_count": 0,
+        "landmark_jitter_median": null,
+        "landmark_jitter_p95": null,
+        "mean_inference_ms": 1.046,
+        "p95_inference_ms": 3.645,
+        "wall_clock_seconds": 1.12,
+        "processing_throughput_fps": 782.333
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "bb907e7278d2851ec182ada147ac1dcd2744aad5d5bf7d7f17038d3aa1948265",
+          "expected": "bb907e7278d2851ec182ada147ac1dcd2744aad5d5bf7d7f17038d3aa1948265"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "max_valid_face_frame_ratio",
+          "label": "Expected difficult-face abstention",
+          "passed": true,
+          "actual": 0.0,
+          "expected": "<= 0.1"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "fop-tiny-speaker-holdout",
+      "filename": "wikimania-fop-240p.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Wikimania_2023_-_Plenary_-_18_August_-_Lightning_Talk_-_A_Survey_of_Freedom_Of_Panorama_(FOP)_in_the_Philippines.webm",
+      "source_sha1": "7b2967bad284e8e1cc094d3ea0a788fdb95fff56",
+      "license": "CC BY-SA 4.0 (Wikimania 2023)",
+      "purpose": "Holdout-designated slide-heavy case with distant stage and tiny inset speakers that should abstain.",
+      "dataset_role": "holdout",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 70.0,
+      "evaluation_duration_seconds": 60.0,
+      "measurements": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 0,
+        "valid_face_frame_ratio": 0.0,
+        "no_face_frame_count": 900,
+        "no_face_frame_ratio": 1.0,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 1,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.014,
+            "end_seconds": 59.934,
+            "duration_seconds": 59.9867,
+            "frame_count": 900,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 59.9867,
+        "reacquisition_event_count": 0,
+        "mean_reacquisition_seconds": null,
+        "max_reacquisition_seconds": null,
+        "stable_segment_count": 0,
+        "stable_transition_count": 0,
+        "landmark_jitter_median": null,
+        "landmark_jitter_p95": null,
+        "mean_inference_ms": 1.06,
+        "p95_inference_ms": 3.889,
+        "wall_clock_seconds": 1.122,
+        "processing_throughput_fps": 801.853
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "0e53c02e8df059ae10dc16763b173e07e8a4800292e7a59294e6b5af34fbdd6f",
+          "expected": "0e53c02e8df059ae10dc16763b173e07e8a4800292e7a59294e6b5af34fbdd6f"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "max_valid_face_frame_ratio",
+          "label": "Expected difficult-face abstention",
+          "passed": true,
+          "actual": 0.0,
+          "expected": "<= 0.25"
+        },
+        {
+          "id": "min_dropout_run_count",
+          "label": "Expected tracking dropout runs",
+          "passed": true,
+          "actual": 1,
+          "expected": ">= 1"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    },
+    {
+      "media_id": "monbiot-cut-reacquisition",
+      "filename": "monbiot-interview-240p.webm",
+      "source_url": "https://commons.wikimedia.org/wiki/File:George_Monbiot_interview_with_The_Green_Interview.webm",
+      "source_sha1": "8b35e8ee0cfb380e92d53cd4d0111128a713f98d",
+      "license": "CC BY 2.5 (The Green Interview)",
+      "purpose": "Development case for close subjects, glasses, off-axis gaze, cuts, and a no-face insert.",
+      "dataset_role": "development",
+      "transform": {
+        "type": "identity"
+      },
+      "passed": true,
+      "start_seconds": 20.0,
+      "evaluation_duration_seconds": 60.0,
+      "measurements": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 792,
+        "valid_face_frame_ratio": 0.88,
+        "no_face_frame_count": 108,
+        "no_face_frame_ratio": 0.12,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 3,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.0,
+            "end_seconds": 0.0,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 12.666,
+            "end_seconds": 19.206,
+            "duration_seconds": 6.6067,
+            "frame_count": 99,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 6.607
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 34.721,
+            "end_seconds": 35.188,
+            "duration_seconds": 0.5337,
+            "frame_count": 8,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.534
+          }
+        ],
+        "longest_dropout_seconds": 6.6067,
+        "reacquisition_event_count": 2,
+        "mean_reacquisition_seconds": 3.5705,
+        "max_reacquisition_seconds": 6.607,
+        "stable_segment_count": 7,
+        "stable_transition_count": 784,
+        "landmark_jitter_median": 0.012651,
+        "landmark_jitter_p95": 0.031219,
+        "mean_inference_ms": 4.013,
+        "p95_inference_ms": 5.179,
+        "wall_clock_seconds": 3.938,
+        "processing_throughput_fps": 228.547
+      },
+      "repeatability": {
+        "runs": 2,
+        "passed": true,
+        "mismatches": []
+      },
+      "checks": [
+        {
+          "id": "exact_media_sha256",
+          "label": "Exact licensed input",
+          "passed": true,
+          "actual": "40936946ea6a5f05ca7af94734e08e329e3351d9c655fc7862ee02b179fdd040",
+          "expected": "40936946ea6a5f05ca7af94734e08e329e3351d9c655fc7862ee02b179fdd040"
+        },
+        {
+          "id": "exact_model_sha256",
+          "label": "Exact MediaPipe model artifact",
+          "passed": true,
+          "actual": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+          "expected": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+        },
+        {
+          "id": "exact_repeatability",
+          "label": "Exact repeated tracking metrics",
+          "passed": true,
+          "actual": [],
+          "expected": "no deterministic metric differences"
+        },
+        {
+          "id": "min_analyzed_fps",
+          "label": "Analyzed frame cadence",
+          "passed": true,
+          "actual": 15.0,
+          "expected": ">= 14.5"
+        },
+        {
+          "id": "min_valid_face_frame_ratio",
+          "label": "Valid single-face frames",
+          "passed": true,
+          "actual": 0.88,
+          "expected": ">= 0.7"
+        },
+        {
+          "id": "min_dropout_run_count",
+          "label": "Expected tracking dropout runs",
+          "passed": true,
+          "actual": 3,
+          "expected": ">= 1"
+        },
+        {
+          "id": "min_reacquisition_event_count",
+          "label": "Track reacquisition events",
+          "passed": true,
+          "actual": 2,
+          "expected": ">= 1"
+        },
+        {
+          "id": "max_reacquisition_seconds",
+          "label": "Track reacquisition time",
+          "passed": true,
+          "actual": 6.607,
+          "expected": "<= 15"
+        },
+        {
+          "id": "min_stable_transition_count",
+          "label": "Defensible stable-landmark transitions",
+          "passed": true,
+          "actual": 784,
+          "expected": ">= 300"
+        },
+        {
+          "id": "max_landmark_jitter_p95",
+          "label": "Stable-segment landmark jitter p95",
+          "passed": true,
+          "actual": 0.031219,
+          "expected": "<= 0.08"
+        },
+        {
+          "id": "max_multi_face_abstention_violations",
+          "label": "Multiple-face abstention violations",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        },
+        {
+          "id": "max_inconsistent_detection_count",
+          "label": "Detector output inconsistencies",
+          "passed": true,
+          "actual": 0,
+          "expected": "<= 0"
+        }
+      ]
+    }
+  ]
+}

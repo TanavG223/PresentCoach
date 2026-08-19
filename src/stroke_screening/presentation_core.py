@@ -5,6 +5,7 @@ from __future__ import annotations
 from dataclasses import asdict, dataclass, field
 from datetime import datetime, timezone
 import math
+from numbers import Real
 import re
 import secrets
 from statistics import fmean, median, pstdev
@@ -18,6 +19,9 @@ QUALITY_GOOD = "good"
 QUALITY_BAD = "bad"
 MIN_FEEDBACK_SECONDS = 30.0
 WINDOW_SECONDS = 15.0
+MIN_CONTACT_ELIGIBLE_RATIO = 0.80
+MIN_VISUAL_METRIC_ELIGIBLE_RATIO = 0.80
+MIN_VISUAL_METRIC_BUCKETS = 10
 PROHIBITED_FEEDBACK_TERMS = (
     "appearance",
     "attractive",
@@ -309,6 +313,57 @@ def _vision_frame_counts(sample: VisionSample) -> tuple[int, int, int, int]:
     return total, detected, eligible, contact
 
 
+def _finite_metric(value: object) -> float | None:
+    """Return a finite stored metric without treating booleans as numbers."""
+
+    if isinstance(value, bool) or not isinstance(value, Real):
+        return None
+    number = float(value)
+    return number if math.isfinite(number) else None
+
+
+def _visual_metric_coverage(
+    samples: Sequence[VisionSample],
+) -> tuple[int, int, int]:
+    """Return detected, complete-pose, and supported-expression buckets."""
+
+    detected = [sample for sample in samples if sample.face_detected]
+    pose_buckets = sum(
+        all(_finite_metric(value) is not None for value in (
+            sample.yaw_degrees,
+            sample.pitch_degrees,
+            sample.roll_degrees,
+            sample.face_center_x,
+            sample.face_center_y,
+        ))
+        for sample in detected
+    )
+    expression_pair_buckets = sum(
+        _finite_metric(sample.mouth_activity) is not None
+        and _finite_metric(sample.brow_activity) is not None
+        for sample in detected
+    )
+    # expression_change is retained as a legacy-compatible fallback for
+    # archives that predate separate mouth and brow activity fields.
+    expression_change_buckets = sum(
+        _finite_metric(sample.expression_change) is not None
+        for sample in detected
+    )
+    return (
+        len(detected),
+        pose_buckets,
+        max(expression_pair_buckets, expression_change_buckets),
+    )
+
+
+def _coverage_good(usable: int, detected: int) -> bool:
+    return bool(
+        usable >= MIN_VISUAL_METRIC_BUCKETS
+        and detected > 0
+        and usable / detected >= MIN_VISUAL_METRIC_ELIGIBLE_RATIO
+    )
+
+
 def _derived_quality_flags(
     samples: Sequence[VisionSample],
     audio_metrics: AudioMetrics,
@@ -319,6 +374,9 @@ def _derived_quality_flags(
     detected_frames = sum(item[1] for item in counts)
     eligible_frames = sum(item[2] for item in counts)
     face_ratio = detected_frames / total_frames if total_frames else 0.0
+    contact_eligible_ratio = (
+        eligible_frames / detected_frames if detected_frames else 0.0
+    )
     analyzed_fps = total_frames / max(duration, 1.0)
     audio_clear = bool(audio_metrics.pace_windows and audio_metrics.overall_words_per_minute > 0) and audio_metrics.waveform_rms >= 0.003
     exact_vision_counts = bool(samples) and all(
@@ -333,12 +391,26 @@ def _derived_quality_flags(
         and face_ratio >= 0.80
         and analyzed_fps >= 14.0
     )
-    detected_buckets = sum(sample.face_detected for sample in samples)
+    detected_buckets, pose_buckets, expression_buckets = _visual_metric_coverage(
+        samples
+    )
     return {
         "face_detected": QUALITY_GOOD if vision_good else QUALITY_BAD,
-        "eye_contact": QUALITY_GOOD if vision_good and eligible_frames > 0 else QUALITY_BAD,
-        "head_stability": QUALITY_GOOD if vision_good and detected_buckets >= 10 else QUALITY_BAD,
-        "expression_variety": QUALITY_GOOD if vision_good and detected_buckets >= 10 else QUALITY_BAD,
+        "eye_contact": (
+            QUALITY_GOOD
+            if vision_good and contact_eligible_ratio >= MIN_CONTACT_ELIGIBLE_RATIO
+            else QUALITY_BAD
+        ),
+        "head_stability": (
+            QUALITY_GOOD
+            if vision_good and _coverage_good(pose_buckets, detected_buckets)
+            else QUALITY_BAD
+        ),
+        "expression_variety": (
+            QUALITY_GOOD
+            if vision_good and _coverage_good(expression_buckets, detected_buckets)
+            else QUALITY_BAD
+        ),
         "audio_clear": QUALITY_GOOD if audio_clear else QUALITY_BAD,
     }
 
@@ -393,7 +465,7 @@ def analyze_session(
 
 
 def _numeric(values: Iterable[float | None]) -> list[float]:
-    return [float(value) for value in values if value is not None and math.isfinite(float(value))]
+    return [number for value in values if (number := _finite_metric(value)) is not None]
 
 
 def _longest_false_run(samples: Sequence[VisionSample]) -> dict[str, float] | None:

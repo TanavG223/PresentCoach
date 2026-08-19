@@ -32,7 +32,7 @@ def _checks(media_id: str, session, metrics: dict[str, object], digest: str) -> 
     common = [
         _check("Exact licensed input", digest == EXPECTED_SHA256[media_id], digest[:12], "SHA-256 matches manifest"),
         _check("Video decoded", session.duration_seconds > 0, round(session.duration_seconds, 2), "duration > 0 seconds"),
-        _check("Vision throughput", aggregate["analyzed_vision_fps"] >= 14.5, aggregate["analyzed_vision_fps"], ">= 14.5 analyzed FPS"),
+        _check("Analyzed media cadence", aggregate["analyzed_vision_fps"] >= 14.5, aggregate["analyzed_vision_fps"], ">= 14.5 sampled media FPS"),
     ]
     if media_id == "tarun-short-distance":
         return common + [

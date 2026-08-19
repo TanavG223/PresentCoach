@@ -1,10 +1,15 @@
+import hashlib
 from io import BytesIO
+import json
 from pathlib import Path
 from dataclasses import replace
 
 from stroke_screening.presentation_core import TranscriptWord, VisionSample, analyze_session, compute_metrics
 from stroke_screening.presentation_server import _serialize_archive, create_app
 from stroke_screening.presentation_store import PresentationArchive, PresentationStore, StoredPresentation
+
+
+ROOT = Path(__file__).resolve().parents[1]
 
 
 class MemoryKeys:
@@ -205,6 +210,63 @@ def test_test_lab_exposes_only_allowlisted_local_clips_and_reports(tmp_path: Pat
         assert client.get("/api/test-media/../private.webm/video").status_code == 404
         denied = client.get(
             "/api/test-media/tarun-short-distance/video",
+            headers={"Sec-Fetch-Site": "cross-site"},
+        )
+        assert denied.status_code == 403
+
+
+def test_tracking_test_media_is_manifest_allowlisted_integrity_checked_and_range_capable(
+    tmp_path: Path,
+):
+    keys = MemoryKeys()
+    store = PresentationStore(data_dir=tmp_path / "data", key_store=keys)
+    media = tmp_path / "media"
+    reports = tmp_path / "reports"
+    media.mkdir()
+    reports.mkdir()
+    manifest = json.loads(
+        (ROOT / "test_media" / "face_tracking_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    good_bytes = b"0123456789"
+    good = manifest["clips"][0]
+    good["filename"] = "range-test.webm"
+    good["sha256"] = hashlib.sha256(good_bytes).hexdigest()
+    bad = manifest["clips"][1]
+    bad["filename"] = "tampered-test.webm"
+    bad["sha256"] = hashlib.sha256(b"expected-content").hexdigest()
+    (media / good["filename"]).write_bytes(good_bytes)
+    (media / bad["filename"]).write_bytes(b"tampered-content")
+    (media / "private.webm").write_bytes(b"must-not-leak")
+    (media / "face_tracking_manifest.json").write_text(
+        json.dumps(manifest), encoding="utf-8"
+    )
+    app = create_app(
+        store=store,
+        llm=FakeLLM(),
+        recorder=FakeRecorder(),
+        test_media_dir=media,
+        reports_dir=reports,
+        testing=True,
+    )
+
+    with app.test_client() as client:
+        ranged = client.get(
+            f"/api/test-media/{good['id']}/video",
+            headers={"Range": "bytes=2-5"},
+        )
+        assert ranged.status_code == 206
+        assert ranged.data == b"2345"
+        assert ranged.headers["Content-Range"] == "bytes 2-5/10"
+        assert ranged.mimetype == "video/webm"
+
+        rejected = client.get(f"/api/test-media/{bad['id']}/video")
+        assert rejected.status_code == 404
+        assert bad["filename"] not in rejected.get_data(as_text=True)
+        assert client.get("/api/test-media/private/video").status_code == 404
+        denied = client.get(
+            f"/api/test-media/{good['id']}/video",
             headers={"Sec-Fetch-Site": "cross-site"},
         )
         assert denied.status_code == 403

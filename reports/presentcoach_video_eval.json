@@ -1,5 +1,5 @@
 {
-  "generated_at": "2026-08-19T16:43:17.679299Z",
+  "generated_at": "2026-08-19T19:44:01.782544Z",
   "evaluation_only": true,
   "used_for_training": false,
   "case_count": 3,
@@ -37,10 +37,10 @@
           "expected": "duration > 0 seconds"
         },
         {
-          "label": "Vision throughput",
+          "label": "Analyzed media cadence",
           "passed": true,
           "actual": 14.9,
-          "expected": ">= 14.5 analyzed FPS"
+          "expected": ">= 14.5 sampled media FPS"
         },
         {
           "label": "Short-session guardrail",
@@ -87,10 +87,10 @@
           "expected": "duration > 0 seconds"
         },
         {
-          "label": "Vision throughput",
+          "label": "Analyzed media cadence",
           "passed": true,
           "actual": 15.0,
-          "expected": ">= 14.5 analyzed FPS"
+          "expected": ">= 14.5 sampled media FPS"
         },
         {
           "label": "Feedback-duration input",
@@ -143,10 +143,10 @@
           "expected": "duration > 0 seconds"
         },
         {
-          "label": "Vision throughput",
+          "label": "Analyzed media cadence",
           "passed": true,
           "actual": 15.0,
-          "expected": ">= 14.5 analyzed FPS"
+          "expected": ">= 14.5 sampled media FPS"
         },
         {
           "label": "Sustained-duration input",

@@ -1,0 +1,257 @@
+{
+  "schema_version": 1,
+  "description": "Identity-free evaluation of PresentCoach's existing MediaPipe face-landmark tracker. These clips are evaluation inputs, never training data.",
+  "target_fps": 15,
+  "model": {
+    "filename": "face_landmarker.task",
+    "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+  },
+  "clips": [
+    {
+      "id": "stable-address-tracking",
+      "filename": "weekly-address-public-domain-full.webm",
+      "sha256": "17127f6dcfbc7e0913d42d75a01f4bba37a36c205047ffccd661bad5674e5ba2",
+      "source_url": "https://commons.wikimedia.org/wiki/File:2015-11-21_President_Obama%27s_Weekly_Address.webm",
+      "license": "U.S. federal public domain",
+      "purpose": "Measures sustained single-face tracking and normalized landmark stability on a fixed-camera presentation excerpt.",
+      "dataset_role": "regression",
+      "start_seconds": 15,
+      "duration_seconds": 20,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "min_valid_face_frame_ratio": 0.9,
+        "max_dropout_run_count": 5,
+        "max_longest_dropout_seconds": 0.5,
+        "min_stable_transition_count": 150,
+        "max_landmark_jitter_p95": 0.04,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "mixed-shot-reacquisition",
+      "filename": "stephen-hawking-nasa-public-domain.webm",
+      "sha256": "f342090520d248594a6819d7bee45960eeab9efac9c3551a0c73c76511cb5091",
+      "source_url": "https://commons.wikimedia.org/wiki/File:StephenHawking-videoselection-2018.webm",
+      "license": "U.S. public domain (NASA)",
+      "purpose": "Exercises dropouts and reacquisition across edits and changing shot composition.",
+      "dataset_role": "regression",
+      "start_seconds": 0,
+      "duration_seconds": 41,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "min_dropout_run_count": 1,
+        "min_reacquisition_event_count": 1,
+        "max_reacquisition_seconds": 20,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "distant-face-abstention",
+      "filename": "tarun-speaking-cc0.webm",
+      "sha256": "338f79f313972a57d064c835ca2b7c12421a034bd6e8529c3834ce20e7c13923",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Tarun_speaking_01.webm",
+      "license": "CC0 1.0",
+      "purpose": "Verifies that a small distant face is not turned into unsupported landmark measurements.",
+      "dataset_role": "regression",
+      "start_seconds": 0,
+      "duration_seconds": 8.5,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "max_valid_face_frame_ratio": 0.1,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "derived-two-face-abstention",
+      "filename": "weekly-address-public-domain-full.webm",
+      "sha256": "17127f6dcfbc7e0913d42d75a01f4bba37a36c205047ffccd661bad5674e5ba2",
+      "source_url": "https://commons.wikimedia.org/wiki/File:2015-11-21_President_Obama%27s_Weekly_Address.webm",
+      "license": "U.S. federal public domain",
+      "purpose": "Duplicates a fixed crop from the licensed source in memory to verify that multiple faces cause abstention.",
+      "dataset_role": "derived",
+      "start_seconds": 20,
+      "duration_seconds": 3,
+      "transform": {
+        "type": "duplicate_fixed_crop",
+        "crop_normalized": [0.36, 0.05, 0.72, 0.75]
+      },
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "min_multi_face_frame_ratio": 0.8,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "elsie-compressed-closeup",
+      "filename": "elsie-kanza-voa-240p.webm",
+      "sha256": "1c989395bb9d1fbd2b317ede458d34d818781fa9f6f690daa2dba58378d44d52",
+      "source_sha1": "67c462d848bbea8d7d5a9dbc439bd1748ee284a5",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Elsie_Kanza_Director,_Head_of_Africa_on_Grow_Africa.webm",
+      "license": "U.S. public domain (VOA; see source-page warning)",
+      "purpose": "Development case for a stable close face inside a compressed broadcast inset with graphics.",
+      "dataset_role": "development",
+      "start_seconds": 0,
+      "duration_seconds": 35.8,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "min_valid_face_frame_ratio": 0.9,
+        "max_dropout_run_count": 5,
+        "min_stable_transition_count": 300,
+        "max_landmark_jitter_p95": 0.06,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "niosh-scene-reacquisition-holdout",
+      "filename": "niosh-sudha-240p.webm",
+      "sha256": "aeb16967d03321455fd29569c8a4da7809c799d7b85caa7b883ff792c18aa3e8",
+      "source_sha1": "d72dfee4cdca61e03932e1212635d79f69069464",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Science_Speaks_-_Talking_to_Women_in_Science_(Sudha,_Medical_Officer).webm",
+      "license": "U.S. federal public domain (NIOSH)",
+      "purpose": "Holdout-designated close-speaker and no-face title-card test with real scene transitions.",
+      "dataset_role": "holdout",
+      "start_seconds": 40,
+      "duration_seconds": 60,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "min_valid_face_frame_ratio": 0.5,
+        "min_dropout_run_count": 1,
+        "min_reacquisition_event_count": 1,
+        "max_reacquisition_seconds": 20,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "picnic-portrait-multiple-people",
+      "filename": "white-house-picnic-240p.webm",
+      "sha256": "ef7de53bbe9f16750de49c7b029076c6fcd70d858ffe95f1b3692fff53e86aba",
+      "source_sha1": "163dca06a19af04b857ddaa296cc7c6fcce93a69",
+      "source_url": "https://commons.wikimedia.org/wiki/File:President_Trump_welcomes_members_of_the_House,_Senate_for_the_annual_Congressional_Picnic.webm",
+      "license": "U.S. federal public domain (White House)",
+      "purpose": "Development case for distant-group abstention in portrait framing.",
+      "dataset_role": "development",
+      "start_seconds": 0,
+      "duration_seconds": 35.3,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "max_valid_face_frame_ratio": 0.25,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "ala-distant-speaker-holdout",
+      "filename": "ala-jodi-jill-240p.webm",
+      "sha256": "c5fb48107684fd0409e01b20c0f22a7c4358d35f4a342dbec6a4479a8ada1bb9",
+      "source_sha1": "190794b60696dd6357cd22335c75db35c68ffb7e",
+      "source_url": "https://commons.wikimedia.org/wiki/File:ALA_2025_Speaker_Jodi_Jill,_Founder_of_National_Puzzle_Day_and_Puzzle_Month_talks_about_Puzzles_in_Libraries.webm",
+      "license": "CC0 1.0",
+      "purpose": "Holdout-designated pillarboxed distant-speaker case that should abstain instead of inventing face detail.",
+      "dataset_role": "holdout",
+      "start_seconds": 30,
+      "duration_seconds": 60,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "max_valid_face_frame_ratio": 0.25,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "immersion-occlusion-holdout",
+      "filename": "immersion-weekend-240p.webm",
+      "sha256": "dfa91f14ff24e3de45d91e3d14177f79c22d1b57977d292ff01e202593dc3f10",
+      "source_sha1": "597823336bb35073c8ee060056571e25a5c4cb63",
+      "source_url": "https://commons.wikimedia.org/wiki/File:About_Immersion_Weekend-10698293.webm",
+      "license": "CC BY-SA 3.0 (Tricia Fulks Kelley)",
+      "purpose": "Holdout-designated low-resolution montage with motion, occlusion, groups, and no-face intervals.",
+      "dataset_role": "holdout",
+      "start_seconds": 20,
+      "duration_seconds": 60,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "max_valid_face_frame_ratio": 0.5,
+        "min_dropout_run_count": 1,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "brianna-stage-motion",
+      "filename": "wikimania-brianna-240p.webm",
+      "sha256": "bb907e7278d2851ec182ada147ac1dcd2744aad5d5bf7d7f17038d3aa1948265",
+      "source_sha1": "e554b8501c1e7e63f4a7e8f5663514c912d7281b",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Wikimania_2008_-_Brianna_Laugher_-_Segment_of_State_of_Commons.ogv",
+      "license": "CC BY-SA 3.0 (Cary Bass)",
+      "purpose": "Development case proving that a distant, partly occluded stage face abstains instead of producing unreliable landmarks.",
+      "dataset_role": "development",
+      "start_seconds": 0,
+      "duration_seconds": 58.4,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "max_valid_face_frame_ratio": 0.1,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "fop-tiny-speaker-holdout",
+      "filename": "wikimania-fop-240p.webm",
+      "sha256": "0e53c02e8df059ae10dc16763b173e07e8a4800292e7a59294e6b5af34fbdd6f",
+      "source_sha1": "7b2967bad284e8e1cc094d3ea0a788fdb95fff56",
+      "source_url": "https://commons.wikimedia.org/wiki/File:Wikimania_2023_-_Plenary_-_18_August_-_Lightning_Talk_-_A_Survey_of_Freedom_Of_Panorama_(FOP)_in_the_Philippines.webm",
+      "license": "CC BY-SA 4.0 (Wikimania 2023)",
+      "purpose": "Holdout-designated slide-heavy case with distant stage and tiny inset speakers that should abstain.",
+      "dataset_role": "holdout",
+      "start_seconds": 70,
+      "duration_seconds": 60,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "max_valid_face_frame_ratio": 0.25,
+        "min_dropout_run_count": 1,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    },
+    {
+      "id": "monbiot-cut-reacquisition",
+      "filename": "monbiot-interview-240p.webm",
+      "sha256": "40936946ea6a5f05ca7af94734e08e329e3351d9c655fc7862ee02b179fdd040",
+      "source_sha1": "8b35e8ee0cfb380e92d53cd4d0111128a713f98d",
+      "source_url": "https://commons.wikimedia.org/wiki/File:George_Monbiot_interview_with_The_Green_Interview.webm",
+      "license": "CC BY 2.5 (The Green Interview)",
+      "purpose": "Development case for close subjects, glasses, off-axis gaze, cuts, and a no-face insert.",
+      "dataset_role": "development",
+      "start_seconds": 20,
+      "duration_seconds": 60,
+      "transform": {"type": "identity"},
+      "expectations": {
+        "min_analyzed_fps": 14.5,
+        "min_valid_face_frame_ratio": 0.7,
+        "min_dropout_run_count": 1,
+        "min_reacquisition_event_count": 1,
+        "max_reacquisition_seconds": 15,
+        "min_stable_transition_count": 300,
+        "max_landmark_jitter_p95": 0.08,
+        "max_multi_face_abstention_violations": 0,
+        "max_inconsistent_detection_count": 0
+      }
+    }
+  ]
+}

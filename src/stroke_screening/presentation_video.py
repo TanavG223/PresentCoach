@@ -18,6 +18,7 @@ import numpy as np
 from .presentation_audio import SAMPLE_RATE, WhisperCppTranscriber, audio_signal_metrics
 from .presentation_core import PresentationSession, TranscriptWord, analyze_session
 from .presentation_vision import PresentationVisionAnalyzer
+from .presentation_video_timing import frame_timestamp_seconds
 
 
 MAX_UPLOAD_BYTES = 512 * 1024 * 1024
@@ -154,15 +155,20 @@ class LocalVideoAnalyzer:
             source_fps = 30.0
         next_sample = 0.0
         frame_index = 0
+        previous_timestamp: float | None = None
         processed = 0
         try:
             while True:
                 ok, frame = capture.read()
                 if not ok:
                     break
-                timestamp = float(capture.get(cv2.CAP_PROP_POS_MSEC)) / 1000.0
-                if not math.isfinite(timestamp) or timestamp < 0:
-                    timestamp = frame_index / source_fps
+                timestamp = frame_timestamp_seconds(
+                    float(capture.get(cv2.CAP_PROP_POS_MSEC)),
+                    frame_index=frame_index,
+                    source_fps=source_fps,
+                    previous_seconds=previous_timestamp,
+                )
+                previous_timestamp = timestamp
                 frame_index += 1
                 if timestamp + (0.5 / source_fps) < next_sample:
                     continue

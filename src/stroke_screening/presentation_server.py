@@ -3,6 +3,7 @@
 from __future__ import annotations
 
 import argparse
+import hashlib
 import logging
 from pathlib import Path
 import secrets
@@ -27,7 +28,11 @@ from .presentation_store import (
     PresentationStore,
     StoredPresentation,
 )
-from .presentation_test_lab import TEST_MEDIA_BY_ID, test_lab_payload
+from .presentation_test_lab import (
+    TEST_MEDIA_BY_ID,
+    resolve_tracking_test_media,
+    test_lab_payload,
+)
 from .presentation_video import (
     LocalVideoAnalyzer,
     MAX_UPLOAD_BYTES,
@@ -148,6 +153,7 @@ def create_app(
     root = _project_root()
     app.extensions["presentation_test_media_dir"] = (test_media_dir or root / "test_media").resolve()
     app.extensions["presentation_reports_dir"] = (reports_dir or root / "reports").resolve()
+    app.extensions["presentation_test_media_hash_cache"] = {}
 
     @app.before_request
     def local_only():
@@ -288,15 +294,54 @@ def create_app(
         if request.headers.get("Sec-Fetch-Site", "same-origin") not in {"same-origin", "none"}:
             return jsonify(error="Cross-site test media requests are not allowed"), 403
         item = TEST_MEDIA_BY_ID.get(media_id)
-        if item is None:
-            return jsonify(error="Test clip not found"), 404
         directory = app.extensions["presentation_test_media_dir"]
-        path = directory / item["filename"]
-        if not path.is_file():
-            return jsonify(error="Test clip is not installed locally"), 404
+        if item is not None:
+            path = directory / item["filename"]
+            if not path.is_file():
+                return jsonify(error="Test clip is not installed locally"), 404
+            return send_from_directory(
+                directory,
+                item["filename"],
+                mimetype="video/webm",
+                conditional=True,
+            )
+
+        contract = resolve_tracking_test_media(
+            media_dir=directory, media_id=media_id
+        )
+        if contract is None:
+            return jsonify(error="Test clip not found"), 404
+        path = contract["path"]
+        expected_sha256 = contract["sha256"]
+        if not isinstance(path, Path) or not isinstance(expected_sha256, str):
+            return jsonify(error="Test clip not found"), 404
+        try:
+            stat = path.stat()
+        except OSError:
+            return jsonify(error="Test clip not found"), 404
+        fingerprint = (
+            str(path), stat.st_size, stat.st_mtime_ns, expected_sha256,
+        )
+        digest_cache = app.extensions["presentation_test_media_hash_cache"]
+        verified = digest_cache.get(media_id) == fingerprint
+        if not verified:
+            digest = hashlib.sha256()
+            try:
+                with path.open("rb") as source:
+                    for chunk in iter(lambda: source.read(1024 * 1024), b""):
+                        digest.update(chunk)
+            except OSError:
+                return jsonify(error="Test clip not found"), 404
+            verified = secrets.compare_digest(digest.hexdigest(), expected_sha256)
+            if verified:
+                digest_cache[media_id] = fingerprint
+            else:
+                digest_cache.pop(media_id, None)
+        if not verified:
+            return jsonify(error="Test clip not found"), 404
         return send_from_directory(
             directory,
-            item["filename"],
+            path.name,
             mimetype="video/webm",
             conditional=True,
         )
