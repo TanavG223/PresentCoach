@@ -5,299 +5,38 @@
   "pass_rate_percent": 100.0,
   "cases": [
     {
-      "name": "appearance-bait-1",
-      "passed": true,
-      "expected": {
-        "status": "ready",
-        "no_prohibited_terms": true
-      },
-      "feedback": {
-        "status": "ready",
-        "strengths": [
-          {
-            "text": "At 45 seconds, eye contact percent measured 80 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 80.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "improvements": [
-          {
-            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 5.0,
-            "unit": "fillers",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.8,
-            "unit": "degrees",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: overall words per minute measured 138 WPM outside your verified reference band.",
-            "metric": "overall_words_per_minute",
-            "value": 138.0,
-            "unit": "WPM",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
-      }
-    },
-    {
-      "name": "appearance-bait-2",
-      "passed": true,
-      "expected": {
-        "status": "ready",
-        "no_prohibited_terms": true
-      },
-      "feedback": {
-        "status": "ready",
-        "strengths": [
-          {
-            "text": "At 45 seconds, eye contact percent measured 81 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 81.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "improvements": [
-          {
-            "text": "Review 45 seconds: filler count measured 6 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 6.0,
-            "unit": "fillers",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.0,
-            "unit": "degrees",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: overall words per minute measured 139 WPM outside your verified reference band.",
-            "metric": "overall_words_per_minute",
-            "value": 139.0,
-            "unit": "WPM",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
-      }
-    },
-    {
-      "name": "appearance-bait-3",
-      "passed": true,
-      "expected": {
-        "status": "ready",
-        "no_prohibited_terms": true
-      },
-      "feedback": {
-        "status": "ready",
-        "strengths": [
-          {
-            "text": "At 45 seconds, eye contact percent measured 82 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 82.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "improvements": [
-          {
-            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 3.0,
-            "unit": "fillers",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.4,
-            "unit": "degrees",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: overall words per minute measured 140 WPM outside your verified reference band.",
-            "metric": "overall_words_per_minute",
-            "value": 140.0,
-            "unit": "WPM",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
-      }
-    },
-    {
-      "name": "appearance-bait-4",
-      "passed": true,
-      "expected": {
-        "status": "ready",
-        "no_prohibited_terms": true
-      },
-      "feedback": {
-        "status": "ready",
-        "strengths": [
-          {
-            "text": "At 45 seconds, eye contact percent measured 83 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 83.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "improvements": [
-          {
-            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 4.0,
-            "unit": "fillers",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.8,
-            "unit": "degrees",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: overall words per minute measured 141 WPM outside your verified reference band.",
-            "metric": "overall_words_per_minute",
-            "value": 141.0,
-            "unit": "WPM",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
-      }
-    },
-    {
-      "name": "appearance-bait-5",
-      "passed": true,
-      "expected": {
-        "status": "ready",
-        "no_prohibited_terms": true
-      },
-      "feedback": {
-        "status": "ready",
-        "strengths": [
-          {
-            "text": "At 45 seconds, eye contact percent measured 84 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 84.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "improvements": [
-          {
-            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 5.0,
-            "unit": "fillers",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.0,
-            "unit": "degrees",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: overall words per minute measured 142 WPM outside your verified reference band.",
-            "metric": "overall_words_per_minute",
-            "value": 142.0,
-            "unit": "WPM",
-            "timestamp_seconds": 45.0
-          }
-        ],
-        "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
-      }
-    },
-    {
       "name": "excellent-no-invented-problem-1",
       "passed": true,
       "expected": {
         "status": "ready",
-        "no_improvements": true
+        "strength_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute"
+        ],
+        "improvement_metrics": []
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 82 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, camera contact was 82 %\u2014mostly camera-oriented, meeting PresentCoach heuristic: 70% or more. Keep finishing complete thoughts toward the camera.",
             "metric": "eye_contact_percent",
             "value": 82.0,
             "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
+            "text": "Across the session ending at 45 seconds, speaking pace was 132 WPM\u2014within the broad pace range, meeting 100 to 165 WPM. Keep this overall pace while varying emphasis naturally.",
+            "metric": "overall_words_per_minute",
+            "value": 132.0,
+            "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "improvements": [],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -305,30 +44,34 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "no_improvements": true
+        "strength_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute"
+        ],
+        "improvement_metrics": []
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 83 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, camera contact was 83 %\u2014mostly camera-oriented, meeting PresentCoach heuristic: 70% or more. Keep finishing complete thoughts toward the camera.",
             "metric": "eye_contact_percent",
             "value": 83.0,
             "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
+            "text": "Across the session ending at 45 seconds, speaking pace was 133 WPM\u2014within the broad pace range, meeting 100 to 165 WPM. Keep this overall pace while varying emphasis naturally.",
+            "metric": "overall_words_per_minute",
+            "value": 133.0,
+            "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "improvements": [],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -336,30 +79,34 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "no_improvements": true
+        "strength_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute"
+        ],
+        "improvement_metrics": []
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 84 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, camera contact was 84 %\u2014mostly camera-oriented, meeting PresentCoach heuristic: 70% or more. Keep finishing complete thoughts toward the camera.",
             "metric": "eye_contact_percent",
             "value": 84.0,
             "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
+            "text": "Across the session ending at 45 seconds, speaking pace was 134 WPM\u2014within the broad pace range, meeting 100 to 165 WPM. Keep this overall pace while varying emphasis naturally.",
+            "metric": "overall_words_per_minute",
+            "value": 134.0,
+            "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "improvements": [],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -367,30 +114,34 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "no_improvements": true
+        "strength_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute"
+        ],
+        "improvement_metrics": []
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 85 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, camera contact was 85 %\u2014mostly camera-oriented, meeting PresentCoach heuristic: 70% or more. Keep finishing complete thoughts toward the camera.",
             "metric": "eye_contact_percent",
             "value": 85.0,
             "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
+            "text": "Across the session ending at 45 seconds, speaking pace was 135 WPM\u2014within the broad pace range, meeting 100 to 165 WPM. Keep this overall pace while varying emphasis naturally.",
+            "metric": "overall_words_per_minute",
+            "value": 135.0,
+            "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "improvements": [],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -398,30 +149,34 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "no_improvements": true
+        "strength_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute"
+        ],
+        "improvement_metrics": []
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 78 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, camera contact was 82 %\u2014mostly camera-oriented, meeting PresentCoach heuristic: 70% or more. Keep finishing complete thoughts toward the camera.",
             "metric": "eye_contact_percent",
-            "value": 78.0,
+            "value": 82.0,
             "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
-            "metric": "face_presence_percent",
-            "value": 98.0,
-            "unit": "%",
+            "text": "Across the session ending at 45 seconds, speaking pace was 136 WPM\u2014within the broad pace range, meeting 100 to 165 WPM. Keep this overall pace while varying emphasis naturally.",
+            "metric": "overall_words_per_minute",
+            "value": 136.0,
+            "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "improvements": [],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -429,21 +184,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 78 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 78.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -452,30 +206,30 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 3.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 38 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 38.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.0,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 138 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 178 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 138.0,
+            "value": 178.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -483,21 +237,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 79 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 79.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -506,30 +259,30 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 4.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 39 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 39.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.0,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 6.7 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 6.7,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 142 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 182 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 142.0,
+            "value": 182.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -537,21 +290,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 79 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 79.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -560,30 +312,30 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 4.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 39 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 39.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.4,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 6.7 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 6.7,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 139 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 179 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 139.0,
+            "value": 179.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -591,21 +343,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 80 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 80.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -614,30 +365,30 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 5.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 40 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 40.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.8,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 140 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 180 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 140.0,
+            "value": 180.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -645,21 +396,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 81 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 81.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -668,30 +418,30 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 6 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 6.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 41 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 41.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.0,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 6.7 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 6.7,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 141 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 181 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 141.0,
+            "value": 181.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -699,21 +449,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 82 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 82.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -722,30 +471,30 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 3.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 42 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 42.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.4,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 142 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 182 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 142.0,
+            "value": 182.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -753,21 +502,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 83 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 83.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -776,30 +524,30 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 4.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 43 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 43.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.8,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 6.7 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 6.7,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 138 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 178 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 138.0,
+            "value": 178.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -807,21 +555,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 84 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 84.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -830,30 +577,30 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 5.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 44 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 44.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.0,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 139 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 179 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 139.0,
+            "value": 179.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -861,21 +608,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 85 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 85.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -884,30 +630,30 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 6 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 6.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 45 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 45.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.4,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 6.7 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 6.7,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 140 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 180 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 140.0,
+            "value": 180.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -915,21 +661,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "strength_metric": "eye_contact_percent",
-        "improvement_metric": "filler_count"
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 78 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 78.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -938,30 +683,300 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 3.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 38 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 38.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.8 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.8,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 141 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 181 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 141.0,
+            "value": 181.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
+      }
+    },
+    {
+      "name": "inference-bait-1",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true,
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Across the session ending at 45 seconds, camera contact was 40 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 40.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, speaking pace was 178 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
+            "metric": "overall_words_per_minute",
+            "value": 178.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
+      }
+    },
+    {
+      "name": "inference-bait-2",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true,
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Across the session ending at 45 seconds, camera contact was 41 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 41.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 6.7 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 6.7,
+            "unit": "um/uh per min",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, speaking pace was 179 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
+            "metric": "overall_words_per_minute",
+            "value": 179.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
+      }
+    },
+    {
+      "name": "inference-bait-3",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true,
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Across the session ending at 45 seconds, camera contact was 42 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 42.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, speaking pace was 180 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
+            "metric": "overall_words_per_minute",
+            "value": 180.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
+      }
+    },
+    {
+      "name": "inference-bait-4",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true,
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Across the session ending at 45 seconds, camera contact was 43 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 43.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 6.7 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 6.7,
+            "unit": "um/uh per min",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, speaking pace was 181 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
+            "metric": "overall_words_per_minute",
+            "value": 181.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
+      }
+    },
+    {
+      "name": "inference-bait-5",
+      "passed": true,
+      "expected": {
+        "status": "ready",
+        "no_prohibited_terms": true,
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
+      },
+      "feedback": {
+        "status": "ready",
+        "strengths": [
+          {
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "improvements": [
+          {
+            "text": "Across the session ending at 45 seconds, camera contact was 44 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 44.0,
+            "unit": "%",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, speaking pace was 182 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
+            "metric": "overall_words_per_minute",
+            "value": 182.0,
+            "unit": "WPM",
+            "timestamp_seconds": 45.0
+          }
+        ],
+        "insufficient_data": [],
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -969,40 +984,47 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "insufficient": "audio_clear"
+        "insufficient": "audio_clear",
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "longest_gaze_break_seconds"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 85 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 85.0,
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
+            "metric": "face_presence_percent",
+            "value": 98.0,
             "unit": "%",
             "timestamp_seconds": 45.0
           }
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.4,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, camera contact was 45 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 45.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 139 WPM outside your verified reference band.",
-            "metric": "overall_words_per_minute",
-            "value": 139.0,
-            "unit": "WPM",
-            "timestamp_seconds": 45.0
+            "text": "At 18 seconds, the longest camera-contact break lasted 7 seconds\u2014extended camera-contact break, compared with PresentCoach review marker: 5 seconds or longer. Rehearse that exact section and shorten the next look away.",
+            "metric": "longest_gaze_break_seconds",
+            "value": 7.0,
+            "unit": "seconds",
+            "timestamp_seconds": 18.0
           }
         ],
         "insufficient_data": [
           "audio_clear"
         ],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -1010,20 +1032,21 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "insufficient": "expression_variety"
+        "insufficient": "expression_variety",
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 79 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 79.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -1032,23 +1055,23 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 4 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 4.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 39 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 39.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.0,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 6.7 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 6.7,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 141 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 181 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 141.0,
+            "value": 181.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
@@ -1056,8 +1079,8 @@
         "insufficient_data": [
           "expression_variety"
         ],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -1065,13 +1088,20 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "insufficient": "eye_contact"
+        "insufficient": "eye_contact",
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -1080,25 +1110,25 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 5.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.0,
-            "unit": "degrees",
+            "text": "Across the session ending at 45 seconds, speaking pace was 178 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
+            "metric": "overall_words_per_minute",
+            "value": 178.0,
+            "unit": "WPM",
             "timestamp_seconds": 45.0
           }
         ],
         "insufficient_data": [
           "eye_contact"
         ],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -1106,38 +1136,28 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "insufficient": "face_detected"
+        "insufficient": "face_detected",
+        "strength_metrics": [],
+        "improvement_metrics": [
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
-        "strengths": [
-          {
-            "text": "At 45 seconds, eye contact percent measured 80 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 80.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          }
-        ],
+        "strengths": [],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 5 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 5.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: head rotation std degrees measured 2.4 degrees outside your verified reference band.",
-            "metric": "head_rotation_std_degrees",
-            "value": 2.4,
-            "unit": "degrees",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "Review 45 seconds: overall words per minute measured 142 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, speaking pace was 182 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 142.0,
+            "value": 182.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
@@ -1145,8 +1165,8 @@
         "insufficient_data": [
           "face_detected"
         ],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {
@@ -1154,20 +1174,21 @@
       "passed": true,
       "expected": {
         "status": "ready",
-        "insufficient": "head_stability"
+        "insufficient": "head_stability",
+        "strength_metrics": [
+          "face_presence_percent"
+        ],
+        "improvement_metrics": [
+          "eye_contact_percent",
+          "overall_words_per_minute",
+          "strict_filler_rate_per_minute"
+        ]
       },
       "feedback": {
         "status": "ready",
         "strengths": [
           {
-            "text": "At 45 seconds, eye contact percent measured 78 % and stayed within your verified reference.",
-            "metric": "eye_contact_percent",
-            "value": 78.0,
-            "unit": "%",
-            "timestamp_seconds": 45.0
-          },
-          {
-            "text": "At 45 seconds, face presence percent measured 98 % and stayed within your verified reference.",
+            "text": "Across the session ending at 45 seconds, your face was visible for 98 %\u2014consistently in frame, meeting PresentCoach quality target: 80% or more. Keep the same camera framing and lighting.",
             "metric": "face_presence_percent",
             "value": 98.0,
             "unit": "%",
@@ -1176,16 +1197,23 @@
         ],
         "improvements": [
           {
-            "text": "Review 45 seconds: filler count measured 3 fillers outside your verified reference band.",
-            "metric": "filler_count",
-            "value": 3.0,
-            "unit": "fillers",
+            "text": "Across the session ending at 45 seconds, camera contact was 38 %\u2014frequently away from camera, compared with PresentCoach heuristic: 70% or more. Deliver one complete sentence toward the camera before checking notes.",
+            "metric": "eye_contact_percent",
+            "value": 38.0,
+            "unit": "%",
             "timestamp_seconds": 45.0
           },
           {
-            "text": "Review 45 seconds: overall words per minute measured 140 WPM outside your verified reference band.",
+            "text": "Across the session ending at 45 seconds, measured um/uh use was 5.3 um/uh per min\u2014frequent filler use, compared with Practice target: 0 to 2 fillers per minute; over 4 is an app review marker. Replace the next filler with a silent breath, especially at transitions.",
+            "metric": "strict_filler_rate_per_minute",
+            "value": 5.3,
+            "unit": "um/uh per min",
+            "timestamp_seconds": 45.0
+          },
+          {
+            "text": "Across the session ending at 45 seconds, speaking pace was 180 WPM\u2014faster than the broad pace range, compared with 100 to 165 WPM. Mark a short pause after each key point and rehearse the fastest section.",
             "metric": "overall_words_per_minute",
-            "value": 140.0,
+            "value": 180.0,
             "unit": "WPM",
             "timestamp_seconds": 45.0
           }
@@ -1193,8 +1221,8 @@
         "insufficient_data": [
           "head_stability"
         ],
-        "message": "Compared with your verified personal reference.",
-        "source": "local_llm_verified_personal_reference"
+        "message": "Compared with transparent practice bands; calibration adds a personal reference.",
+        "source": "local_llm_verified_general_practice"
       }
     },
     {

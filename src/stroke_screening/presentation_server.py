@@ -40,13 +40,66 @@ LOGGER = logging.getLogger("presentcoach")
 DEFAULT_HOST = "127.0.0.1"
 DEFAULT_PORT = 8765
 
+FEEDBACK_METRIC_QUALITY = {
+    "eye_contact_percent": "eye_contact",
+    "longest_gaze_break_seconds": "eye_contact",
+    "face_presence_percent": "face_detected",
+    "head_rotation_std_degrees": "head_stability",
+    "head_position_std_percent": "head_stability",
+    "expression_variety_index": "expression_variety",
+    "overall_words_per_minute": "audio_clear",
+    "window_words_per_minute": "audio_clear",
+    "filler_count": "audio_clear",
+    "filler_rate_per_minute": "audio_clear",
+    "strict_filler_count": "audio_clear",
+    "strict_filler_rate_per_minute": "audio_clear",
+    "strict_filler_cluster_count": "audio_clear",
+    "pauses_over_2_seconds": "audio_clear",
+    "pauses_over_3_seconds": "audio_clear",
+    "long_pause_rate_per_minute": "audio_clear",
+    "longest_pause_seconds": "audio_clear",
+}
+
 
 def _project_root() -> Path:
     return Path(__file__).resolve().parents[2]
 
 
 def _serialize_archive(archive) -> list[dict[str, object]]:
-    return [item.to_dict() for item in archive.sessions]
+    documents: list[dict[str, object]] = []
+    for item in archive.sessions:
+        document = item.to_dict()
+        # Older encrypted sessions remain readable while gaining newly added
+        # derived rates/events. Raw transcript and vision samples are the
+        # source of truth, so this migration is deterministic and read-only.
+        document["metrics"] = compute_metrics(item.session)
+        document["session"]["quality_flags"] = document["metrics"]["quality_flags"]
+        feedback = document.get("feedback")
+        quality = document["metrics"]["quality_flags"]
+        if isinstance(feedback, dict) and feedback.get("status") == "ready":
+            claims = [
+                claim
+                for group in (feedback.get("strengths", ()), feedback.get("improvements", ()))
+                if isinstance(group, list)
+                for claim in group
+                if isinstance(claim, dict)
+            ]
+            if any(
+                quality.get(FEEDBACK_METRIC_QUALITY.get(str(claim.get("metric")))) != "good"
+                for claim in claims
+                if FEEDBACK_METRIC_QUALITY.get(str(claim.get("metric")))
+            ):
+                document["feedback"] = {
+                    "status": "calibration_required",
+                    "strengths": [], "improvements": [],
+                    "insufficient_data": [
+                        name for name, state in quality.items() if state != "good"
+                    ],
+                    "message": "Saved feedback used a metric that no longer passes the current quality gate.",
+                    "source": "guardrail",
+                }
+        documents.append(document)
+    return documents
 
 
 def create_app(
@@ -272,7 +325,8 @@ def create_app(
             return jsonify(error="Record a baseline before confirming it"), 409
         if candidate.session.duration_seconds < 30:
             return jsonify(error="The baseline must be at least 30 seconds"), 422
-        if any(state != "good" for state in candidate.session.quality_flags.values()):
+        current_quality = compute_metrics(candidate.session)["quality_flags"]
+        if any(state != "good" for state in current_quality.values()):
             return jsonify(error="The baseline has insufficient face or audio data; record it again"), 422
         current_store().update_calibration(profile_id, {
             "baseline_session_id": candidate.session.session_id,
@@ -291,7 +345,8 @@ def create_app(
         )
         if stored is None:
             return jsonify(error="The presentation session was not found"), 404
-        prepared = prepare_feedback_metrics(stored.metrics, calibration_status(archive))
+        metrics = compute_metrics(stored.session)
+        prepared = prepare_feedback_metrics(metrics, calibration_status(archive))
         feedback = generate_feedback(
             prepared, app.extensions["presentation_llm"]
         ).to_dict()

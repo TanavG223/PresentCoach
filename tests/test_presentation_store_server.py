@@ -1,9 +1,10 @@
 from io import BytesIO
 from pathlib import Path
+from dataclasses import replace
 
-from stroke_screening.presentation_core import TranscriptWord, VisionSample, analyze_session
-from stroke_screening.presentation_server import create_app
-from stroke_screening.presentation_store import PresentationStore
+from stroke_screening.presentation_core import TranscriptWord, VisionSample, analyze_session, compute_metrics
+from stroke_screening.presentation_server import _serialize_archive, create_app
+from stroke_screening.presentation_store import PresentationArchive, PresentationStore, StoredPresentation
 
 
 class MemoryKeys:
@@ -15,7 +16,17 @@ class MemoryKeys:
 
 class FakeLLM:
     def status(self): return {"available": True, "installed": True, "model": "fake"}
-    def complete_json(self, **_kwargs): return {"strengths": [], "improvements": [], "insufficient_data": []}
+    def complete_json(self, **_kwargs):
+        return {
+            "strengths": [
+                {"text": "100 % at 31 seconds", "metric": "eye_contact_percent", "value": 100, "unit": "%", "timestamp_seconds": 31},
+                {"text": "0 um/uh per min at 31 seconds", "metric": "strict_filler_rate_per_minute", "value": 0, "unit": "um/uh per min", "timestamp_seconds": 31},
+            ],
+            "improvements": [
+                {"text": "60 WPM at 31 seconds", "metric": "overall_words_per_minute", "value": 60, "unit": "WPM", "timestamp_seconds": 31},
+            ],
+            "insufficient_data": [],
+        }
 
 
 class FakeRecorder:
@@ -36,6 +47,8 @@ class FakeVideoAnalyzer:
                 roll_degrees=0.0, face_center_x=0.5, face_center_y=0.5,
                 mouth_activity=0.1, brow_activity=0.1,
                 expression_change=0.01, inference_ms=1.0,
+                detected_frame_count=15, contact_frame_count=15,
+                contact_eligible_frame_count=15,
             )
             for second in range(31)
         )
@@ -121,6 +134,37 @@ def test_uploaded_video_is_analyzed_locally_without_becoming_a_baseline(tmp_path
         )
         assert invalid.status_code == 415
         assert analyzer.calls == 1
+
+
+def test_legacy_bucket_feedback_is_invalidated_until_regenerated(tmp_path: Path):
+    source = tmp_path / "legacy.webm"
+    source.write_bytes(b"local-video")
+    session = FakeVideoAnalyzer().analyze(source)
+    legacy = replace(
+        session,
+        vision_metrics=tuple(
+            replace(
+                sample,
+                detected_frame_count=None,
+                contact_frame_count=None,
+                contact_eligible_frame_count=None,
+            )
+            for sample in session.vision_metrics
+        ),
+    )
+    feedback = {
+        "status": "ready", "source": "local_llm_verified_descriptive",
+        "strengths": [{"metric": "eye_contact_percent"}],
+        "improvements": [], "insufficient_data": [],
+    }
+    archive = PresentationArchive(
+        "a" * 32, "Tanav",
+        (StoredPresentation(legacy, compute_metrics(session), feedback),),
+        {},
+    )
+    document = _serialize_archive(archive)[0]
+    assert document["session"]["quality_flags"]["eye_contact"] == "bad"
+    assert document["feedback"]["status"] == "calibration_required"
 
 
 def test_test_lab_exposes_only_allowlisted_local_clips_and_reports(tmp_path: Path):

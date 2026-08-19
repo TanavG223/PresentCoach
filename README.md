@@ -49,9 +49,10 @@ Audio is captured locally at 16 kHz mono. Raw audio is discarded after
 transcription. Stored results include:
 
 - full word-level transcript with timestamps;
-- `um`, `uh`, `like`, `you know`, and `so` occurrences;
+- strict `um`/`uh` counts plus separately tracked `like`, `you know`, and `so` phrases;
 - words per minute in 15-second windows;
-- pauses longer than two seconds and total duration.
+- gaps between Whisper word timestamps longer than two seconds and total
+  duration. These are transcript gaps, not waveform-verified silence.
 
 You can also choose **Upload video** to analyze an existing MP4, MOV, M4V, or
 WebM file. Imports use the same MediaPipe, Whisper, metric, encryption, and LLM
@@ -65,21 +66,34 @@ The main public functions live in
 2. `compute_metrics(session)` creates aggregates and notable moments.
 3. `generate_feedback(metrics, llm)` creates and verifies structured feedback.
 
-## Measurement trust gate
+## Transparent coaching policy
 
-PresentCoach deliberately does not ship universal “good speaker” thresholds.
-Any quality-approved recording of at least 30 seconds receives neutral,
-number-and-timestamp-backed observations immediately. Personal comparative
-language requires:
+Any quality-approved recording of at least 30 seconds receives actionable,
+number-and-time-backed coaching immediately. Python applies a versioned,
+transparent default policy before the local LLM sees the metrics:
+
+- 100–165 WPM is the broad speaking-pace reference;
+- 0–2 measured `um`/`uh` occurrences per minute is the practice target, while
+  over 4 per minute is called frequent;
+- 70% camera orientation and five-second gaze breaks are explicitly labeled
+  PresentCoach product heuristics, not universal scientific norms;
+- two-second transcript gaps remain neutral; only longer or repeated gaps are
+  review markers.
+
+The pace and filler targets follow [Microsoft Speaker
+Coach](https://support.microsoft.com/en-US/PowerPoint/suggestions-from-speaker-coach)
+and [Trent University presentation
+guidance](https://www.trentu.ca/academicskills/how-guides/how-present-university-and-beyond/delivering-oral-presentation-public-speaking).
+The camera and event-duration bands are disclosed app defaults. Personal
+comparative language additionally requires:
 
 1. one recording of at least 30 seconds to inspect raw baseline numbers;
 2. explicit confirmation of that personal reference;
 3. two nearly identical recordings whose key metrics pass declared
    repeatability tolerances.
 
-Until that sequence succeeds, the LLM labels its output descriptive and never
-claims a metric is good, bad, inside a reference, or outside one. Calibration
-upgrades the same panel to verified personal-reference comparisons.
+Calibration upgrades the same panel with verified personal-reference
+comparisons; it is not required to receive default-policy coaching.
 
 ## LLM guardrails
 
@@ -88,6 +102,10 @@ upgrades the same panel to verified personal-reference comparisons.
   discarded.
 - No comments on appearance, accent, voice quality, personality, or anything
   unmeasured.
+- No claims about confidence, nervousness, posture, or reading from notes.
+  Face landmarks measure camera/head behavior, not those hidden causes. Full
+  posture feedback remains unavailable until a quality-gated body-pose model
+  is added.
 - Bad-quality metrics are labeled insufficient rather than guessed.
 - Sessions shorter than 30 seconds are refused for feedback.
 - Feedback describes the recording and never scores or grades the person.
@@ -100,7 +118,8 @@ Run the 30-case adversarial evaluation:
 
 The machine-readable result is
 `reports/presentcoach_llm_eval.json` and includes grounded, excellent-session,
-missing-data, short-session, and appearance-bait cases.
+missing-data, short-session, and appearance/accent/confidence/reading/posture
+inference-bait cases. Expected and returned metric sets must match exactly.
 
 ## Reproducible public-domain video tests
 

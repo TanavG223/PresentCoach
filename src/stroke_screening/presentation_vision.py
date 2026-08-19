@@ -188,6 +188,8 @@ class PresentationVisionAnalyzer:
                     face_center_x=None, face_center_y=None,
                     mouth_activity=None, brow_activity=None,
                     expression_change=None, inference_ms=None,
+                    detected_frame_count=0, contact_frame_count=0,
+                    contact_eligible_frame_count=0,
                 ))
                 continue
             detected = [frame for frame in selected if frame.face_detected]
@@ -195,7 +197,7 @@ class PresentationVisionAnalyzer:
             buckets.append(VisionSample(
                 timestamp_seconds=float(second),
                 frame_count=len(selected),
-                face_detected=len(detected) >= max(1, len(selected) // 2),
+                face_detected=len(detected) * 2 >= len(selected),
                 eye_contact=(sum(value is True for value in eye_values) >= max(1, len(eye_values) / 2)) if eye_values else None,
                 gaze_horizontal=_mean_or_none(frame.gaze_horizontal for frame in detected),
                 gaze_vertical=_mean_or_none(frame.gaze_vertical for frame in detected),
@@ -208,6 +210,9 @@ class PresentationVisionAnalyzer:
                 brow_activity=_mean_or_none(frame.brow_activity for frame in detected),
                 expression_change=_mean_or_none(frame.expression_change for frame in detected),
                 inference_ms=_mean_or_none(frame.inference_ms for frame in selected),
+                detected_frame_count=len(detected),
+                contact_frame_count=sum(value is True for value in eye_values),
+                contact_eligible_frame_count=len(eye_values),
             ))
         return tuple(buckets)
 
