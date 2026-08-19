@@ -68,15 +68,18 @@ The main public functions live in
 ## Measurement trust gate
 
 PresentCoach deliberately does not ship universal “good speaker” thresholds.
-The UI requires:
+Any quality-approved recording of at least 30 seconds receives neutral,
+number-and-timestamp-backed observations immediately. Personal comparative
+language requires:
 
 1. one recording of at least 30 seconds to inspect raw baseline numbers;
 2. explicit confirmation of that personal reference;
 3. two nearly identical recordings whose key metrics pass declared
    repeatability tolerances.
 
-The LLM panel stays locked until that sequence succeeds. This separates
-instrument repeatability from storytelling by the model.
+Until that sequence succeeds, the LLM labels its output descriptive and never
+claims a metric is good, bad, inside a reference, or outside one. Calibration
+upgrades the same panel to verified personal-reference comparisons.
 
 ## LLM guardrails
 

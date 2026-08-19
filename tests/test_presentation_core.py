@@ -7,6 +7,7 @@ from stroke_screening.presentation_core import (
     compute_metrics,
     generate_feedback,
 )
+from stroke_screening.presentation_calibration import prepare_feedback_metrics
 
 
 def vision_samples(seconds=40):
@@ -66,8 +67,32 @@ def test_feedback_refuses_short_recording_before_llm():
     assert result.status == "refused_short_session"
 
 
-def test_feedback_refuses_uncalibrated_metrics_before_llm():
-    result = generate_feedback(
-        {"duration_seconds": 60, "calibration_ready": False}, NeverCalledLLM()
+class DescriptiveLLM:
+    def complete_json(self, **_kwargs):
+        return {
+            "strengths": [{
+                "text": "Face presence was 100% at 40 seconds.",
+                "metric": "face_presence_percent", "value": 100.0,
+                "unit": "%", "timestamp_seconds": 40.0,
+            }],
+            "improvements": [{
+                "text": "The contact break was 1 second at 0 seconds.",
+                "metric": "longest_gaze_break_seconds", "value": 1.0,
+                "unit": "seconds", "timestamp_seconds": 0.0,
+            }],
+            "insufficient_data": ["audio_clear"],
+        }
+
+
+def test_feedback_without_calibration_is_neutral_and_evidence_locked():
+    session = analyze_session(
+        vision_samples(),
+        {"words": [], "duration_seconds": 40, "waveform_rms": 0},
     )
-    assert result.status == "calibration_required"
+    metrics = prepare_feedback_metrics(compute_metrics(session), {"ready": False})
+    result = generate_feedback(metrics, DescriptiveLLM())
+    assert result.status == "ready"
+    assert result.source == "local_llm_verified_descriptive"
+    assert result.strengths[0].text == "At 40 seconds, face presence measured 100 %."
+    assert "verified reference" not in result.strengths[0].text
+    assert result.insufficient_data == ("audio_clear",)

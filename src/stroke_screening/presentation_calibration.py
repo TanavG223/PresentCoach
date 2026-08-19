@@ -123,7 +123,49 @@ def prepare_feedback_metrics(
     prepared = dict(metrics)
     prepared["calibration_ready"] = calibration.get("ready") is True
     if calibration.get("ready") is not True:
+        aggregate = metrics.get("aggregate", {})
+        quality = metrics.get("quality_flags", {})
+        timeline = metrics.get("timeline", {})
+        if not isinstance(aggregate, Mapping) or not isinstance(quality, Mapping):
+            return prepared
+        observations: list[dict[str, object]] = []
+        quality_metrics = {
+            "face_detected": ("face_presence_percent",),
+            "eye_contact": ("eye_contact_percent",),
+            "head_stability": (
+                "head_rotation_std_degrees", "head_position_std_percent",
+            ),
+            "expression_variety": ("expression_variety_index",),
+            "audio_clear": (
+                "overall_words_per_minute", "filler_count",
+                "pauses_over_2_seconds", "longest_pause_seconds",
+            ),
+        }
+        for flag, names in quality_metrics.items():
+            if quality.get(flag) != "good":
+                continue
+            for name in names:
+                if name in aggregate:
+                    observations.append({"metric": name, "role": "strength"})
+        if isinstance(timeline, Mapping):
+            gaze = timeline.get("longest_gaze_break")
+            if quality.get("eye_contact") == "good" and isinstance(gaze, Mapping):
+                observations.append({
+                    "metric": "longest_gaze_break_seconds", "role": "improvement",
+                })
+            if quality.get("audio_clear") == "good":
+                if timeline.get("pace_spikes"):
+                    observations.append({
+                        "metric": "window_words_per_minute", "role": "improvement",
+                    })
+                if timeline.get("filler_clusters"):
+                    observations.append({
+                        "metric": "filler_cluster_count", "role": "improvement",
+                    })
+        prepared["feedback_mode"] = "descriptive"
+        prepared["role_hints"] = observations
         return prepared
+    prepared["feedback_mode"] = "personal_reference"
     reference = calibration.get("baseline", {})
     aggregate = metrics.get("aggregate", {})
     if not isinstance(reference, Mapping) or not isinstance(aggregate, Mapping):

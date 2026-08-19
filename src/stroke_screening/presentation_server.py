@@ -280,6 +280,24 @@ def create_app(
         })
         return jsonify(calibration=calibration_status(current_store().load_profile(profile_id)))
 
+    @app.post("/api/profiles/<profile_id>/sessions/<session_id>/feedback")
+    def regenerate_session_feedback(profile_id: str, session_id: str):
+        if current_recorder().is_active() or current_video_analyzer().is_active():
+            return jsonify(error="Wait for the active recording or video analysis to finish"), 409
+        archive = current_store().load_profile(profile_id)
+        stored = next(
+            (item for item in archive.sessions if item.session.session_id == session_id),
+            None,
+        )
+        if stored is None:
+            return jsonify(error="The presentation session was not found"), 404
+        prepared = prepare_feedback_metrics(stored.metrics, calibration_status(archive))
+        feedback = generate_feedback(
+            prepared, app.extensions["presentation_llm"]
+        ).to_dict()
+        current_store().replace_feedback(profile_id, session_id, feedback)
+        return jsonify(feedback=feedback)
+
     @app.post("/api/recordings/start")
     def start_recording():
         document = request.get_json(silent=True)

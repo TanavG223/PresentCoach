@@ -1,4 +1,4 @@
-from stroke_screening.presentation_calibration import calibration_status
+from stroke_screening.presentation_calibration import calibration_status, prepare_feedback_metrics
 from stroke_screening.presentation_core import TranscriptWord, VisionSample, analyze_session, compute_metrics
 from stroke_screening.presentation_store import PresentationArchive, StoredPresentation
 
@@ -34,3 +34,13 @@ def test_short_baseline_can_be_re_recorded():
         {"baseline_session_id": short.session.session_id, "baseline_confirmed": False},
     )
     assert calibration_status(archive)["stage"] == "record_baseline"
+
+
+def test_uncalibrated_feedback_uses_neutral_observation_hints():
+    item = stored("practice")
+    prepared = prepare_feedback_metrics(item.metrics, {"ready": False})
+    assert prepared["feedback_mode"] == "descriptive"
+    roles = {(hint["metric"], hint["role"]) for hint in prepared["role_hints"]}
+    assert ("face_presence_percent", "strength") in roles
+    assert ("overall_words_per_minute", "strength") in roles
+    assert "personal_reference" not in prepared

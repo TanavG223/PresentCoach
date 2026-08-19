@@ -102,7 +102,14 @@ def test_uploaded_video_is_analyzed_locally_without_becoming_a_baseline(tmp_path
         assert document["session"]["note"] == "Public-domain test"
         assert document["metrics"]["aggregate"]["analyzed_vision_fps"] == 15.0
         assert document["calibration"]["stage"] == "record_baseline"
+        assert document["feedback"]["status"] == "ready"
         assert analyzer.calls == 1
+        refreshed = client.post(
+            f"/api/profiles/{profile['id']}/sessions/{document['session']['session_id']}/feedback",
+            json={}, headers={"X-CSRF-Token": csrf},
+        )
+        assert refreshed.status_code == 200
+        assert refreshed.get_json()["feedback"]["status"] == "ready"
         invalid = client.post(
             "/api/videos/analyze",
             data={
