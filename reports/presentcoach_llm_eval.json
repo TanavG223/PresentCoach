@@ -1,11 +1,32 @@
 {
+  "schema_version": 2,
+  "generated_at": "2026-08-20T06:20:02+00:00",
+  "evaluation_only": true,
+  "used_for_training": false,
   "model": "presentcoach-local:latest",
+  "model_digest": "c1170a85745314ec402225035cdfe27f723a73c285b702039727d618d028771c",
+  "artifacts": {
+    "modelfile_sha256": "de90330f40f038e86241356278126a41d69429cc728fea5a618f8130c8504037",
+    "evaluator_sha256": "50549a0b5971c45b18454f00af51f92d405575de597ccc7a9a55e955dd2cc16e",
+    "feedback_schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+    "case_contract_sha256": "398ee5fc7cf697ef3b98d5517c8ad17c77815c5ed0986e1952db2a8542bdfa7d",
+    "feedback_policy_sha256": "5450d7afdfbed3d685524a03ac1ea8221e48fa89dda2f26e4dfc7fdb1df56227"
+  },
+  "case_categories": {
+    "excellent": 5,
+    "grounded": 10,
+    "inference_bait": 5,
+    "missing_quality": 5,
+    "short_refusal": 5
+  },
   "case_count": 30,
   "passed": 30,
   "pass_rate_percent": 100.0,
+  "cases_sha256": "027fc5e546424fd6b96225d54fef07b3ca9c3f7b3d458976c9a846e756f65664",
   "cases": [
     {
       "name": "excellent-no-invented-problem-1",
+      "category": "excellent",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -41,6 +62,7 @@
     },
     {
       "name": "excellent-no-invented-problem-2",
+      "category": "excellent",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -76,6 +98,7 @@
     },
     {
       "name": "excellent-no-invented-problem-3",
+      "category": "excellent",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -111,6 +134,7 @@
     },
     {
       "name": "excellent-no-invented-problem-4",
+      "category": "excellent",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -146,6 +170,7 @@
     },
     {
       "name": "excellent-no-invented-problem-5",
+      "category": "excellent",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -181,6 +206,7 @@
     },
     {
       "name": "grounded-1",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -234,6 +260,7 @@
     },
     {
       "name": "grounded-10",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -287,6 +314,7 @@
     },
     {
       "name": "grounded-2",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -340,6 +368,7 @@
     },
     {
       "name": "grounded-3",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -393,6 +422,7 @@
     },
     {
       "name": "grounded-4",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -446,6 +476,7 @@
     },
     {
       "name": "grounded-5",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -499,6 +530,7 @@
     },
     {
       "name": "grounded-6",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -552,6 +584,7 @@
     },
     {
       "name": "grounded-7",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -605,6 +638,7 @@
     },
     {
       "name": "grounded-8",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -658,6 +692,7 @@
     },
     {
       "name": "grounded-9",
+      "category": "grounded",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -711,6 +746,7 @@
     },
     {
       "name": "inference-bait-1",
+      "category": "inference_bait",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -765,6 +801,7 @@
     },
     {
       "name": "inference-bait-2",
+      "category": "inference_bait",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -819,6 +856,7 @@
     },
     {
       "name": "inference-bait-3",
+      "category": "inference_bait",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -873,6 +911,7 @@
     },
     {
       "name": "inference-bait-4",
+      "category": "inference_bait",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -927,6 +966,7 @@
     },
     {
       "name": "inference-bait-5",
+      "category": "inference_bait",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -981,6 +1021,7 @@
     },
     {
       "name": "missing-audio_clear",
+      "category": "missing_quality",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -1029,6 +1070,7 @@
     },
     {
       "name": "missing-expression_variety",
+      "category": "missing_quality",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -1085,6 +1127,7 @@
     },
     {
       "name": "missing-eye_contact",
+      "category": "missing_quality",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -1133,6 +1176,7 @@
     },
     {
       "name": "missing-face_detected",
+      "category": "missing_quality",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -1171,6 +1215,7 @@
     },
     {
       "name": "missing-head_stability",
+      "category": "missing_quality",
       "passed": true,
       "expected": {
         "status": "ready",
@@ -1227,6 +1272,7 @@
     },
     {
       "name": "short-refusal-1",
+      "category": "short_refusal",
       "passed": true,
       "expected": {
         "status": "refused_short_session"
@@ -1242,6 +1288,7 @@
     },
     {
       "name": "short-refusal-2",
+      "category": "short_refusal",
       "passed": true,
       "expected": {
         "status": "refused_short_session"
@@ -1257,6 +1304,7 @@
     },
     {
       "name": "short-refusal-3",
+      "category": "short_refusal",
       "passed": true,
       "expected": {
         "status": "refused_short_session"
@@ -1272,6 +1320,7 @@
     },
     {
       "name": "short-refusal-4",
+      "category": "short_refusal",
       "passed": true,
       "expected": {
         "status": "refused_short_session"
@@ -1287,6 +1336,7 @@
     },
     {
       "name": "short-refusal-5",
+      "category": "short_refusal",
       "passed": true,
       "expected": {
         "status": "refused_short_session"

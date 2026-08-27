@@ -10,7 +10,7 @@ from stroke_screening.presentation_camera import (
 )
 
 
-def test_blocked_reader_retains_and_eventually_closes_concrete_camera(monkeypatch):
+def test_blocked_reader_is_never_closed_concurrently_and_eventually_closes(monkeypatch):
     class BlockedCamera:
         instance = None
 
@@ -19,20 +19,31 @@ def test_blocked_reader_retains_and_eventually_closes_concrete_camera(monkeypatc
             self.read_started = threading.Event()
             self.release_read = threading.Event()
             self.closed_after_read = threading.Event()
+            self.read_active = False
+            self.close_during_read = False
             self.close_count = 0
+            self.read_count = 0
 
         def open(self):
             return None
 
         def read(self):
+            self.read_count += 1
+            if self.read_count == 1:
+                return np.zeros((8, 8, 3), dtype=np.uint8)
             self.read_started.set()
-            assert self.release_read.wait(timeout=2.0)
-            return np.zeros((8, 8, 3), dtype=np.uint8)
+            self.read_active = True
+            try:
+                assert self.release_read.wait(timeout=2.0)
+                return np.zeros((8, 8, 3), dtype=np.uint8)
+            finally:
+                self.read_active = False
 
         def close(self):
+            if self.read_active:
+                self.close_during_read = True
             self.close_count += 1
-            if self.close_count >= 2:
-                self.closed_after_read.set()
+            self.closed_after_read.set()
 
     monkeypatch.setattr(presentation_camera_module, "LocalCamera", BlockedCamera)
     service = PresentationCameraService(
@@ -46,7 +57,8 @@ def test_blocked_reader_retains_and_eventually_closes_concrete_camera(monkeypatc
 
     service.stop(owner)
 
-    assert camera.close_count == 1
+    assert camera.close_count == 0
+    assert camera.close_during_read is False
     assert reader is not None and reader.is_alive()
     with pytest.raises(CameraSessionError, match="expired"):
         service.next_frame(owner, timeout=0.01)
@@ -55,7 +67,43 @@ def test_blocked_reader_retains_and_eventually_closes_concrete_camera(monkeypatc
     assert camera.closed_after_read.wait(timeout=1.0)
     reader.join(timeout=1.0)
     assert not reader.is_alive()
-    assert camera.close_count == 2
+    assert camera.close_count == 1
+    assert camera.close_during_read is False
+    assert service._owner is None
+    assert service._camera is None
+
+
+def test_camera_start_requires_a_real_frame_before_returning(monkeypatch):
+    class NoFrameCamera:
+        instance = None
+
+        def __init__(self, *_args, **_kwargs):
+            type(self).instance = self
+            self.closed = threading.Event()
+
+        def open(self):
+            return None
+
+        def read(self):
+            raise RuntimeError("native capture returned no frame")
+
+        def close(self):
+            self.closed.set()
+
+    monkeypatch.setattr(presentation_camera_module, "LocalCamera", NoFrameCamera)
+    service = PresentationCameraService(
+        timeout_seconds=30.0,
+        reader_join_timeout_seconds=0.1,
+        startup_frame_timeout_seconds=0.1,
+    )
+
+    with pytest.raises(CameraSessionError, match="opened but did not return a frame"):
+        service.start()
+
+    assert NoFrameCamera.instance is not None
+    assert NoFrameCamera.instance.closed.wait(timeout=1.0)
+    assert service._owner is None
+    assert service._camera is None
 
 
 @pytest.mark.parametrize("failure_phase", ("reader_start", "timer_start"))
@@ -113,7 +161,11 @@ def test_camera_start_failure_rolls_back_owner_and_closes_capture(
 
     camera = Camera.instance
     assert camera is not None
-    assert camera.close_count >= 1
+    assert camera.closed.wait(timeout=1.5)
+    thread = service._thread
+    if thread is not None:
+        thread.join(timeout=1.0)
+    assert camera.close_count == 1
     assert service._owner is None
     assert service._camera is None
     assert service._thread is None

@@ -8,9 +8,10 @@ an exact metric, number, and timestamp.
 
 [Project site](https://tanavg223.github.io/PresentCoach/)
 
-It is a runnable desktop application, not a hosted service. The Python service
-binds only to `127.0.0.1:8765`; the interface is intended for the Codex in-app
-browser. The launcher never opens Safari, Chrome, or the default browser.
+It is a standalone, open-source desktop application, not a hosted service. A
+native AppKit/WebKit window starts and owns the Python engine, which binds only
+to `127.0.0.1:8765`. PresentCoach never opens Safari, Chrome, Codex, or the
+default browser.
 
 ## Install and run
 
@@ -23,18 +24,11 @@ zsh scripts/setup_presentcoach.sh
 open "$HOME/Applications/PresentCoach.app"
 ```
 
-PresentCoach does not open a personal browser. After it starts, read its private
-per-process launch URL:
-
-```bash
-cat "$HOME/Library/Application Support/PresentCoach/access-url"
-```
-
-Paste that complete URL into the Codex in-app browser. The first request
-authorizes only that browser session and redirects to the clean
-`http://127.0.0.1:8765/` address, removing the secret from the visible URL.
-Opening the base address directly shows a locked page and does not return
-profile or session data. Do not share or bookmark the private launch URL.
+PresentCoach opens its own macOS window, appears in the Dock, supports normal
+Quit/Hide/About commands, and shuts down its child Python process when the app
+quits. The embedded WebKit session privately consumes the per-process launch
+capability and strips it from the visible address before loading any profile or
+session data. That capability should not be shared or bookmarked.
 
 To run directly from source:
 
@@ -42,14 +36,18 @@ To run directly from source:
 .venv/bin/python -m stroke_screening.presentation_server
 ```
 
-The same `access-url` file is created for a source run and removed when the
-server exits normally.
+The same private `access-url` file is created for a source run and removed when
+the server exits normally. It exists for the native shell's authorization
+exchange and is not part of the ordinary user workflow.
 
 Requirements are Python 3.11, Node/npm for rebuilding the React bundle,
-Homebrew `whisper-cpp`, and Ollama. `scripts/setup_presentcoach.sh` downloads
+the macOS Swift compiler, Homebrew `whisper-cpp`, and Ollama.
+`scripts/setup_presentcoach.sh` downloads
 and verifies the pinned MediaPipe and Whisper model artifacts, creates the
-local Ollama model, and builds the app. Model weights are not stored in this
-repository.
+local Ollama model, builds the React assets, compiles the native arm64 app, and
+installs it to `~/Applications/PresentCoach.app`. Model weights are not stored
+in this repository. The native shell source is
+[`macos/PresentCoachNative.swift`](macos/PresentCoachNative.swift).
 
 ## What it measures
 
@@ -163,12 +161,27 @@ The machine-readable result is
 `reports/presentcoach_llm_eval.json` and includes grounded, excellent-session,
 missing-data, short-session, and appearance/accent/confidence/reading/posture
 inference-bait cases. Expected and returned metric sets must match exactly.
+The refreshed schema-v2 report records **30/30 cases passed (100%)** against
+the pinned local Ollama model and binds the model, prompt policy, response
+schema, evaluator, and case-contract digests. This is a guardrail and grounding
+result, not a claim that the LLM measures video by itself.
+
+The separate [real-video API E2E report](reports/presentcoach_e2e_development.json)
+records **10/10 development presentations passed** through the actual Flask
+upload endpoint: bounded video decoding, MediaPipe measurements, local Whisper
+timestamps, local Ollama selection, encrypted storage, signed range replay,
+timestamped review cues, and bootstrap reload. Two natural-video cases needed
+the documented deterministic completion path because the 4B model omitted
+approved findings; Python completed only already-derived candidate IDs and
+reverified every metric, role, quality flag, value, unit, and timestamp. The
+model-output holdout was not reused for this API evaluation.
 
 ## Reproducible licensed-video evaluation
 
-The [downloader](scripts/download_test_videos.sh) fetches and verifies 11
-pinned Wikimedia Commons files: the three original pipeline-test clips and
-eight additional presentation/interview clips used by the tracking benchmark.
+The [downloader](scripts/download_test_videos.sh) fetches and verifies 26
+pinned Wikimedia Commons source files: three pipeline clips, eight additional
+tracking inputs, and fifteen moving-speaker TEDx/lightning-talk sources. It also
+recreates the fifteen deterministic 60-second H.264/AAC presentation excerpts.
 
 ```bash
 zsh scripts/download_test_videos.sh
@@ -213,6 +226,37 @@ persist landmark arrays or face templates, or retrain/fine-tune the pinned
 MediaPipe Face Landmarker. A real training claim would require a separate
 consented dataset, locked labels and splits, a documented training procedure,
 and independent held-out evaluation.
+
+### Moving-presenter observed-state benchmark
+
+The stricter [moving-presenter manifest](test_media/dynamic_presentation_manifest.json)
+contains fifteen real 60-second talks with speaker motion, scene cuts, slides,
+wide shots, occlusion, and multiple-camera edits. Ten clips form the declared
+development split and five separately sourced clips form an iteration-2
+model-output holdout. Development clips run twice and must produce identical
+non-runtime aggregate measurements; the holdout runs once.
+
+The final development report passed all six frozen pooled engineering gates:
+82.1% trackable-face coverage, 9.8% false-valid rate, 97.1% multi-face
+abstention, 5.48 dropouts per annotated minute, 100% reacquisition, and a
+1.53-second maximum reacquisition latency. The slowest clip processed at 83.5
+FPS on the development machine, above the 15 FPS analysis cadence.
+
+The one-shot holdout is intentionally preserved as a **failed** result rather
+than rerun: it measured 96.3% trackable coverage and 100% reacquisition, but a
+25.9% false-valid rate on slide/wide-shot intervals, 6.06 dropouts per minute,
+and no annotated multi-face interval, leaving that required metric not
+evaluated. No thresholds or tracker code were changed after seeing this output.
+The earlier iteration-1 manifest and reports are retained under
+`dynamic_presentation_manifest_iteration1.json` and
+`presentcoach_dynamic_iteration1_*.json` so the failed research path is not
+erased.
+
+These are single-curator observed-state engineering checks on fixed licensed
+clips—not population face-tracking accuracy, gaze accuracy, speaker identity,
+or proof of model training. MediaPipe and YuNet remain pinned pretrained
+anonymous geometry models; PresentCoach learns no face identity and stores no
+face embedding or landmark template.
 
 The downloaded media is not covered by PresentCoach's MIT license. Each clip
 retains the license on its Commons source page: CC BY material requires credit,

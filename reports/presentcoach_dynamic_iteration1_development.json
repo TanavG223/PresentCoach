@@ -1,0 +1,1254 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-20T04:46:39.161368Z",
+  "split": "development",
+  "split_isolation": "one report contains exactly one dataset_role",
+  "case_count": 5,
+  "manifest_sha256": "e470d7034a02f58f858582e4cbdf1da581f44690d6600430c0884c802f12a8fc",
+  "model": {
+    "filename": "face_landmarker.task",
+    "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+    "matches_manifest": true
+  },
+  "configuration": {
+    "target_fps": 15.0,
+    "start_seconds": 0.0,
+    "transform": {
+      "type": "identity"
+    },
+    "sampler": "presentation_tracking_eval.sample_tracking_clip",
+    "development_repeatability_runs": 2,
+    "holdout_repeatability_runs": 1,
+    "repeatability_projection": "all aggregate model outputs excluding runtime-only metrics",
+    "face_landmarker": {
+      "max_face_count": 2,
+      "min_face_detection_confidence": 0.55,
+      "min_face_presence_confidence": 0.55,
+      "min_tracking_confidence": 0.55,
+      "landmark_smoothing_time_constant_ms": 80.0,
+      "reacquisition_gap_ms": 250,
+      "multiscale_fallback_enabled": true,
+      "multiscale_tile_size": 0.5,
+      "multiscale_tile_offsets": [
+        0.0,
+        0.25,
+        0.5
+      ],
+      "multiscale_tile_count": 9,
+      "multiscale_deduplication_iou": 0.25
+    }
+  },
+  "configuration_sha256": "51203552cacba74c680087c664ff19400999824986cadd80efd6c278ba535718",
+  "policy": {
+    "power_policy": {
+      "minimum_trackable_frames": 15,
+      "minimum_nontrackable_frames": 15,
+      "minimum_multi_face_frames": 15,
+      "minimum_trackable_seconds": 10.0,
+      "minimum_reacquisition_events": 3,
+      "minimum_sampling_coverage_ratio": 0.8
+    },
+    "scoring_policy": {
+      "scope": "one_global_policy_for_development_and_model_output_holdout",
+      "thresholds_frozen_before_model_output_holdout": true,
+      "aggregation": "Pool labeled observations and reacquisition events within each dataset_role while also reporting every clip; never tune or set thresholds per clip.",
+      "uncertain_and_unlabeled_intervals": "excluded",
+      "underpowered_metric_behavior": "Return null with a reason and fail the overall gate closed.",
+      "gaze_metric_behavior": "Do not score gaze because the corpus has no independently labeled contact/away truth.",
+      "required_metrics": [
+        "trackable_coverage",
+        "false_valid_rate",
+        "multi_face_abstention",
+        "dropouts_per_annotated_minute",
+        "reacquisition_success_rate",
+        "max_reacquisition_latency_seconds"
+      ],
+      "acceptance_thresholds": {
+        "trackable_coverage_min": 0.75,
+        "false_valid_rate_max": 0.1,
+        "multi_face_abstention_min": 0.9,
+        "dropouts_per_annotated_minute_max": 6.0,
+        "reacquisition_success_rate_min": 0.8,
+        "max_reacquisition_latency_seconds_max": 2.0
+      },
+      "claim_boundary": "These are pre-registered engineering gates for this ten-clip scenario corpus, not population accuracy, generalization, identity recognition, or model-training evidence."
+    }
+  },
+  "policy_sha256": "b72979178c926c72da8f9be7145e3d9c77fbd1b01d9da9b97e755194476008e5",
+  "source_sha256": {
+    "presentation_dynamic_eval.py": "df053898342a3f6dc5460cf46619a4fc900eba47e628225ee65f0fc2d50923cb",
+    "presentation_tracking_eval.py": "1c886ad3dda8a94610eaef1b3ea72c63770995543fec36ce354cc81017e35513",
+    "presentation_tracking_ground_truth.py": "c0c64dffc931e2607ef259c7df4b2b09dd3af0247d304f47a999b185f2d11ca3",
+    "landmarks.py": "626030b5b35a9163ff1638bd618849c2714481a3059f3f47ad309622aab3d92b",
+    "presentation_video_timing.py": "613b39c03ccedc3657f1b5b822d57fffaceec0b03269839ce19965f28455e4b8",
+    "scripts/evaluate_dynamic_presentations.py": "c567fdf026c4ff981235d8ecd29ba7b3463d032907d04c2d0b787058afcadc16"
+  },
+  "git": {
+    "commit": "68171ef3d132f8bb01ae6f2b801869e6bbe71402",
+    "dirty": true,
+    "status_sha256": "7bc42d2e68af872c2a064bcc07c6d5e01f372a37686af0edf564fc24f0ef5749"
+  },
+  "evaluation_only": true,
+  "used_for_training": false,
+  "identity_recognition": false,
+  "face_embeddings_created": false,
+  "landmarks_persisted": false,
+  "gaze_accuracy_evaluated": false,
+  "annotation_evidence": "single-curator coarse observed-state intervals; not independently adjudicated accuracy",
+  "aggregate": {
+    "observation_count": 4500,
+    "labeled_observation_count": 4500,
+    "trackable_valid_observation_count": 3509,
+    "trackable_observation_count": 3735,
+    "nontrackable_false_valid_observation_count": 39,
+    "nontrackable_observation_count": 765,
+    "multi_face_abstained_observation_count": 381,
+    "multi_face_observation_count": 390,
+    "dropout_run_count": 24,
+    "annotated_trackable_seconds": 249.0,
+    "annotated_nontrackable_seconds": 51.0,
+    "annotated_multi_face_seconds": 26.0,
+    "trackable_sampling_coverage": 1.0,
+    "nontrackable_sampling_coverage": 1.0,
+    "multi_face_sampling_coverage": 1.0,
+    "trackable_coverage": 0.939491,
+    "false_valid_rate": 0.05098,
+    "multi_face_abstention": 0.976923,
+    "dropouts_per_annotated_minute": 5.783133,
+    "reacquisition_success_count": 4,
+    "reacquisition_event_count": 4,
+    "reacquisition_success_rate": 1.0,
+    "mean_reacquisition_latency_seconds": 0.3,
+    "max_reacquisition_latency_seconds": 1.2,
+    "gaze_accuracy": null,
+    "underpowered_reasons": {
+      "gaze_accuracy": "natural multi-camera presentation clips have no reliable camera-contact ground truth"
+    }
+  },
+  "release_gate": {
+    "status": "pass",
+    "failed_required_metrics": [],
+    "underpowered_required_metrics": [],
+    "checks": [
+      {
+        "metric": "trackable_coverage",
+        "required": true,
+        "status": "pass",
+        "passed": true,
+        "actual": 0.939491,
+        "comparison": ">=",
+        "threshold": 0.75
+      },
+      {
+        "metric": "false_valid_rate",
+        "required": true,
+        "status": "pass",
+        "passed": true,
+        "actual": 0.05098,
+        "comparison": "<=",
+        "threshold": 0.1
+      },
+      {
+        "metric": "multi_face_abstention",
+        "required": true,
+        "status": "pass",
+        "passed": true,
+        "actual": 0.976923,
+        "comparison": ">=",
+        "threshold": 0.9
+      },
+      {
+        "metric": "dropouts_per_annotated_minute",
+        "required": true,
+        "status": "pass",
+        "passed": true,
+        "actual": 5.783133,
+        "comparison": "<=",
+        "threshold": 6.0
+      },
+      {
+        "metric": "reacquisition_success_rate",
+        "required": true,
+        "status": "pass",
+        "passed": true,
+        "actual": 1.0,
+        "comparison": ">=",
+        "threshold": 0.8
+      },
+      {
+        "metric": "max_reacquisition_latency_seconds",
+        "required": true,
+        "status": "pass",
+        "passed": true,
+        "actual": 1.2,
+        "comparison": "<=",
+        "threshold": 2.0
+      }
+    ]
+  },
+  "cases": [
+    {
+      "clip_id": "dynamic-david-roberts",
+      "dataset_role": "development",
+      "split_group_id": "commons-sha1-d57f97f373fc8912b597c7d46174db5f74894994",
+      "filename": "dynamic-david-roberts-60s.mp4",
+      "media_sha256": "cfb418ac4280a6c3f34083ec6ca785b2319ed6a8e309b213c0df9529507f7593",
+      "annotation_file": "annotations/dynamic-david-roberts.json",
+      "annotation_sha256": "4f5503791458827d083afd0b87ea98e6bc4bc398163182299d89c2b4bd980840",
+      "source_title": "Climate change is simple \u2014 David Roberts at TEDxTheEvergreenStateCollege",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:Climate_change_is_simple_David_Roberts_at_TEDxTheEvergreenStateCollege.webm",
+      "license_spdx": "CC-BY-3.0",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 752,
+        "valid_face_frame_ratio": 0.835556,
+        "no_face_frame_count": 148,
+        "no_face_frame_ratio": 0.164444,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 22,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 6.7333,
+            "end_seconds": 6.7333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 7.1333,
+            "end_seconds": 10.5333,
+            "duration_seconds": 3.4667,
+            "frame_count": 52,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 3.4667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 11.2667,
+            "end_seconds": 11.2667,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 11.5333,
+            "end_seconds": 11.5333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 11.8,
+            "end_seconds": 11.9333,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 12.0667,
+            "end_seconds": 12.6,
+            "duration_seconds": 0.6,
+            "frame_count": 9,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.6
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 12.7333,
+            "end_seconds": 12.9333,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 16.8,
+            "end_seconds": 17.0667,
+            "duration_seconds": 0.3333,
+            "frame_count": 5,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.3333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 17.2667,
+            "end_seconds": 17.3333,
+            "duration_seconds": 0.1333,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.1333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 17.7333,
+            "end_seconds": 17.7333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 17.8667,
+            "end_seconds": 18.0,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 18.4,
+            "end_seconds": 18.5333,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 18.9333,
+            "end_seconds": 18.9333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 33.4,
+            "end_seconds": 33.6,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 34.1333,
+            "end_seconds": 34.2,
+            "duration_seconds": 0.1333,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.1333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 34.3333,
+            "end_seconds": 34.6,
+            "duration_seconds": 0.3333,
+            "frame_count": 5,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.3333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 34.9333,
+            "end_seconds": 36.4,
+            "duration_seconds": 1.5333,
+            "frame_count": 23,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.5333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 36.5333,
+            "end_seconds": 37.0667,
+            "duration_seconds": 0.6,
+            "frame_count": 9,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.6
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 37.3333,
+            "end_seconds": 37.3333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 42.8,
+            "end_seconds": 42.8,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 42.9333,
+            "end_seconds": 42.9333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 43.0667,
+            "end_seconds": 44.0667,
+            "duration_seconds": 1.0667,
+            "frame_count": 16,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.0667
+          }
+        ],
+        "longest_dropout_seconds": 3.4667,
+        "reacquisition_event_count": 22,
+        "mean_reacquisition_seconds": 0.4485,
+        "max_reacquisition_seconds": 3.4667,
+        "stable_segment_count": 15,
+        "stable_transition_count": 582,
+        "landmark_jitter_median": 0.027402,
+        "landmark_jitter_p95": 0.094216,
+        "mean_inference_ms": 8.041,
+        "p95_inference_ms": 22.968,
+        "wall_clock_seconds": 7.74,
+        "processing_throughput_fps": 116.277
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-david-roberts",
+        "split_group_id": "commons-sha1-d57f97f373fc8912b597c7d46174db5f74894994",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 900,
+        "trackable_valid_observation_count": 752,
+        "nontrackable_observation_count": 0,
+        "false_valid_observation_count": 0,
+        "multi_face_observation_count": 0,
+        "multi_face_abstained_observation_count": 0,
+        "motion_observation_counts": {
+          "head_turn": 150,
+          "mixed": 750,
+          "scale": 0,
+          "static": 0,
+          "translate": 0
+        },
+        "annotated_trackable_seconds": 60.0,
+        "trackable_sampling_coverage": 1.0,
+        "nontrackable_sampling_coverage": 0.0,
+        "multi_face_sampling_coverage": 0.0,
+        "trackable_coverage": 0.835556,
+        "false_valid_rate": null,
+        "multi_face_abstention": null,
+        "dropout_run_count": 14,
+        "dropouts_per_annotated_minute": 14.0,
+        "reacquisition_event_count": 0,
+        "reacquisition_success_count": 0,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "false_valid_rate": "needs at least 15 labeled non-trackable frames; found 0 with 0.0% sampling coverage",
+          "multi_face_abstention": "needs at least 15 labeled multiple-face frames; found 0 with 0.0% sampling coverage",
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 0",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 0",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 0",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 2,
+        "status": "pass",
+        "exact_non_runtime_metrics": true
+      }
+    },
+    {
+      "clip_id": "dynamic-jack-andraka",
+      "dataset_role": "development",
+      "split_group_id": "commons-sha1-5ab2a87703c03cda017a9cf2a4e214555d3bc16f",
+      "filename": "dynamic-jack-andraka-60s.mp4",
+      "media_sha256": "25c878e2ce3d8918078d2224de4346c1cf3cacaa0cc8da81f6564c16459dea68",
+      "annotation_file": "annotations/dynamic-jack-andraka.json",
+      "annotation_sha256": "90cfab79abc5f8a0407ffb6cb666543f9270c9a0d2680cf36c4301a6e68947c0",
+      "source_title": "Jack Andraka \u2014 Detecting pancreatic cancer at 15",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:Jack_Andraka_-_Detecting_pancreatic_cancer_at_15.webm",
+      "license_spdx": "CC-BY-2.5",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 515,
+        "valid_face_frame_ratio": 0.572222,
+        "no_face_frame_count": 385,
+        "no_face_frame_ratio": 0.427778,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 10,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 6.5333,
+            "end_seconds": 6.5333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 8.5333,
+            "end_seconds": 8.7333,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 13.9333,
+            "end_seconds": 13.9333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 14.6667,
+            "end_seconds": 15.0667,
+            "duration_seconds": 0.4667,
+            "frame_count": 7,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 15.2,
+            "end_seconds": 15.2,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 15.3333,
+            "end_seconds": 15.3333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 15.6,
+            "end_seconds": 15.6,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 16.0,
+            "end_seconds": 31.8667,
+            "duration_seconds": 15.9333,
+            "frame_count": 239,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 15.9333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 51.2667,
+            "end_seconds": 51.8,
+            "duration_seconds": 0.6,
+            "frame_count": 9,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.6
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 51.9333,
+            "end_seconds": 59.9333,
+            "duration_seconds": 8.0667,
+            "frame_count": 121,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 15.9333,
+        "reacquisition_event_count": 9,
+        "mean_reacquisition_seconds": 1.9556,
+        "max_reacquisition_seconds": 15.9333,
+        "stable_segment_count": 13,
+        "stable_transition_count": 446,
+        "landmark_jitter_median": 0.024435,
+        "landmark_jitter_p95": 0.075087,
+        "mean_inference_ms": 9.94,
+        "p95_inference_ms": 16.487,
+        "wall_clock_seconds": 9.423,
+        "processing_throughput_fps": 95.513
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-jack-andraka",
+        "split_group_id": "commons-sha1-5ab2a87703c03cda017a9cf2a4e214555d3bc16f",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 525,
+        "trackable_valid_observation_count": 509,
+        "nontrackable_observation_count": 375,
+        "false_valid_observation_count": 6,
+        "multi_face_observation_count": 195,
+        "multi_face_abstained_observation_count": 190,
+        "motion_observation_counts": {
+          "head_turn": 285,
+          "mixed": 240,
+          "scale": 0,
+          "static": 0,
+          "translate": 0
+        },
+        "annotated_trackable_seconds": 35.0,
+        "trackable_sampling_coverage": 1.0,
+        "nontrackable_sampling_coverage": 1.0,
+        "multi_face_sampling_coverage": 1.0,
+        "trackable_coverage": 0.969524,
+        "false_valid_rate": 0.016,
+        "multi_face_abstention": 0.974359,
+        "dropout_run_count": 2,
+        "dropouts_per_annotated_minute": 3.428571,
+        "reacquisition_event_count": 1,
+        "reacquisition_success_count": 1,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [
+          {
+            "onset_seconds": 32.0,
+            "reacquired": true,
+            "latency_seconds": 0.0
+          }
+        ],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 1",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 2,
+        "status": "pass",
+        "exact_non_runtime_metrics": true
+      }
+    },
+    {
+      "clip_id": "dynamic-richard-gill",
+      "dataset_role": "development",
+      "split_group_id": "commons-sha1-3d4be9987e2257b118d84d2c49124dfa671a28e8",
+      "filename": "dynamic-richard-gill-60s.mp4",
+      "media_sha256": "098531cb0b7dc42299ac9c1bc60d41f9f9cfaeddce7a2cf05975dc27754ed974",
+      "annotation_file": "annotations/dynamic-richard-gill.json",
+      "annotation_sha256": "1e66dee271a255cc646cdd23dcc2d6d94e22b50a62aa82161e253a29c82528fa",
+      "source_title": "Richard Gill \u2014 The Value of Music Education",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:TEDxSydney_-_Richard_Gill_-_The_Value_of_Music_Education.webm",
+      "license_spdx": "CC-BY-3.0",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 644,
+        "valid_face_frame_ratio": 0.715556,
+        "no_face_frame_count": 247,
+        "no_face_frame_ratio": 0.274444,
+        "multi_face_frame_count": 9,
+        "multi_face_frame_ratio": 0.01,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 16,
+        "dropout_runs": [
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 0.3333,
+            "end_seconds": 0.3333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 0.5333,
+            "end_seconds": 0.5333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 2.7333,
+            "end_seconds": 2.7333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 3.0667,
+            "end_seconds": 3.0667,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 3.4667,
+            "end_seconds": 3.4667,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 3.6,
+            "end_seconds": 3.6,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 4.1333,
+            "end_seconds": 4.2,
+            "duration_seconds": 0.1333,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.1333
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 4.4,
+            "end_seconds": 4.4,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 8.5333,
+            "end_seconds": 17.8667,
+            "duration_seconds": 9.4,
+            "frame_count": 141,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 9.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 37.5333,
+            "end_seconds": 37.6,
+            "duration_seconds": 0.1333,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.1333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 39.6667,
+            "end_seconds": 39.6667,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 46.0,
+            "end_seconds": 46.0,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 46.1333,
+            "end_seconds": 49.8,
+            "duration_seconds": 3.7333,
+            "frame_count": 56,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 3.7333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 56.5333,
+            "end_seconds": 56.5333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 56.9333,
+            "end_seconds": 59.6,
+            "duration_seconds": 2.7333,
+            "frame_count": 41,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 2.7333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 59.7333,
+            "end_seconds": 59.9333,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 9.4,
+        "reacquisition_event_count": 15,
+        "mean_reacquisition_seconds": 1.12,
+        "max_reacquisition_seconds": 9.4,
+        "stable_segment_count": 13,
+        "stable_transition_count": 489,
+        "landmark_jitter_median": 0.029749,
+        "landmark_jitter_p95": 0.087758,
+        "mean_inference_ms": 10.774,
+        "p95_inference_ms": 26.518,
+        "wall_clock_seconds": 10.208,
+        "processing_throughput_fps": 88.168
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-richard-gill",
+        "split_group_id": "commons-sha1-3d4be9987e2257b118d84d2c49124dfa671a28e8",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 645,
+        "trackable_valid_observation_count": 626,
+        "nontrackable_observation_count": 255,
+        "false_valid_observation_count": 18,
+        "multi_face_observation_count": 195,
+        "multi_face_abstained_observation_count": 191,
+        "motion_observation_counts": {
+          "head_turn": 0,
+          "mixed": 645,
+          "scale": 0,
+          "static": 0,
+          "translate": 0
+        },
+        "annotated_trackable_seconds": 43.0,
+        "trackable_sampling_coverage": 1.0,
+        "nontrackable_sampling_coverage": 1.0,
+        "multi_face_sampling_coverage": 1.0,
+        "trackable_coverage": 0.970543,
+        "false_valid_rate": 0.070588,
+        "multi_face_abstention": 0.979487,
+        "dropout_run_count": 3,
+        "dropouts_per_annotated_minute": 4.186047,
+        "reacquisition_event_count": 2,
+        "reacquisition_success_count": 2,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [
+          {
+            "onset_seconds": 18.0,
+            "reacquired": true,
+            "latency_seconds": 0.0
+          },
+          {
+            "onset_seconds": 50.0,
+            "reacquired": true,
+            "latency_seconds": 0.0
+          }
+        ],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 2",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 2",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 2",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 2,
+        "status": "pass",
+        "exact_non_runtime_metrics": true
+      }
+    },
+    {
+      "clip_id": "dynamic-leslie-cannold",
+      "dataset_role": "development",
+      "split_group_id": "commons-sha1-a7c0ce0ebab8705f7d662f3a00d09e595c6b7fc3",
+      "filename": "dynamic-leslie-cannold-60s.mp4",
+      "media_sha256": "1938e1920d58561a69807b4e30a92f1647ad099f3ec778bd39fa3d84291e99a5",
+      "annotation_file": "annotations/dynamic-leslie-cannold.json",
+      "annotation_sha256": "f0cc45d4236a3e6d0eb651674a967eac91253f39c45de1be6d778c30bde0053a",
+      "source_title": "Leslie Cannold at TEDxCanberra 2012",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:I_had_an_abortion..._Or_maybe_I_didn%27t_Leslie_Cannold_at_TEDxCanberra_2012.webm",
+      "license_spdx": "CC-BY-3.0",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 763,
+        "valid_face_frame_ratio": 0.847778,
+        "no_face_frame_count": 136,
+        "no_face_frame_ratio": 0.151111,
+        "multi_face_frame_count": 1,
+        "multi_face_frame_ratio": 0.001111,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 9,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.0,
+            "end_seconds": 7.8,
+            "duration_seconds": 7.8667,
+            "frame_count": 118,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 8.8667,
+            "end_seconds": 9.0667,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 9.2,
+            "end_seconds": 9.5333,
+            "duration_seconds": 0.4,
+            "frame_count": 6,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 9.6667,
+            "end_seconds": 9.6667,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 9.8,
+            "end_seconds": 10.0,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 10.1333,
+            "end_seconds": 10.1333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 10.4,
+            "end_seconds": 10.4,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 10.5333,
+            "end_seconds": 10.5333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 25.2,
+            "end_seconds": 25.2,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          }
+        ],
+        "longest_dropout_seconds": 7.8667,
+        "reacquisition_event_count": 8,
+        "mean_reacquisition_seconds": 0.1584,
+        "max_reacquisition_seconds": 0.4,
+        "stable_segment_count": 11,
+        "stable_transition_count": 725,
+        "landmark_jitter_median": 0.027728,
+        "landmark_jitter_p95": 0.076454,
+        "mean_inference_ms": 5.256,
+        "p95_inference_ms": 8.092,
+        "wall_clock_seconds": 5.259,
+        "processing_throughput_fps": 171.12
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-leslie-cannold",
+        "split_group_id": "commons-sha1-a7c0ce0ebab8705f7d662f3a00d09e595c6b7fc3",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 765,
+        "trackable_valid_observation_count": 748,
+        "nontrackable_observation_count": 135,
+        "false_valid_observation_count": 15,
+        "multi_face_observation_count": 0,
+        "multi_face_abstained_observation_count": 0,
+        "motion_observation_counts": {
+          "head_turn": 0,
+          "mixed": 765,
+          "scale": 0,
+          "static": 0,
+          "translate": 0
+        },
+        "annotated_trackable_seconds": 51.0,
+        "trackable_sampling_coverage": 1.0,
+        "nontrackable_sampling_coverage": 1.0,
+        "multi_face_sampling_coverage": 0.0,
+        "trackable_coverage": 0.977778,
+        "false_valid_rate": 0.111111,
+        "multi_face_abstention": null,
+        "dropout_run_count": 3,
+        "dropouts_per_annotated_minute": 3.529412,
+        "reacquisition_event_count": 1,
+        "reacquisition_success_count": 1,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [
+          {
+            "onset_seconds": 9.0,
+            "reacquired": true,
+            "latency_seconds": 1.2
+          }
+        ],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "multi_face_abstention": "needs at least 15 labeled multiple-face frames; found 0 with 0.0% sampling coverage",
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 1",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 2,
+        "status": "pass",
+        "exact_non_runtime_metrics": true
+      }
+    },
+    {
+      "clip_id": "dynamic-you-should-speak",
+      "dataset_role": "development",
+      "split_group_id": "commons-sha1-17bbd20a7e4f7306e1db2ba29faa0a8f17e758f4",
+      "filename": "dynamic-you-should-speak-60s.mp4",
+      "media_sha256": "277eb60f8288f21586c9fdf881af08764b5ba03d2faf1743236bc2f70452fbd8",
+      "annotation_file": "annotations/dynamic-you-should-speak.json",
+      "annotation_sha256": "e5ee5cb54350e7bba7b9fad5bef32add9991d96080e7963b875d8d0cbc978157",
+      "source_title": "You Should Speak \u2014 LinuxConfAu 2018",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:You_Should_Speak.webm",
+      "license_spdx": "CC-BY-3.0",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 874,
+        "valid_face_frame_ratio": 0.971111,
+        "no_face_frame_count": 26,
+        "no_face_frame_ratio": 0.028889,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 3,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 3.1333,
+            "end_seconds": 3.8667,
+            "duration_seconds": 0.8,
+            "frame_count": 12,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.8
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 13.2667,
+            "end_seconds": 13.2667,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 13.4,
+            "end_seconds": 14.2,
+            "duration_seconds": 0.8667,
+            "frame_count": 13,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.8667
+          }
+        ],
+        "longest_dropout_seconds": 0.8667,
+        "reacquisition_event_count": 3,
+        "mean_reacquisition_seconds": 0.5778,
+        "max_reacquisition_seconds": 0.8667,
+        "stable_segment_count": 7,
+        "stable_transition_count": 857,
+        "landmark_jitter_median": 0.026491,
+        "landmark_jitter_p95": 0.062816,
+        "mean_inference_ms": 21.692,
+        "p95_inference_ms": 26.735,
+        "wall_clock_seconds": 19.984,
+        "processing_throughput_fps": 45.036
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-you-should-speak",
+        "split_group_id": "commons-sha1-17bbd20a7e4f7306e1db2ba29faa0a8f17e758f4",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 900,
+        "trackable_valid_observation_count": 874,
+        "nontrackable_observation_count": 0,
+        "false_valid_observation_count": 0,
+        "multi_face_observation_count": 0,
+        "multi_face_abstained_observation_count": 0,
+        "motion_observation_counts": {
+          "head_turn": 0,
+          "mixed": 900,
+          "scale": 0,
+          "static": 0,
+          "translate": 0
+        },
+        "annotated_trackable_seconds": 60.0,
+        "trackable_sampling_coverage": 1.0,
+        "nontrackable_sampling_coverage": 0.0,
+        "multi_face_sampling_coverage": 0.0,
+        "trackable_coverage": 0.971111,
+        "false_valid_rate": null,
+        "multi_face_abstention": null,
+        "dropout_run_count": 2,
+        "dropouts_per_annotated_minute": 2.0,
+        "reacquisition_event_count": 0,
+        "reacquisition_success_count": 0,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "false_valid_rate": "needs at least 15 labeled non-trackable frames; found 0 with 0.0% sampling coverage",
+          "multi_face_abstention": "needs at least 15 labeled multiple-face frames; found 0 with 0.0% sampling coverage",
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 0",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 0",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 0",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 2,
+        "status": "pass",
+        "exact_non_runtime_metrics": true
+      }
+    }
+  ]
+}

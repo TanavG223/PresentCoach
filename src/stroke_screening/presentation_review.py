@@ -22,6 +22,9 @@ LONG_TRANSCRIPT_GAP_SECONDS = 2.0
 # This is a display floor for normalized blendshape movement, not a speaking
 # quality threshold. It only suppresses zero-valued buckets and numeric noise.
 MIN_REVIEW_EXPRESSION_CHANGE = 0.001
+# A one- or two-second look away is common and too noisy to coach from
+# one-second landmark buckets. Shorter runs remain visible in the raw timeline.
+MIN_CAMERA_CONTACT_BREAK_SECONDS = 3.0
 
 
 @dataclass(frozen=True)
@@ -334,6 +337,9 @@ def _camera_contact_cues(
             continue
         percent = round(100.0 * contact_frames / eligible_frames, 1)
         span = round(end - start, 2)
+        if span < MIN_CAMERA_CONTACT_BREAK_SECONDS:
+            continue
+        span_text = "1 second" if span == 1 else f"{span:g} seconds"
         cues.append(_draft(
             kind="camera_contact_break",
             role="review",
@@ -343,7 +349,7 @@ def _camera_contact_cues(
             text=(
                 f"From {_time_text(start)} to {_time_text(end)}, camera contact measured "
                 f"{contact_frames} of {eligible_frames} eligible frames ({percent:g}%) "
-                f"across {span:g} seconds."
+                f"across {span_text}."
             ),
             metric="camera_contact_break_seconds",
             value=span,
@@ -462,6 +468,17 @@ def _expression_movement_cue(
     mouth_display = round(mouth, 4)
     brow_display = round(brow, 4)
     change_display = round(change, 4)
+    session_median = float(median(item[0] for item in candidates))
+    relative_change = (
+        round(change / session_median, 1)
+        if session_median >= MIN_REVIEW_EXPRESSION_CHANGE
+        else None
+    )
+    comparison = (
+        f"about {relative_change:g} times the session's typical measured change"
+        if relative_change is not None
+        else "the largest measurable change in this session"
+    )
     return [_draft(
         kind="expression_movement",
         role="observation",
@@ -470,9 +487,8 @@ def _expression_movement_cue(
         title="Largest measured expression change",
         text=(
             f"In the analyzed bucket from {_time_text(start)} to {_time_text(end)}, "
-            f"measured mouth activity was {mouth_display:.4f}, brow activity was "
-            f"{brow_display:.4f}, and normalized expression change was "
-            f"{change_display:.4f}."
+            f"facial-landmark movement was {comparison}. This describes visible "
+            "movement only; it does not infer an internal state."
         ),
         metric="expression_change",
         value=change_display,
@@ -484,6 +500,8 @@ def _expression_movement_cue(
             "mouth_activity": mouth_display,
             "brow_activity": brow_display,
             "expression_change": change_display,
+            "session_median_expression_change": round(session_median, 4),
+            "relative_to_session_median": relative_change,
             "display_floor": MIN_REVIEW_EXPRESSION_CHANGE,
         },
     )]

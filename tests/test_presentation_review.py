@@ -56,6 +56,14 @@ def measured_metrics():
                 },
                 {
                     "timestamp_seconds": 3.0, "frame_count": 15,
+                    "face_detected": True, "eye_contact": False,
+                    "detected_frame_count": 15, "contact_frame_count": 6,
+                    "contact_eligible_frame_count": 15,
+                    "mouth_activity": 0.11, "brow_activity": 0.06,
+                    "expression_change": 0.01,
+                },
+                {
+                    "timestamp_seconds": 4.0, "frame_count": 15,
                     "face_detected": True, "eye_contact": True,
                     "detected_frame_count": 15, "contact_frame_count": 15,
                     "contact_eligible_frame_count": 15,
@@ -157,10 +165,19 @@ def test_build_review_cues_covers_measured_events_and_verified_claims():
 
     contact = next(cue for cue in cues if cue["kind"] == "camera_contact_break")
     assert contact["start_seconds"] == 1.0
-    assert contact["end_seconds"] == 3.0
-    assert contact["value"] == 2.0
-    assert contact["evidence"]["contact_frames"] == 9
-    assert contact["evidence"]["eligible_frames"] == 30
+    assert contact["end_seconds"] == 4.0
+    assert contact["value"] == 3.0
+    assert contact["evidence"]["contact_frames"] == 15
+    assert contact["evidence"]["eligible_frames"] == 45
+    assert contact["text"].endswith("across 3 seconds.")
+
+    single_bucket_metrics = measured_metrics()
+    single_bucket_metrics["timeline"]["vision"][2]["eye_contact"] = True
+    single_bucket_metrics["timeline"]["vision"][3]["eye_contact"] = True
+    assert not any(
+        cue["kind"] == "camera_contact_break"
+        for cue in build_review_cues(single_bucket_metrics, verified_feedback())["cues"]
+    )
 
     expression = next(cue for cue in cues if cue["kind"] == "expression_movement")
     assert expression["role"] == "observation"
@@ -174,11 +191,12 @@ def test_build_review_cues_covers_measured_events_and_verified_claims():
         "mouth_activity": 0.18,
         "brow_activity": 0.08,
         "expression_change": 0.07,
+        "session_median_expression_change": 0.01,
+        "relative_to_session_median": 7.0,
         "display_floor": 0.001,
     }
-    assert "mouth activity was 0.1800" in expression["text"]
-    assert "brow activity was 0.0800" in expression["text"]
-    assert "normalized expression change was 0.0700" in expression["text"]
+    assert "7 times the session's typical measured change" in expression["text"]
+    assert "does not infer an internal state" in expression["text"]
     assert not any(
         term in expression["text"].casefold()
         for term in ("emotion", "flat affect", "confidence", "intent")

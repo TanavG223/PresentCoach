@@ -1,0 +1,14 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-jack-andraka",
+  "split_group_id": "commons-sha1-5ab2a87703c03cda017a9cf2a4e214555d3bc16f",
+  "duration_seconds": 60,
+  "intervals": [
+    {"start_seconds": 0, "end_seconds": 16, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"},
+    {"start_seconds": 16, "end_seconds": 24, "face_state": "multiple_faces", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 24, "end_seconds": 32, "face_state": "no_face", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 32, "end_seconds": 51, "face_state": "single_trackable", "motion": "head_turn", "gaze_truth": "unknown"},
+    {"start_seconds": 51, "end_seconds": 56, "face_state": "multiple_faces", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 56, "end_seconds": 60, "face_state": "no_face", "motion": "unknown", "gaze_truth": "unknown"}
+  ]
+}

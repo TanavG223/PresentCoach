@@ -4,22 +4,42 @@ import {
   activeCoachingCueIndex,
   activeCoachingCueIds,
   binaryTimelinePath,
+  dynamicSplitPresentation,
   formatPercentRatio,
   formatQualityMetric,
   findRecoveredSession,
   groupCoachingMarkers,
   isTrackingReportComplete,
   normalizeCoachingCues,
+  rankCoachingCues,
   recorderCanClose,
+  requestNativeCapturePermissions,
   savedSessionNotice,
   sessionVideoSource,
   shouldWarnBeforeRecorderExit,
+  sessionHistoryKind,
+  trackingOutcomeLabel,
   trackingVideoSource,
   transcriptVtt,
 } from "./App.jsx";
 
 
 describe("tracking evidence UI helpers", () => {
+  it("distinguishes an untouched holdout from failure and underpowered evidence", () => {
+    expect(dynamicSplitPresentation({ state: "untouched" }, "model_output_holdout")).toEqual({
+      label: "Untouched • not run",
+      tone: "untouched",
+    });
+    expect(dynamicSplitPresentation({ state: "not_evaluated", trusted: true }, "development")).toEqual({
+      label: "Not evaluated",
+      tone: "neutral",
+    });
+    expect(dynamicSplitPresentation({ state: "pass", trusted: true, release_gate_status: "pass" })).toEqual({
+      label: "Engineering gates passed",
+      tone: "pass",
+    });
+  });
+
   it("renders ratios without turning missing data into zero", () => {
     expect(formatPercentRatio(0.73444)).toBe("73.4%");
     expect(formatPercentRatio(null)).toBe("Insufficient");
@@ -113,6 +133,36 @@ describe("tracking evidence UI helpers", () => {
     expect(shouldWarnBeforeRecorderExit(undefined)).toBe(false);
   });
 
+  it("waits for native capture permission before starting Python devices", async () => {
+    const listeners = new Map();
+    const host = {
+      webkit: { messageHandlers: { presentCoachPermissions: {
+        postMessage(value) {
+          expect(value).toBe("request");
+          queueMicrotask(() => listeners.get("presentcoach-permission-result")({
+            detail: { camera: true, microphone: false },
+          }));
+        },
+      } } },
+      addEventListener(name, listener) { listeners.set(name, listener); },
+      removeEventListener(name) { listeners.delete(name); },
+    };
+    await expect(requestNativeCapturePermissions(host, 100)).resolves.toEqual({
+      camera: true,
+      microphone: false,
+      native: true,
+    });
+    expect(listeners.size).toBe(0);
+  });
+
+  it("keeps browser development compatible when no native permission bridge exists", async () => {
+    await expect(requestNativeCapturePermissions({}, 100)).resolves.toEqual({
+      camera: true,
+      microphone: true,
+      native: false,
+    });
+  });
+
   it("reports stop recovery only when encrypted history contains a new durable session", () => {
     const original = { session: { session_id: "session-before" } };
     const saved = { session: { session_id: "session-after" }, media: { available: true } };
@@ -184,5 +234,34 @@ describe("tracking evidence UI helpers", () => {
     expect(activeCoachingCueIndex(cues, 15)).toBe(-1);
     expect(activeCoachingCueIndex(cues, 22)).toBe(1);
     expect(activeCoachingCueIndex(cues, 24)).toBe(-1);
+  });
+
+  it("shows five diverse priority notes before the full measured list", () => {
+    const cues = [
+      ...Array.from({ length: 6 }, (_, index) => ({ id: `f${index}`, category: "speech", role: "review", severity: "info", start_seconds: index, end_seconds: index + 0.2 })),
+      { id: "camera", category: "camera", role: "improvement", severity: "high", start_seconds: 20, end_seconds: 27 },
+      { id: "quality", category: "quality", role: "insufficient", severity: "info", start_seconds: 0, end_seconds: 2 },
+    ];
+    const ranked = rankCoachingCues(cues, 5);
+    expect(ranked).toHaveLength(5);
+    expect(ranked.map(cue => cue.id)).toContain("camera");
+    expect(ranked.map(cue => cue.id)).toContain("quality");
+    expect(ranked.map(cue => cue.category)).not.toEqual(["speech", "speech", "speech", "speech", "speech"]);
+  });
+
+  it("labels only the selected quality-approved run as the baseline", () => {
+    const base = {
+      session: { session_id: "good", session_kind: "baseline", duration_seconds: 40 },
+      metrics: { quality_flags: { face_detected: "good", eye_contact: "good", head_stability: "good", expression_variety: "good", audio_clear: "good" } },
+    };
+    expect(sessionHistoryKind(base, { baseline_session_id: "good" }).label).toBe("Baseline");
+    expect(sessionHistoryKind({ ...base, session: { ...base.session, session_id: "old" } }, { baseline_session_id: "good" }).label).toBe("Baseline attempt");
+    expect(sessionHistoryKind({ ...base, session: { ...base.session, duration_seconds: 5 } }, { baseline_session_id: "good" }).label).toBe("Baseline attempt");
+  });
+
+  it("explains a successful zero-face scenario as expected abstention", () => {
+    expect(trackingOutcomeLabel({ passed: true, title: "Distant Face Abstention", valid_face_frame_ratio: 0 })).toBe("✓ Expected abstention");
+    expect(trackingOutcomeLabel({ passed: true, title: "Stable presenter" })).toBe("✓ Contract passed");
+    expect(trackingOutcomeLabel({ passed: false, title: "Distant Face Abstention" })).toBe("× Contract failed");
   });
 });

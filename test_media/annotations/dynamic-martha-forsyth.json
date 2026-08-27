@@ -1,0 +1,13 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-martha-forsyth",
+  "split_group_id": "commons-sha1-d80f1a8d77030e500a622b5504a0c26dea73c95f",
+  "duration_seconds": 60,
+  "intervals": [
+    {"start_seconds": 0, "end_seconds": 8, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"},
+    {"start_seconds": 8, "end_seconds": 10, "face_state": "occluded_or_tiny", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 10, "end_seconds": 41, "face_state": "no_face", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 41, "end_seconds": 44, "face_state": "occluded_or_tiny", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 44, "end_seconds": 60, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"}
+  ]
+}

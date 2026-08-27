@@ -451,7 +451,7 @@ def _apply_transform(frame: np.ndarray, transform: Mapping[str, object]) -> np.n
     return output
 
 
-def analyze_tracking_clip(
+def sample_tracking_clip(
     path: Path,
     *,
     model_path: Path,
@@ -459,8 +459,14 @@ def analyze_tracking_clip(
     duration_seconds: float,
     target_fps: float,
     transform: Mapping[str, object],
-) -> tuple[dict[str, object], float]:
-    """Run the production detector over one bounded clip excerpt."""
+) -> tuple[tuple[TrackingObservation, ...], float, dict[str, float]]:
+    """Return anonymous per-frame observations from one bounded excerpt.
+
+    The observations are intentionally short-lived evaluation inputs.  The
+    checked-in reports retain only aggregate measurements, never landmarks.
+    Keeping this sampler shared prevents the ground-truth scorer from quietly
+    using a detector path that differs from the existing tracking benchmark.
+    """
 
     capture = cv2.VideoCapture(str(path))
     if not capture.isOpened():
@@ -531,13 +537,40 @@ def analyze_tracking_clip(
         capture.release()
     if not observations:
         raise TrackingEvaluationError("No frames were analyzed")
+    runtime = {
+        "wall_clock_seconds": round(wall_seconds, 3),
+        "processing_throughput_fps": round(
+            len(observations) / max(wall_seconds, 1e-9), 3
+        ),
+    }
+    return tuple(observations), evaluation_duration, runtime
+
+
+def analyze_tracking_clip(
+    path: Path,
+    *,
+    model_path: Path,
+    start_seconds: float,
+    duration_seconds: float,
+    target_fps: float,
+    transform: Mapping[str, object],
+) -> tuple[dict[str, object], float]:
+    """Run the production detector and return aggregate tracking metrics."""
+
+    observations, evaluation_duration, runtime = sample_tracking_clip(
+        path,
+        model_path=model_path,
+        start_seconds=start_seconds,
+        duration_seconds=duration_seconds,
+        target_fps=target_fps,
+        transform=transform,
+    )
     metrics = compute_tracking_metrics(
         observations,
         evaluation_duration_seconds=evaluation_duration,
         target_fps=target_fps,
     )
-    metrics["wall_clock_seconds"] = round(wall_seconds, 3)
-    metrics["processing_throughput_fps"] = round(len(observations) / max(wall_seconds, 1e-9), 3)
+    metrics.update(runtime)
     return metrics, evaluation_duration
 
 

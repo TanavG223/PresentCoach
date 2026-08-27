@@ -133,6 +133,40 @@ def test_feedback_without_calibration_is_actionable_and_evidence_locked():
     assert result.insufficient_data == ("audio_clear",)
 
 
+class OmittedGeneralHintLLM:
+    def complete_json(self, **_kwargs):
+        return {
+            "strengths": [{
+                "text": "Camera contact was 80% at 40 seconds.",
+                "metric": "eye_contact_percent", "value": 80.0,
+                "unit": "%", "timestamp_seconds": 40.0,
+            }],
+            "improvements": [],
+            "insufficient_data": ["audio_clear"],
+        }
+
+
+def test_general_feedback_completes_an_omitted_verified_hint_deterministically():
+    session = analyze_session(
+        vision_samples(),
+        {"words": [], "duration_seconds": 40, "waveform_rms": 0},
+    )
+    metrics = prepare_feedback_metrics(compute_metrics(session), {"ready": False})
+
+    result = generate_feedback(metrics, OmittedGeneralHintLLM())
+
+    assert result.status == "ready"
+    assert result.source == (
+        "local_llm_verified_general_practice_with_deterministic_completion"
+    )
+    assert [claim.metric for claim in result.strengths] == [
+        "eye_contact_percent", "face_presence_percent",
+    ]
+    assert result.improvements == ()
+    assert "omitted selections were completed" in result.message
+    assert result.insufficient_data == ("audio_clear",)
+
+
 def test_compute_metrics_normalizes_strict_um_uh_and_timestamps_transcript_gaps():
     words = [
         TranscriptWord("so", 0.0, 0.2, .9),

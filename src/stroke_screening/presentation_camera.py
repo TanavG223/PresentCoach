@@ -33,17 +33,24 @@ class PresentationCameraService:
         height: int = 540,
         timeout_seconds: float = 30 * 60 + 30,
         reader_join_timeout_seconds: float = 3.0,
+        startup_frame_timeout_seconds: float = 3.0,
     ) -> None:
         if (
             not math.isfinite(reader_join_timeout_seconds)
             or reader_join_timeout_seconds <= 0
         ):
             raise ValueError("Camera reader join timeout must be positive")
+        if (
+            not math.isfinite(startup_frame_timeout_seconds)
+            or startup_frame_timeout_seconds <= 0
+        ):
+            raise ValueError("Camera startup frame timeout must be positive")
         self.camera_index = camera_index
         self.width = width
         self.height = height
         self.timeout_seconds = timeout_seconds
         self.reader_join_timeout_seconds = float(reader_join_timeout_seconds)
+        self.startup_frame_timeout_seconds = float(startup_frame_timeout_seconds)
         self._condition = threading.Condition()
         self._camera_close_lock = threading.Lock()
         self._owner: str | None = None
@@ -87,11 +94,20 @@ class PresentationCameraService:
         except Exception as error:
             stop_event.set()
             timer.cancel()
-            self._close_camera(camera)
             if thread.ident is not None and thread is not threading.current_thread():
                 thread.join(timeout=self.reader_join_timeout_seconds)
+            # AVFoundation's OpenCV backend is not safe when release() races a
+            # native read().  If the worker actually started, it exclusively
+            # owns closing the capture in _reader's finally block.  A worker
+            # that never started can be closed synchronously here.
+            if thread.ident is None:
+                self._close_camera(camera)
             with self._condition:
-                if self._owner == owner and self._camera is camera:
+                if (
+                    self._owner == owner
+                    and self._camera is camera
+                    and (thread.ident is None or not thread.is_alive())
+                ):
                     self._owner = None
                     self._camera = None
                     self._thread = None
@@ -102,6 +118,20 @@ class PresentationCameraService:
             raise CameraSessionError(
                 "The local camera worker could not start"
             ) from error
+        deadline = time.monotonic() + self.startup_frame_timeout_seconds
+        with self._condition:
+            while self._generation < 0 and self._error is None and thread.is_alive():
+                remaining = deadline - time.monotonic()
+                if remaining <= 0:
+                    break
+                self._condition.wait(timeout=remaining)
+            startup_ready = self._generation >= 0
+        if not startup_ready:
+            self.stop(owner)
+            raise CameraSessionError(
+                "The local camera opened but did not return a frame. Close other "
+                "camera apps, then try again; if it persists, restart the Mac."
+            )
         return owner
 
     def _reader(
@@ -122,10 +152,18 @@ class PresentationCameraService:
                     self._error = str(error)
                 self._condition.notify_all()
         finally:
-            # Close the concrete capture passed to this reader. The service's
-            # shared slot may already be cleared or may belong to a new run.
+            # The reader thread has exclusive ownership of close().  Calling
+            # VideoCapture.release() from a control thread while AVFoundation
+            # is inside read() can segfault the entire Python process.
             self._close_camera(camera)
             with self._condition:
+                if self._camera is camera and stop_event.is_set():
+                    self._owner = None
+                    self._camera = None
+                    self._thread = None
+                    self._timer = None
+                    self._latest = None
+                    self._error = None
                 self._condition.notify_all()
 
     def _close_camera(self, camera: LocalCamera) -> None:
@@ -144,6 +182,8 @@ class PresentationCameraService:
 
     def _assert_owner(self, owner: str) -> None:
         if not owner or not secrets.compare_digest(owner, self._owner or ""):
+            raise CameraSessionError("The local camera session expired")
+        if self._stop_event.is_set():
             raise CameraSessionError("The local camera session expired")
         if self._error:
             raise CameraSessionError("The local camera stopped unexpectedly")
@@ -205,15 +245,18 @@ class PresentationCameraService:
             self._timer = None
         if timer is not None and timer is not threading.current_thread():
             timer.cancel()
-        # Closing the concrete capture is the best-effort unblock for a native
-        # read that ignores the stop event. The reader retains the same local
-        # reference and closes it again when the read eventually returns.
-        if camera is not None:
-            self._close_camera(camera)
+        # Do not close here. The reader may currently be executing a native
+        # AVFoundation read, and concurrent release/read is a process-crashing
+        # use-after-free. The reader observes stop_event after its current read
+        # and closes its own concrete capture in finally.
         if thread is not None and thread is not threading.current_thread():
             thread.join(timeout=self.reader_join_timeout_seconds)
         with self._condition:
-            if self._owner == active_owner and self._camera is camera:
+            if (
+                self._owner == active_owner
+                and self._camera is camera
+                and (thread is None or not thread.is_alive())
+            ):
                 self._owner = None
                 self._camera = None
                 self._thread = None

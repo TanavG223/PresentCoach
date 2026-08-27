@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-constance-adams",
+  "split_group_id": "commons-sha1-2aacce82ffbb646abe7abf0fe9eafb88f7310dfd",
+  "duration_seconds": 60,
+  "intervals": [
+    {"start_seconds": 0, "end_seconds": 4, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"},
+    {"start_seconds": 4, "end_seconds": 31, "face_state": "occluded_or_tiny", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 31, "end_seconds": 49, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"},
+    {"start_seconds": 49, "end_seconds": 60, "face_state": "multiple_faces", "motion": "unknown", "gaze_truth": "unknown"}
+  ]
+}

@@ -1,0 +1,29 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-v2-fr4-global-trends",
+  "split_group_id": "commons-sha1-af21279f3c10603165491aede1684537b7c2633b",
+  "duration_seconds": 60,
+  "intervals": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 13,
+      "face_state": "occluded_or_tiny",
+      "motion": "unknown",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 13,
+      "end_seconds": 55,
+      "face_state": "single_trackable",
+      "motion": "mixed",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 55,
+      "end_seconds": 60,
+      "face_state": "occluded_or_tiny",
+      "motion": "unknown",
+      "gaze_truth": "unknown"
+    }
+  ]
+}

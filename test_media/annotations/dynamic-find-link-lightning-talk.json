@@ -1,0 +1,10 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-find-link-lightning-talk",
+  "split_group_id": "commons-sha1-8e8d2dd804dea5d027664615a3f58271e2bf9951",
+  "duration_seconds": 60,
+  "intervals": [
+    {"start_seconds": 0, "end_seconds": 52, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"},
+    {"start_seconds": 52, "end_seconds": 60, "face_state": "single_trackable", "motion": "translate", "gaze_truth": "unknown"}
+  ]
+}

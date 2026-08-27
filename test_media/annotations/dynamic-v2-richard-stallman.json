@@ -1,0 +1,43 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-v2-richard-stallman",
+  "split_group_id": "commons-sha1-b97189ef635fe38655cdcbf30abae3492ad6d35b",
+  "duration_seconds": 60,
+  "intervals": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 14,
+      "face_state": "single_trackable",
+      "motion": "mixed",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 14,
+      "end_seconds": 24,
+      "face_state": "no_face",
+      "motion": "unknown",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 24,
+      "end_seconds": 31,
+      "face_state": "occluded_or_tiny",
+      "motion": "unknown",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 31,
+      "end_seconds": 54,
+      "face_state": "single_trackable",
+      "motion": "mixed",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 54,
+      "end_seconds": 60,
+      "face_state": "no_face",
+      "motion": "unknown",
+      "gaze_truth": "unknown"
+    }
+  ]
+}

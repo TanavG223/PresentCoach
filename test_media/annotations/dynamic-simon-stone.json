@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-simon-stone",
+  "split_group_id": "commons-sha1-1fc4290c456a6c7696b13cea6c92fd0d54bf8b90",
+  "duration_seconds": 60,
+  "intervals": [
+    {"start_seconds": 0, "end_seconds": 51, "face_state": "occluded_or_tiny", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 51, "end_seconds": 57, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"},
+    {"start_seconds": 57, "end_seconds": 60, "face_state": "occluded_or_tiny", "motion": "unknown", "gaze_truth": "unknown"}
+  ]
+}

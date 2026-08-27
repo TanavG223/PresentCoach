@@ -1,0 +1,12 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-david-roberts",
+  "split_group_id": "commons-sha1-d57f97f373fc8912b597c7d46174db5f74894994",
+  "duration_seconds": 60,
+  "intervals": [
+    {"start_seconds": 0, "end_seconds": 15, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"},
+    {"start_seconds": 15, "end_seconds": 25, "face_state": "single_trackable", "motion": "head_turn", "gaze_truth": "unknown"},
+    {"start_seconds": 25, "end_seconds": 45, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"},
+    {"start_seconds": 45, "end_seconds": 60, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"}
+  ]
+}

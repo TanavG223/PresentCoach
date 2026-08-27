@@ -69,6 +69,13 @@ class FakeLLM:
         }
 
 
+class OmittedHintLLM(FakeLLM):
+    def complete_json(self, **_kwargs):
+        document = super().complete_json(**_kwargs)
+        document["strengths"] = document["strengths"][:1]
+        return document
+
+
 class InterruptingLLM(FakeLLM):
     """Simulate a process interruption only after durable session persistence."""
 
@@ -1595,6 +1602,33 @@ def test_stored_feedback_is_invalidated_when_claim_role_changes(tmp_path: Path):
     assert document["coaching_cues"]["counts"]["verified_coaching"] == 0
 
 
+def test_stored_deterministically_completed_feedback_survives_reload(
+    tmp_path: Path,
+):
+    source = tmp_path / "practice.webm"
+    source.write_bytes(b"local-video")
+    presentation = FakeVideoAnalyzer().analyze(source)
+    metrics = compute_metrics(presentation)
+    feedback = generate_feedback(
+        prepare_feedback_metrics(metrics, {"ready": False}), OmittedHintLLM()
+    ).to_dict()
+    assert feedback["source"] == (
+        "local_llm_verified_general_practice_with_deterministic_completion"
+    )
+    archive = PresentationArchive(
+        "a" * 32,
+        "Tanav",
+        (StoredPresentation(presentation, metrics, feedback),),
+        {},
+    )
+
+    document = _serialize_archive(archive)[0]
+
+    assert document["feedback"] == feedback
+    assert document["feedback"]["status"] == "ready"
+    assert document["coaching_cues"]["counts"]["verified_coaching"] > 0
+
+
 def test_test_lab_exposes_only_allowlisted_integrity_checked_local_clips_and_reports(
     tmp_path: Path, monkeypatch,
 ):
@@ -1632,7 +1666,9 @@ def test_test_lab_exposes_only_allowlisted_integrity_checked_local_clips_and_rep
         assert lab["video_eval"] == {
             "case_count": 3, "generated_at": None, "pass_rate_percent": 100.0, "passed": 3,
         }
-        assert lab["llm_eval"]["passed"] == 30
+        assert lab["llm_eval"]["trusted"] is False
+        assert lab["llm_eval"]["case_count"] == 0
+        assert lab["llm_eval"]["passed"] == 0
         assert lab["clips"][0]["available"] is True
         assert lab["clips"][1]["available"] is False
         clip = client.get("/api/test-media/tarun-short-distance/video")
@@ -1701,6 +1737,55 @@ def test_tracking_test_media_is_manifest_allowlisted_integrity_checked_and_range
         assert client.get("/api/test-media/private/video").status_code == 404
         denied = client.get(
             f"/api/test-media/{good['id']}/video",
+            headers={"Sec-Fetch-Site": "cross-site"},
+        )
+        assert denied.status_code == 403
+
+
+def test_dynamic_test_media_is_manifest_allowlisted_mp4_and_range_capable(
+    tmp_path: Path,
+):
+    keys = MemoryKeys()
+    store = PresentationStore(data_dir=tmp_path / "data", key_store=keys)
+    media = tmp_path / "media"
+    reports = tmp_path / "reports"
+    media.mkdir()
+    reports.mkdir()
+    manifest = json.loads(
+        (ROOT / "test_media" / "dynamic_presentation_manifest.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    clip_bytes = b"0123456789-dynamic-mp4"
+    clip = manifest["clips"][0]
+    clip["filename"] = "canonical-range-test.mp4"
+    clip["sha256"] = hashlib.sha256(clip_bytes).hexdigest()
+    (media / clip["filename"]).write_bytes(clip_bytes)
+    (media / "private.mp4").write_bytes(b"must-not-leak")
+    (media / "dynamic_presentation_manifest.json").write_text(
+        json.dumps(manifest), encoding="utf-8"
+    )
+    app = create_app(
+        store=store,
+        llm=FakeLLM(),
+        recorder=FakeRecorder(),
+        test_media_dir=media,
+        reports_dir=reports,
+        testing=True,
+    )
+
+    with app.test_client() as client:
+        ranged = client.get(
+            f"/api/test-media/{clip['id']}/video",
+            headers={"Range": "bytes=2-8"},
+        )
+        assert ranged.status_code == 206
+        assert ranged.data == clip_bytes[2:9]
+        assert ranged.mimetype == "video/mp4"
+        assert client.get("/api/test-media/private/video").status_code == 404
+        assert client.get("/api/test-media/../private.mp4/video").status_code == 404
+        denied = client.get(
+            f"/api/test-media/{clip['id']}/video",
             headers={"Sec-Fetch-Site": "cross-site"},
         )
         assert denied.status_code == 403

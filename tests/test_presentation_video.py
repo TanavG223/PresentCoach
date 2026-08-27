@@ -574,7 +574,7 @@ def test_normalization_timeout_is_bounded_and_partial_output_is_cleaned(
     fake_ffmpeg = tmp_path / "slow-ffmpeg"
     fake_ffmpeg.write_text(
         "#!/bin/sh\n"
-        f"(sleep 0.4; printf orphaned > {shlex.quote(str(sentinel))}) &\n"
+        f"(sleep 1.0; printf orphaned > {shlex.quote(str(sentinel))}) &\n"
         f"printf spawned > {shlex.quote(str(spawned))}\n"
         "for last do :; done\n"
         "printf partial > \"$last\"\n"
@@ -589,7 +589,10 @@ def test_normalization_timeout_is_bounded_and_partial_output_is_cleaned(
         transcriber=NeverTranscribe(),
         ffmpeg_executable=fake_ffmpeg,
         ffprobe_executable=Path("/usr/bin/true"),
-        normalization_timeout_seconds=0.15,
+        # Leave enough scheduling headroom for the shell to write the spawn
+        # marker on a loaded CI machine; the one-second child still proves the
+        # timed-out process group is terminated before it can escape.
+        normalization_timeout_seconds=0.5,
     )
     destination = tmp_path / "browser.mp4"
 

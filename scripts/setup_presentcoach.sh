@@ -9,6 +9,9 @@ MODEL_SHA256="4baf70dd0d7c4247ba2b81fafd9c01005ac77c2f9ef064e00dcf195d0e2fdd2f"
 FACE_MODEL_PATH="${PROJECT_ROOT}/models/face_landmarker.task"
 FACE_MODEL_URL="https://storage.googleapis.com/mediapipe-models/face_landmarker/face_landmarker/float16/1/face_landmarker.task"
 FACE_MODEL_SHA256="64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff"
+PROPOSAL_MODEL_PATH="${PROJECT_ROOT}/models/face_detection_yunet_2023mar.onnx"
+PROPOSAL_MODEL_URL="https://github.com/opencv/opencv_zoo/raw/main/models/face_detection_yunet/face_detection_yunet_2023mar.onnx"
+PROPOSAL_MODEL_SHA256="8f2383e4dd3cfbb4553ea8718107fc0423210dc964f9f4280604804ed2552fa4"
 
 cd "${PROJECT_ROOT}"
 for required_tool in brew curl npm ollama; do
@@ -30,6 +33,9 @@ fi
 if [[ ! -f "${FACE_MODEL_PATH}" ]]; then
   curl --fail --location --retry 3 --output "${FACE_MODEL_PATH}" "${FACE_MODEL_URL}"
 fi
+if [[ ! -f "${PROPOSAL_MODEL_PATH}" ]]; then
+  curl --fail --location --retry 3 --output "${PROPOSAL_MODEL_PATH}" "${PROPOSAL_MODEL_URL}"
+fi
 verify_model() {
   local model_path="$1"
   local expected_digest="$2"
@@ -43,6 +49,7 @@ verify_model() {
 }
 verify_model "${MODEL_PATH}" "${MODEL_SHA256}" "Whisper model"
 verify_model "${FACE_MODEL_PATH}" "${FACE_MODEL_SHA256}" "MediaPipe face model"
+verify_model "${PROPOSAL_MODEL_PATH}" "${PROPOSAL_MODEL_SHA256}" "Anonymous face proposal model"
 if [[ ! -x "${PROJECT_ROOT}/.venv/bin/python" ]]; then
   python3 -m venv "${PROJECT_ROOT}/.venv"
 fi

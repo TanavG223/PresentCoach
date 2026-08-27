@@ -49,6 +49,7 @@ from .presentation_store import (
 )
 from .presentation_test_lab import (
     TEST_MEDIA_BY_ID,
+    resolve_dynamic_test_media,
     resolve_tracking_test_media,
     test_lab_payload,
 )
@@ -79,6 +80,33 @@ class _StoredFeedbackReplay:
 
     def complete_json(self, **_kwargs) -> dict[str, object]:
         return self.document
+
+
+def _stored_feedback_matches_current(
+    stored: dict[str, object], current: dict[str, object]
+) -> bool:
+    """Accept only byte-equivalent semantics under the current verifier.
+
+    A first-pass local model may omit a safe deterministic hint.  The live
+    generator records that provenance while Python completes the exact claim.
+    Replaying the now-complete stored claims no longer needs completion, so the
+    current verifier returns the ordinary source/message pair.  Normalize only
+    that exact provenance difference; every claim, number, role, timestamp,
+    quality flag, and insufficient-data item must still compare equal.
+    """
+
+    if current == stored:
+        return True
+    if stored.get("source") != (
+        "local_llm_verified_general_practice_with_deterministic_completion"
+    ):
+        return False
+    normalized = dict(stored)
+    normalized["source"] = "local_llm_verified_general_practice"
+    normalized["message"] = (
+        "Compared with transparent practice bands; calibration adds a personal reference."
+    )
+    return normalized == current
 
 
 def _requested_byte_range(
@@ -214,7 +242,10 @@ def _serialize_archive(archive) -> list[dict[str, object]]:
                 ).to_dict()
             except (LocalPresentationAIError, TypeError, ValueError):
                 current_feedback = None
-            if current_feedback != feedback:
+            if (
+                current_feedback is None
+                or not _stored_feedback_matches_current(feedback, current_feedback)
+            ):
                 document["feedback"] = {
                     "status": "calibration_required",
                     "strengths": [], "improvements": [],
@@ -259,7 +290,11 @@ def create_app(
     if recorder is None:
         root = _project_root()
         camera = PresentationCameraService(
-            width=960, height=540, timeout_seconds=30 * 60 + 30
+            # The built-in Apple camera advertises 1280x720, not 960x540.
+            # AVFoundation may report a 960x540 capture as opened and then
+            # return zero frames forever, so capture at the supported mode and
+            # keep the existing 512px preview / 15 FPS analysis caps downstream.
+            width=1280, height=720, timeout_seconds=30 * 60 + 30
         )
         transcriber = WhisperCppTranscriber(
             model_path=root / "models" / "whisper" / "ggml-base.en-q5_1.bin"
@@ -433,7 +468,16 @@ def create_app(
                     "The measurements were saved, but the local video could not "
                     "be retained safely."
                 )
-        if presentation.session_kind == "baseline":
+        baseline_quality = metrics.get("quality_flags", {})
+        baseline_is_eligible = (
+            presentation.duration_seconds >= 30.0
+            and isinstance(baseline_quality, dict)
+            and all(baseline_quality.get(flag) == "good" for flag in (
+                "face_detected", "eye_contact", "head_stability",
+                "expression_variety", "audio_clear",
+            ))
+        )
+        if presentation.session_kind == "baseline" and baseline_is_eligible:
             current_store().update_calibration(profile_id, {
                 "baseline_session_id": presentation.session_id,
                 "baseline_confirmed": False,
@@ -555,14 +599,20 @@ def create_app(
         if item is not None:
             path = directory / item["filename"]
             expected_sha256 = item.get("sha256")
+            mimetype = "video/webm"
         else:
             contract = resolve_tracking_test_media(
                 media_dir=directory, media_id=media_id
             )
             if contract is None:
+                contract = resolve_dynamic_test_media(
+                    media_dir=directory, media_id=media_id
+                )
+            if contract is None:
                 return jsonify(error="Test clip not found"), 404
             path = contract["path"]
             expected_sha256 = contract["sha256"]
+            mimetype = str(contract.get("mimetype", "video/webm"))
         if not isinstance(path, Path) or not isinstance(expected_sha256, str):
             return jsonify(error="Test clip not found"), 404
         try:
@@ -592,7 +642,7 @@ def create_app(
         return send_from_directory(
             directory,
             path.name,
-            mimetype="video/webm",
+            mimetype=mimetype,
             conditional=True,
         )
 
@@ -613,7 +663,7 @@ def create_app(
         )
         if candidate is None:
             candidate = next(
-                (item for item in archive.sessions if item.session.session_kind == "baseline"),
+                (item for item in reversed(archive.sessions) if item.session.session_kind == "baseline"),
                 None,
             )
         if candidate is None:

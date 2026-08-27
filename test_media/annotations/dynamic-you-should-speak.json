@@ -1,0 +1,9 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-you-should-speak",
+  "split_group_id": "commons-sha1-17bbd20a7e4f7306e1db2ba29faa0a8f17e758f4",
+  "duration_seconds": 60,
+  "intervals": [
+    {"start_seconds": 0, "end_seconds": 60, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"}
+  ]
+}

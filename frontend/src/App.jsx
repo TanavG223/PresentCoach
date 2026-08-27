@@ -87,12 +87,12 @@ function cueCategory(value) {
 function cuePracticeAction(kind, role) {
   if (role === "strength") return "Keep this delivery choice and compare it with nearby sections.";
   return ({
-    strict_filler: "Repeat this sentence and replace the filler with a short silent beat.",
-    camera_contact_break: "Rehearse this section while returning your gaze toward the camera.",
-    pace_spike: "Repeat this section with a little more space between phrases.",
-    transcript_gap: "Replay the transition and decide whether the gap helps the point land.",
+    strict_filler: "Replay the sentence, then say it once more with a brief silent beat in place of the filler.",
+    camera_contact_break: "Rehearse one sentence here and return your gaze to the lens at the end of the clause.",
+    pace_spike: "Repeat this window once at a steadier pace, leaving space after each main idea.",
+    transcript_gap: "Replay this transition and decide whether the measured gap supports the idea or needs a clearer bridge.",
     face_tracking_gap: "Keep one face centered and fully visible before recording this section again.",
-    expression_movement: "Compare this largest measured movement bucket with quieter sections of your delivery.",
+    expression_movement: "Compare this visible movement peak with a quieter section; keep whichever delivery feels intentional.",
     quality: "Adjust the local capture setup, then record this section again.",
   })[kind] || "Replay this moment and compare it with the measured evidence.";
 }
@@ -123,6 +123,37 @@ export function recorderCanClose(phase) {
 
 export function shouldWarnBeforeRecorderExit(cancelArmed) {
   return cancelArmed === true;
+}
+
+export function requestNativeCapturePermissions(host = globalThis.window, timeoutMs = 90000) {
+  const bridge = host?.webkit?.messageHandlers?.presentCoachPermissions;
+  if (!bridge || typeof bridge.postMessage !== "function") {
+    return Promise.resolve({ camera: true, microphone: true, native: false });
+  }
+  return new Promise((resolve, reject) => {
+    let timeout;
+    const cleanup = () => {
+      host.removeEventListener("presentcoach-permission-result", receive);
+      clearTimeout(timeout);
+    };
+    const receive = event => {
+      const result = event?.detail;
+      if (typeof result?.camera !== "boolean" || typeof result?.microphone !== "boolean") return;
+      cleanup();
+      resolve({ camera: result.camera, microphone: result.microphone, native: true });
+    };
+    host.addEventListener("presentcoach-permission-result", receive);
+    timeout = setTimeout(() => {
+      cleanup();
+      reject(new Error("The macOS permission prompt did not finish. Close it, then try recording again."));
+    }, timeoutMs);
+    try {
+      bridge.postMessage("request");
+    } catch (_) {
+      cleanup();
+      reject(new Error("PresentCoach could not request camera and microphone access."));
+    }
+  });
 }
 
 export function findRecoveredSession(previousSessionIds = [], nextSessions = []) {
@@ -263,6 +294,30 @@ export function normalizeCoachingCues(item) {
   return normalized.filter((cue, index) => index === 0 || cue.id !== normalized[index - 1].id);
 }
 
+export function rankCoachingCues(cues, limit = 5) {
+  const source = Array.isArray(cues) ? cues : [];
+  if (source.length <= limit) return source;
+  const roleWeight = { insufficient: 500, quality: 480, improvement: 420, review: 350, strength: 250, observation: 180 };
+  const severityWeight = { high: 30, moderate: 20, info: 10 };
+  const ranked = [...source].sort((left, right) => {
+    const leftScore = (roleWeight[left.role] || 0) + (severityWeight[left.severity] || 0) + Math.min(20, Math.max(0, Number(left.end_seconds) - Number(left.start_seconds)));
+    const rightScore = (roleWeight[right.role] || 0) + (severityWeight[right.severity] || 0) + Math.min(20, Math.max(0, Number(right.end_seconds) - Number(right.start_seconds)));
+    return rightScore - leftScore || left.start_seconds - right.start_seconds || left.id.localeCompare(right.id);
+  });
+  const selected = [];
+  const categories = new Set();
+  ranked.forEach(cue => {
+    if (selected.length < limit && !categories.has(cue.category)) {
+      selected.push(cue);
+      categories.add(cue.category);
+    }
+  });
+  ranked.forEach(cue => {
+    if (selected.length < limit && !selected.includes(cue)) selected.push(cue);
+  });
+  return selected.sort((left, right) => left.start_seconds - right.start_seconds || left.id.localeCompare(right.id));
+}
+
 export function activeCoachingCueIndex(cues, currentTime) {
   const time = Number(currentTime);
   if (!Number.isFinite(time)) return -1;
@@ -330,6 +385,18 @@ export function formatQualityMetric(value, quality, suffix = "") {
     : "Insufficient";
 }
 
+export function sessionHistoryKind(item = {}, calibration = {}) {
+  const kind = item?.session?.session_kind || "practice";
+  if (kind !== "baseline") return { label: kind === "repeat" ? "Repeat" : "Practice", className: kind };
+  const quality = item?.metrics?.quality_flags || item?.session?.quality_flags || {};
+  const eligible = Number(item?.session?.duration_seconds) >= 30
+    && ["face_detected", "eye_contact", "head_stability", "expression_variety", "audio_clear"].every(flag => quality[flag] === "good");
+  const selected = item?.session?.session_id === calibration?.baseline_session_id;
+  return selected && eligible
+    ? { label: "Baseline", className: "baseline" }
+    : { label: "Baseline attempt", className: "baseline-attempt" };
+}
+
 function formatTrackingInterval(interval) {
   if (!interval) return "None observed";
   const duration = Number(interval.duration_seconds);
@@ -362,10 +429,11 @@ function TrackingCase({ item, active, onPlay }) {
       video.pause();
     }
   };
+  const outcome = trackingOutcomeLabel(item);
   return <article className="tracking-case">
     <div className="tracking-case-head">
       <span className={`tracking-role ${item.dataset_role}`}>{TRACKING_ROLE_LABELS[item.dataset_role] || item.dataset_role}</span>
-      <span className={`test-result ${item.passed ? "pass" : "fail"}`}>{item.passed ? "✓ Contract passed" : "× Contract failed"}</span>
+      <span className={`test-result ${item.passed ? "pass" : "fail"}`}>{outcome}</span>
     </div>
     <h4>{item.title}</h4>
     <p>{item.purpose}</p>
@@ -400,6 +468,94 @@ function TrackingCase({ item, active, onPlay }) {
     {!!item.declared_checks?.length && <details className="tracking-checks"><summary>Declared scenario checks ({item.declared_checks.length})</summary><ul>{item.declared_checks.map(check => <li key={check.id} className={check.passed ? "pass" : "fail"}><Icon name={check.passed ? "check" : "close"} size={13} /><span>{check.label}<small>{check.expected}</small></span></li>)}</ul></details>}
     <a className="source-link tracking-source" href={item.source_url} target="_blank" rel="noreferrer">{item.license} • source ↗</a>
   </article>;
+}
+
+export function trackingOutcomeLabel(item = {}) {
+  if (!item.passed) return "× Contract failed";
+  const checks = Array.isArray(item.declared_checks) ? item.declared_checks : [];
+  const expectedAbstention = checks.some(check => /abstain|max(?:imum)? valid|no face/i.test(`${check?.id || ""} ${check?.label || ""} ${check?.expected || ""}`))
+    || /abstention|distant face|no face/i.test(`${item.title || ""} ${item.purpose || ""}`);
+  return expectedAbstention ? "✓ Expected abstention" : "✓ Contract passed";
+}
+
+export function dynamicSplitPresentation(split = {}, role = "development") {
+  if (role === "model_output_holdout" && split.state === "untouched") {
+    return { label: "Untouched • not run", tone: "untouched" };
+  }
+  if (split.state === "not_run") return { label: "Not run", tone: "neutral" };
+  if (split.state === "not_evaluated") return { label: "Not evaluated", tone: "neutral" };
+  if (split.trusted === true && split.release_gate_status === "pass") return { label: "Engineering gates passed", tone: "pass" };
+  if (split.trusted === true && split.release_gate_status === "fail") return { label: "Engineering gates failed", tone: "fail" };
+  if (split.state === "manifest_unavailable") return { label: "Manifest unavailable", tone: "fail" };
+  return { label: "Report unverified", tone: "fail" };
+}
+
+function dynamicMetric(value, kind = "ratio") {
+  if (!Number.isFinite(value)) return "Not evaluated";
+  if (kind === "ratio") return formatPercentRatio(value);
+  if (kind === "seconds") return `${value.toFixed(2)}s`;
+  if (kind === "rate") return `${value.toFixed(2)}/min`;
+  return String(value);
+}
+
+function DynamicPresenterCase({ item, active, onPlay }) {
+  const [mediaError, setMediaError] = useState(false);
+  const mediaSource = trackingVideoSource(item.media);
+  const result = item.result;
+  const observed = result?.observed_state || {};
+  const tracking = result?.tracking || {};
+  return <article className="dynamic-case">
+    <div className="dynamic-case-video">
+      {mediaSource ? active && !mediaError ? <video
+        controls autoPlay playsInline preload="metadata" src={mediaSource}
+        aria-label={`Canonical moving-presenter test video: ${item.title}`}
+        onError={() => setMediaError(true)}
+      /> : mediaError ? <button type="button" onClick={() => setMediaError(false)}><Icon name="lock" size={20} /><span><strong>Integrity check blocked playback</strong><small>Restore the manifest-locked MP4 and retry.</small></span></button> : <button type="button" onClick={() => { setMediaError(false); onPlay(); }}><Icon name="play" size={22} /><span><strong>Watch canonical excerpt</strong><small>60 seconds • loads only on click</small></span></button> : <div className="dynamic-video-missing"><Icon name="upload" size={20} /><span><strong>Canonical MP4 not installed</strong><small>Run the verified test-media downloader.</small></span></div>}
+    </div>
+    <div className="dynamic-case-copy">
+      <div className="dynamic-case-title"><span className={`tracking-role ${item.dataset_role === "development" ? "development" : "holdout"}`}>{item.dataset_role === "development" ? "Development" : result ? "One-shot holdout" : "Untouched holdout"}</span><span className={`test-result ${result ? "pass" : ""}`}>{result ? "Measured" : "No model output"}</span></div>
+      <h5>{item.title}</h5>
+      <p>{item.purpose}</p>
+      {result ? <dl className="dynamic-case-metrics">
+        <div><dt>Analyzed cadence</dt><dd>{Number.isFinite(tracking.analyzed_fps) ? `${tracking.analyzed_fps.toFixed(1)} FPS` : "Not evaluated"}</dd></div>
+        <div><dt>Processing throughput</dt><dd>{Number.isFinite(tracking.processing_throughput_fps) ? `${tracking.processing_throughput_fps.toFixed(1)} FPS` : "Not evaluated"}</dd></div>
+        <div><dt>Trackable coverage</dt><dd>{dynamicMetric(observed.trackable_coverage)}</dd></div>
+        <div><dt>False-valid rate</dt><dd>{dynamicMetric(observed.false_valid_rate)}</dd></div>
+        <div><dt>Multi-face abstention</dt><dd>{dynamicMetric(observed.multi_face_abstention)}</dd></div>
+        <div><dt>Observed dropouts</dt><dd>{observed.dropout_run_count ?? "Not evaluated"}</dd></div>
+        <div><dt>Repeatability</dt><dd>{result.repeatability?.status === "pass" ? `${result.repeatability.runs} exact runs` : "One frozen holdout run"}</dd></div>
+      </dl> : <p className="dynamic-no-output">This card exposes the licensed input only. No measurements are shown without a fully verified split report.</p>}
+      <a className="source-link" href={item.source_url} target="_blank" rel="noreferrer">{item.license_spdx} • source and license ↗</a>
+    </div>
+  </article>;
+}
+
+function DynamicSplitPanel({ split, role, activeClip, setActiveClip }) {
+  const presentation = dynamicSplitPresentation(split, role);
+  const aggregate = split.aggregate || {};
+  const holdoutWasRun = role === "model_output_holdout" && split.trusted === true && split.case_count > 0;
+  const title = role === "development" ? "Development tuning set" : holdoutWasRun ? "One-shot model-output holdout" : "Untouched model-output holdout";
+  const subtitle = role === "development"
+    ? "Used only to tune deterministic measurement and quality guardrails; each finished report requires two exact non-runtime runs."
+    : holdoutWasRun
+      ? "Run exactly once after the code and thresholds were frozen. Its failures are preserved here without retuning or rerunning."
+      : "Reserved before model output. Its report remains absent until configuration and policy are frozen, then runs exactly once.";
+  return <section className={`dynamic-split ${role === "model_output_holdout" ? "holdout" : "development"}`} aria-label={title}>
+    <div className="dynamic-split-head"><div><span className="eyebrow">{role === "development" ? "TUNING SPLIT" : holdoutWasRun ? "ONE-SHOT FINAL SPLIT" : "RESERVED SPLIT"}</span><h4>{title}</h4><p>{subtitle}</p></div><span className={`dynamic-state ${presentation.tone}`}>{presentation.label}</span></div>
+    {split.trusted ? <>
+      <dl className="dynamic-aggregate">
+        <div><dt>Trackable coverage</dt><dd>{dynamicMetric(aggregate.trackable_coverage)}</dd></div>
+        <div><dt>False-valid rate</dt><dd>{dynamicMetric(aggregate.false_valid_rate)}</dd></div>
+        <div><dt>Multi-face abstention</dt><dd>{dynamicMetric(aggregate.multi_face_abstention)}</dd></div>
+        <div><dt>Dropouts / annotated min</dt><dd>{dynamicMetric(aggregate.dropouts_per_annotated_minute, "rate")}</dd></div>
+        <div><dt>Reacquisition success</dt><dd>{dynamicMetric(aggregate.reacquisition_success_rate)}</dd></div>
+        <div><dt>Max reacquisition</dt><dd>{dynamicMetric(aggregate.max_reacquisition_latency_seconds, "seconds")}</dd></div>
+      </dl>
+      {!!split.underpowered_required_metrics?.length && <p className="dynamic-underpowered"><Icon name="scan" size={15} /> Not evaluated: insufficient evidence for {split.underpowered_required_metrics.map(metricLabel).join(", ")}. Missing power is never counted as a pass.</p>}
+      {!!split.checks?.length && <details className="dynamic-checks"><summary>Frozen global engineering gates ({split.checks.length})</summary><ul>{split.checks.map(check => <li key={check.metric} className={check.status === "pass" ? "pass" : check.status === "fail" ? "fail" : "neutral"}><Icon name={check.status === "pass" ? "check" : check.status === "fail" ? "close" : "scan"} size={13} /><span><strong>{metricLabel(check.metric)}</strong><small>{check.status === "not_evaluated" ? "Not evaluated—insufficient evidence" : `${testActual(check.actual)} ${check.comparison} ${testActual(check.threshold)}`}</small></span></li>)}</ul></details>}
+    </> : <div className={`dynamic-split-message ${presentation.tone}`}><Icon name={role === "model_output_holdout" && split.state === "untouched" ? "lock" : "scan"} size={17} /><span>{split.trust_message}</span></div>}
+    <div className="dynamic-case-grid">{(split.cases || []).map(item => <DynamicPresenterCase key={item.id} item={item} active={activeClip === `dynamic:${item.id}`} onPlay={() => setActiveClip(`dynamic:${item.id}`)} />)}</div>
+  </section>;
 }
 
 function Onboarding({ csrf, onCreated }) {
@@ -443,6 +599,7 @@ function CalibrationPanel({ calibration, csrf, profileId, onChanged }) {
 
 function RecordingModal({ profileId, csrf, calibration, previousSessionIds, onClose, onSaved, onRecover }) {
   const [phase, setPhase] = useState("ready");
+  const [startingMessage, setStartingMessage] = useState("Starting camera + mic…");
   const [status, setStatus] = useState({ elapsed_seconds: 0, analysis_fps: 0, face_detected: false, maximum_duration_seconds: 1680, maximum_duration_reached: false });
   const [previewUrl, setPreviewUrl] = useState("");
   const [error, setError] = useState("");
@@ -504,8 +661,12 @@ function RecordingModal({ profileId, csrf, calibration, previousSessionIds, onCl
   async function start() {
     cancelOnUnmount.current = true;
     stopRequested.current = false;
-    setPhase("starting"); setError("");
+    setPhase("starting"); setError(""); setStartingMessage("Waiting for macOS camera + microphone permission…");
     try {
+      const permissions = await requestNativeCapturePermissions();
+      if (!permissions.camera) throw new Error("Camera access is off. Allow PresentCoach in System Settings > Privacy & Security > Camera.");
+      if (!permissions.microphone) throw new Error("Microphone access is off. Allow PresentCoach in System Settings > Privacy & Security > Microphone.");
+      setStartingMessage("Starting camera + mic…");
       const started = await api("/api/recordings/start", { method: "POST", body: JSON.stringify({ profile_id: profileId, client_id: recordingClientId.current }) }, csrf); setPreviewUrl(started.preview_url); setPhase("recording");
       beginStatusPolling();
     } catch (caught) { cancelOnUnmount.current = false; setPhase("ready"); setError(caught.message); }
@@ -558,7 +719,7 @@ function RecordingModal({ profileId, csrf, calibration, previousSessionIds, onCl
     {phase === "recording" && <div className="live-stats"><span><Icon name="clock" /><strong>{formatTime(status.elapsed_seconds)}</strong><small>{status.elapsed_seconds < 30 ? `${Math.ceil(30 - status.elapsed_seconds)}s until feedback eligible` : `${formatTime(timeUntilAutomaticSave)} until automatic save`}</small></span><span><Icon name="scan" /><strong>{status.analyzed_frames || 0}</strong><small>frames measured</small></span><span><Icon name="mic" /><strong>Local mic</strong><small>raw buffer discarded • replay encrypted</small></span></div>}
     {error && <div className="error" role="alert">{error}</div>}
     {phase === "ready" && <button className="primary record-action" onClick={start}><Icon name="record" /> Start {expected.toLowerCase()}</button>}
-    {phase === "starting" && <button className="primary record-action" disabled><span className="spinner" /> Starting camera + mic…</button>}
+    {phase === "starting" && <button className="primary record-action" disabled><span className="spinner" /> {startingMessage}</button>}
     {phase === "recording" && <div className="recording-actions"><button className="stop-action" onClick={stop}><Icon name="stop" /> Stop & analyze</button><button className="secondary discard-action" onClick={discard}>Discard recording</button></div>}
     {phase === "processing" && <button className="primary record-action" disabled><span className="spinner" /> Running local Whisper…</button>}
     <p className="local-note"><Icon name="lock" size={14} /> Python owns the camera and microphone. After you stop, the replay is encrypted locally; metrics run at 15+ FPS. A live run automatically stops and saves at {formatTime(maximumDuration)}.</p>
@@ -621,13 +782,20 @@ export function binaryTimelinePath(samples, x, valueFor, yesY, noY) {
 
 function Timeline({ item }) {
   const vision = item?.metrics?.timeline?.vision || [], pace = item?.metrics?.timeline?.pace_windows || [];
-  const duration = Math.max(item?.session?.duration_seconds || 1, 1), x = time => 44 + (Number(time) / duration) * 812;
-  const gazePath = binaryTimelinePath(vision, x, sample => sample.eye_contact, 52, 126);
-  const presencePath = binaryTimelinePath(vision, x, sample => sample.face_detected, 160, 218);
+  const duration = Math.max(item?.session?.duration_seconds || 1, 1), x = time => 132 + (Number(time) / duration) * 724;
+  const gazePath = binaryTimelinePath(vision, x, sample => sample.eye_contact, 38, 68);
+  const presencePath = binaryTimelinePath(vision, x, sample => sample.face_detected, 105, 135);
   const maxPace = Math.max(220, ...pace.map(window => Number(window.words_per_minute || 0)));
-  const pacePath = pace.map((window, index) => `${index ? "L" : "M"}${x(window.start_seconds)},${218 - (Number(window.words_per_minute) / maxPace) * 166}`).join(" ");
+  const pacePath = pace.map((window, index) => `${index ? "L" : "M"}${x(window.start_seconds)},${235 - (Number(window.words_per_minute) / maxPace) * 60}`).join(" ");
   if (!vision.length && !pace.length) return <div className="empty-panel">No usable timeline data for this run.</div>;
-  return <div className="timeline-wrap"><svg className="timeline" viewBox="0 0 900 260" role="img" aria-label="Camera contact, face presence, and speaking pace over time">{[52, 94, 136, 178, 220].map(y => <line key={y} x1="44" x2="856" y1={y} y2={y} className="grid" />)}{gazePath && <path d={gazePath} className="gaze-line" />}{presencePath && <path d={presencePath} className="presence-line" />}{pacePath && <path d={pacePath} className="pace-line" />}<text x="44" y="246">0:00</text><text x="820" y="246">{formatTime(duration)}</text></svg><div className="legend"><span className="gaze">Camera contact</span><span className="presence">Face present</span><span className="pace">Pace</span></div></div>;
+  return <div className="timeline-wrap"><svg className="timeline" viewBox="0 0 900 280" role="img" aria-label="Camera contact and face presence as yes or no lanes, plus speaking pace in words per minute over time">
+    {[38, 68, 105, 135, 175, 205, 235].map(y => <line key={y} x1="132" x2="856" y1={y} y2={y} className="grid" />)}
+    <text className="lane-title" x="8" y="42">Camera contact</text><text x="104" y="42">yes</text><text x="108" y="72">no</text>
+    <text className="lane-title" x="8" y="109">Face present</text><text x="104" y="109">yes</text><text x="108" y="139">no</text>
+    <text className="lane-title" x="8" y="179">Pace</text><text x="85" y="179">{maxPace}</text><text x="91" y="239">0</text><text x="8" y="194">words/min</text>
+    {gazePath && <path d={gazePath} className="gaze-line" />}{presencePath && <path d={presencePath} className="presence-line" />}{pacePath && <path d={pacePath} className="pace-line" />}
+    <text x="132" y="267">{formatTime(0)}</text><text textAnchor="end" x="856" y="267">{formatTime(duration)}</text>
+  </svg><div className="legend"><span className="gaze">Camera contact</span><span className="presence">Face present</span><span className="pace">Pace (WPM)</span></div></div>;
 }
 
 function Transcript({ session, currentTime = -1, onSeek = () => {}, enabled = false }) {
@@ -674,6 +842,7 @@ function SessionReview({ item }) {
   const [mediaError, setMediaError] = useState(false);
   const [captionUrl, setCaptionUrl] = useState("");
   const [announcement, setAnnouncement] = useState("");
+  const [showAll, setShowAll] = useState(false);
   const cues = useMemo(() => normalizeCoachingCues(item), [item]);
   const source = sessionVideoSource(item?.media);
   const replayAvailable = Boolean(source && !mediaError);
@@ -681,13 +850,15 @@ function SessionReview({ item }) {
   const markerGroups = useMemo(() => groupCoachingMarkers(cues), [cues]);
   const captions = useMemo(() => transcriptVtt(item?.session), [item?.session]);
   const categories = [...new Set(cues.map(cue => cue.category))];
-  const visible = filter === "all" ? cues : cues.filter(cue => cue.category === filter);
+  const filtered = filter === "all" ? cues : cues.filter(cue => cue.category === filter);
+  const visible = showAll ? filtered : rankCoachingCues(filtered, 5);
 
   useEffect(() => {
     setCurrentTime(0);
     setFilter("all");
     setMediaError(false);
     setAnnouncement("");
+    setShowAll(false);
   }, [item?.session?.session_id]);
 
   useEffect(() => {
@@ -728,7 +899,7 @@ function SessionReview({ item }) {
           >{captionUrl && <track kind="captions" srcLang="en" label="English transcript" src={captionUrl} default />}</video> : <div className="session-video-empty" role="status"><Icon name={mediaError ? "lock" : "play"} size={32} /><strong>{mediaError ? "Encrypted replay could not be opened" : "Replay is unavailable for this session"}</strong><p>{mediaError ? "Reload the app to request a fresh local playback link. Your measurements are still intact." : "No video replay was retained for this session. It may predate replay support, or its safe video copy could not be created. Timestamped metrics and transcript remain available below."}</p></div>}
           {source && !mediaError && <div className="video-status"><Icon name="lock" size={13} /> Encrypted locally • opened only for replay</div>}
         </div>
-        {replayAvailable && !!markerGroups.length && <div className="cue-marker-track" aria-label="Measured markers on the recording timeline">{markerGroups.map(group => <button
+        {replayAvailable && !!markerGroups.length && <><div className="cue-marker-track" aria-label="Measured markers on the recording timeline">{markerGroups.map(group => <button
           type="button"
           key={`${group.start_seconds}-${group.cues.map(cue => cue.id).join("-")}`}
           className={`${group.cues[0].category}${group.cues.some(cue => activeIds.has(cue.id)) ? " active" : ""}`}
@@ -736,16 +907,16 @@ function SessionReview({ item }) {
           onClick={() => seekTo(group.cues[0].seek_seconds)}
           title={`${formatTime(group.start_seconds)} • ${group.cues.map(cue => cue.title).join("; ")}`}
           aria-label={`Jump to ${formatTime(group.start_seconds)}: ${group.cues.length} measured ${group.cues.length === 1 ? "note" : "notes"}`}
-        />)}</div>}
+        />)}</div><div className="cue-marker-legend" aria-label="Marker colors"><span className="camera">Camera</span><span className="speech">Fillers</span><span className="pace">Pace</span><span className="pause">Gaps</span><span className="expression">Expression</span><span className="quality">Capture</span></div></>}
         <div className="review-transcript">
           <div className="review-subhead"><div><span className="eyebrow">WHISPER • LOCAL</span><h3>{replayAvailable ? "Select any word to replay it" : "Timestamped transcript"}</h3></div><span className="filler-key">highlight = tracked phrase</span></div>
           <Transcript session={item.session} currentTime={currentTime} onSeek={seekTo} enabled={replayAvailable} />
         </div>
       </div>
       <aside className="coaching-rail" aria-label="Timestamped coaching notes">
-        <div className="coaching-rail-head"><div><span className="eyebrow">MEASURED COACHING TIMELINE</span><h3>{cues.length ? `${cues.length} evidence-backed notes` : "No flagged moments"}</h3></div><Icon name="spark" /></div>
-        {!!categories.length && <div className="cue-filters" aria-label="Filter coaching notes"><button type="button" className={filter === "all" ? "active" : ""} aria-pressed={filter === "all"} onClick={() => setFilter("all")}>All</button>{categories.map(category => <button type="button" key={category} className={filter === category ? "active" : ""} aria-pressed={filter === category} onClick={() => setFilter(category)}>{COACHING_CATEGORIES[category]?.label || category}</button>)}</div>}
-        {visible.length ? <ol className="cue-list">{visible.map(cue => {
+        <div className="coaching-rail-head"><div><span className="eyebrow">MEASURED COACHING TIMELINE</span><h3>{cues.length ? `${Math.min(visible.length, filtered.length)} of ${filtered.length} notes shown` : "No flagged moments"}</h3></div><Icon name="spark" /></div>
+        {!!categories.length && <div className="cue-filters" aria-label="Filter coaching notes"><button type="button" className={filter === "all" ? "active" : ""} aria-pressed={filter === "all"} onClick={() => { setFilter("all"); setShowAll(false); }}>All</button>{categories.map(category => <button type="button" key={category} className={filter === category ? "active" : ""} aria-pressed={filter === category} onClick={() => { setFilter(category); setShowAll(false); }}>{COACHING_CATEGORIES[category]?.label || category}</button>)}</div>}
+        {visible.length ? <><ol className="cue-list">{visible.map(cue => {
           const active = activeIds.has(cue.id);
           const content = <>
             <span className={`cue-icon ${cue.category}`}><Icon name={COACHING_CATEGORIES[cue.category]?.icon || "spark"} size={17} /></span>
@@ -756,7 +927,7 @@ function SessionReview({ item }) {
             ? <button type="button" className={`cue-card ${cue.role} ${cue.severity}${active ? " active" : ""}`} aria-current={active ? "true" : undefined} onClick={() => seekTo(cue.seek_seconds)}>{content}</button>
             : <article className={`cue-card cue-card-static ${cue.role} ${cue.severity}`}>{content}</article>}
           </li>;
-        })}</ol> : <div className="cue-empty"><Icon name="check" size={25} /><strong>{cues.length ? "No notes in this filter" : "No measured behavior crossed a timestamped coaching threshold"}</strong><p>PresentCoach does not invent a problem when the evidence does not support one.</p></div>}
+        })}</ol>{filtered.length > 5 && <button type="button" className="cue-expand" onClick={() => setShowAll(value => !value)}>{showAll ? "Show the 5 priority notes" : `Show all ${filtered.length} measured notes`}</button>}</> : <div className="cue-empty"><Icon name="check" size={25} /><strong>{cues.length ? "No notes in this filter" : "No measured behavior crossed a timestamped coaching threshold"}</strong><p>PresentCoach does not invent a problem when the evidence does not support one.</p></div>}
         <p className="coaching-boundary"><Icon name="lock" size={13} /> Facial landmarks measure movement and camera orientation—not emotion, confidence, or proof that you were reading.</p>
       </aside>
     </div>
@@ -772,9 +943,10 @@ function FeedbackPanel({ feedback, onGenerate }) {
     return <div className="feedback-locked"><div><Icon name={regeneratable ? "spark" : "lock"} size={24} /></div><h3>{feedback?.status === "refused_short_session" ? "Recording too short" : feedback?.status === "local_ai_unavailable" ? "Local feedback is available to retry" : feedback?.status === "insufficient_data" ? "Insufficient measured data" : "Feedback is ready to generate"}</h3><p>{legacyLock ? "This recording was saved under the old calibration lock. Generate an actionable, evidence-locked summary now." : feedback?.message || "Record at least 30 seconds with clear face and audio data."}</p>{regeneratable && <button className="primary generate-feedback" onClick={generate} disabled={busy}>{busy ? <><span className="spinner" /> Running local AI…</> : <><Icon name="spark" /> Generate feedback</>}</button>}{error && <div className="error" role="alert">{error}</div>}</div>;
   }
   const descriptive = feedback.source === "local_llm_verified_descriptive";
-  const general = feedback.source === "local_llm_verified_general_practice";
+  const general = feedback.source?.startsWith("local_llm_verified_general_practice");
+  const safelyCompleted = feedback.source === "local_llm_verified_general_practice_with_deterministic_completion";
   return <div className="feedback-columns">
-    {general && <p className="feedback-mode"><Icon name="scan" size={14} /> General practice bands are active. Your completed calibration adds personal comparison.</p>}
+    {general && <p className="feedback-mode"><Icon name="scan" size={14} /> {safelyCompleted ? "Local AI selected verified measurements; PresentCoach filled any missing slots with measured results." : "General practice bands are active. Your completed calibration adds personal comparison."}</p>}
     {descriptive && <div className="feedback-mode"><Icon name="scan" size={14} /><span>This is an older neutral summary.</span><button className="secondary upgrade-feedback" onClick={generate} disabled={busy}>{busy ? "Upgrading…" : "Upgrade coaching"}</button></div>}
     {error && <div className="error" role="alert">{error}</div>}
     <div><span className="feedback-label strength"><Icon name="check" size={15} /> {descriptive ? "Measured observations" : "What worked"}</span>{feedback.strengths.map((claim, index) => <article key={index}><strong>{metricLabel(claim.metric)}</strong><p>{claim.text}</p><small>{formatTime(claim.timestamp_seconds)} • {claim.value} {claim.unit}</small></article>)}</div>
@@ -789,7 +961,7 @@ function SessionView({ item, onGenerateFeedback }) {
   const aggregate = item.metrics.aggregate, quality = item.metrics.quality_flags || item.session.quality_flags;
   return <><section className="metric-row"><div><span>Camera contact</span><strong>{quality.eye_contact === "good" ? `${aggregate.eye_contact_percent}%` : "Insufficient"}</strong><small>{quality.eye_contact === "good" ? "of analyzed contact frames" : "record a new 15 FPS run"}</small></div><div><span>Speaking pace</span><strong>{quality.audio_clear === "good" ? aggregate.overall_words_per_minute : "Insufficient"}</strong><small>{quality.audio_clear === "good" ? "words per minute" : "audio quality"}</small></div><div><span>Um / uh</span><strong>{quality.audio_clear === "good" ? aggregate.strict_filler_count ?? aggregate.filler_count : "—"}</strong><small>{quality.audio_clear === "good" ? `${aggregate.strict_filler_rate_per_minute ?? "—"} per minute` : "audio quality"}</small></div><div><span>Face presence</span><strong>{quality.face_detected === "good" ? `${aggregate.face_presence_percent}%` : "Insufficient"}</strong><small>{quality.face_detected === "good" ? `${aggregate.analyzed_vision_fps} analysis FPS` : "framing or legacy precision"}</small></div></section>
     <SessionReview item={item} />
-    <section className="content-grid"><article className="panel timeline-panel"><div className="panel-head"><div><span className="eyebrow">MOMENT BY MOMENT</span><h2>Metric timeline</h2></div><span className="duration"><Icon name="clock" size={16} /> {formatTime(item.session.duration_seconds)}</span></div><Timeline item={item} /><div className="submetrics"><span><small>Head rotation variation</small><strong>{formatQualityMetric(aggregate.head_rotation_std_degrees, quality.head_stability, "°")}</strong></span><span><small>Position variation</small><strong>{formatQualityMetric(aggregate.head_position_std_percent, quality.head_stability, "% frame")}</strong></span><span><small>Expression movement</small><strong>{formatQualityMetric(aggregate.expression_variety_index, quality.expression_variety)}</strong></span><span><small>Pauses over 2s</small><strong>{aggregate.pauses_over_2_seconds}</strong></span></div></article>
+    <section className="content-grid"><article className="panel timeline-panel"><div className="panel-head"><div><span className="eyebrow">MOMENT BY MOMENT</span><h2>Metric timeline</h2></div><span className="duration"><Icon name="clock" size={16} /> {formatTime(item.session.duration_seconds)}</span></div><Timeline item={item} /><div className="submetrics"><span><small>Head rotation variation</small><strong>{formatQualityMetric(aggregate.head_rotation_std_degrees, quality.head_stability, "°")}</strong><em>session standard deviation; compare with your baseline</em></span><span><small>Position variation</small><strong>{formatQualityMetric(aggregate.head_position_std_percent, quality.head_stability, "%")}</strong><em>percent of frame; no universal target</em></span><span><small>Expression movement</small><strong>{formatQualityMetric(aggregate.expression_variety_index, quality.expression_variety)}</strong><em>relative landmark-movement index</em></span><span><small>Transcript gaps over 2s</small><strong>{aggregate.pauses_over_2_seconds}</strong><em>possible silence or recognition gaps</em></span></div></article>
     <article className="panel feedback-panel"><div className="panel-head"><div><span className="eyebrow">LOCAL AI • EVIDENCE-LOCKED</span><h2>Session summary</h2></div><Icon name="spark" /></div><FeedbackPanel feedback={item.feedback} onGenerate={() => onGenerateFeedback(item.session.session_id)} /></article></section></>;
 }
 
@@ -806,11 +978,14 @@ export function isTrackingReportComplete(tracking = {}) {
 function TestLab({ lab }) {
   const [activeClip, setActiveClip] = useState(null);
   if (!lab) return null;
-  const video = lab.video_eval || {}, llm = lab.llm_eval || {}, tracking = lab.tracking_eval || {};
+  const video = lab.video_eval || {}, llm = lab.llm_eval || {}, tracking = lab.tracking_eval || {}, dynamic = lab.dynamic_eval || {};
+  const dynamicDevelopment = dynamic.development || {};
+  const dynamicHoldout = dynamic.holdout || {};
+  const dynamicDevelopmentState = dynamicSplitPresentation(dynamicDevelopment, "development");
   const trackingCases = tracking.cases || [];
   const trackingComplete = isTrackingReportComplete(tracking);
   return <section className="test-lab" id="test-lab">
-    <div className="test-lab-head"><div><span className="eyebrow">REPRODUCIBLE TEST LAB</span><h2>Watch the inputs. Inspect the evidence.</h2><p>Licensed clips evaluate MediaPipe, Whisper, quality flags, guardrails, and anonymous landmark continuity. These are scenario-contract results—not face-tracking accuracy—and they never train on a speaker’s face.</p></div><div className="test-summaries"><span className={video.passed === video.case_count && video.case_count ? "pass" : "fail"}><strong>{video.passed}/{video.case_count}</strong><small>full-pipeline video cases</small></span><span className={trackingComplete ? "pass" : "fail"}><strong>{tracking.trusted ? `${tracking.passed}/${tracking.case_count}` : "—"}</strong><small>{tracking.trusted ? "tracking scenario contracts" : "tracking report unverified"}</small></span><span className={llm.passed === llm.case_count && llm.case_count ? "pass" : "fail"}><strong>{llm.passed}/{llm.case_count}</strong><small>LLM cases • {llm.pass_rate_percent}%</small></span></div></div>
+    <div className="test-lab-head"><div><span className="eyebrow">REPRODUCIBLE TEST LAB</span><h2>Watch the inputs. Inspect the evidence.</h2><p>Licensed clips evaluate MediaPipe, Whisper, quality flags, guardrails, and anonymous landmark continuity. These are scenario-contract results—not face-tracking accuracy—and they never train on a speaker’s face.</p></div><div className="test-summaries"><span className={video.passed === video.case_count && video.case_count ? "pass" : "fail"}><strong>{video.passed}/{video.case_count}</strong><small>full-pipeline video cases</small></span><span className={dynamicDevelopmentState.tone}><strong>{dynamicDevelopment.trusted ? dynamicDevelopment.release_gate_status === "not_evaluated" ? "N/E" : dynamicDevelopment.case_count : "—"}</strong><small>moving-presenter development • {dynamicDevelopmentState.label}</small></span><span className={trackingComplete ? "pass" : "fail"}><strong>{tracking.trusted ? `${tracking.passed}/${tracking.case_count}` : "—"}</strong><small>{tracking.trusted ? "tracking scenario contracts" : "tracking report unverified"}</small></span><span className={llm.passed === llm.case_count && llm.case_count ? "pass" : "fail"}><strong>{llm.passed}/{llm.case_count}</strong><small>LLM cases • {llm.pass_rate_percent}%{llm.deterministic_completion_count ? ` • ${llm.deterministic_completion_count} safely completed` : ""}</small></span></div></div>
     <div className="test-video-grid">{lab.clips.map(clip => {
       const result = clip.result, measured = result?.measurements;
       return <article className="test-video-card" key={clip.id}>
@@ -822,6 +997,17 @@ function TestLab({ lab }) {
         </div>
       </article>;
     })}</div>
+    <section className="dynamic-suite" aria-labelledby="dynamic-suite-title">
+      <div className="tracking-suite-head">
+        <div><span className="eyebrow">REAL MOVING PRESENTERS • SPLIT-LOCKED</span><h3 id="dynamic-suite-title">Observed-state tracking on licensed presentations</h3><p>Canonical 60-second clips contain actual stage movement, camera cuts, turns, gestures, tiny faces, occlusion, and multi-face shots. The development split guided measurement guardrails; the separately sourced holdout was then run exactly once and its failures were preserved.</p></div>
+        <div className="tracking-contract" aria-label="Dynamic evaluation privacy and claim boundary"><Icon name="lock" size={17} /><span><strong>Anonymous geometry</strong><small>No identity • no embeddings • no training</small></span></div>
+      </div>
+      <div className="dynamic-boundary"><Icon name="scan" size={16} /><p><strong>Claim boundary:</strong> {dynamic.claim_boundary || "Single-curator observed-state engineering gates—not population accuracy, gaze accuracy, identity recognition, or training evidence."} Gaze is not scored, and underpowered metrics are shown as not evaluated.</p></div>
+      <div className="dynamic-splits">
+        <DynamicSplitPanel split={dynamicDevelopment} role="development" activeClip={activeClip} setActiveClip={setActiveClip} />
+        <DynamicSplitPanel split={dynamicHoldout} role="model_output_holdout" activeClip={activeClip} setActiveClip={setActiveClip} />
+      </div>
+    </section>
     <section className="tracking-suite" aria-labelledby="tracking-suite-title">
       <div className="tracking-suite-head">
         <div><span className="eyebrow">ANONYMOUS LANDMARK TRACKING</span><h3 id="tracking-suite-title">Face-pattern reliability, without face recognition</h3><p>These cases measure whether a single anonymous landmark track stays valid, abstains around multiple faces, survives dropouts, and repeats deterministically. No identity labels, face embeddings, or model training are involved.</p></div>
@@ -865,7 +1051,17 @@ export default function App() {
   return <div className="app-shell"><header className="topbar"><a className="brand" href="/"><span className="logo-mark small"><Icon name="scan" /></span><span><strong>PresentCoach</strong><small>evidence-based practice</small></span></a><div className="status-row"><span className={data.whisper.available ? "status ready" : "status"}><i /> Whisper local</span><span className={data.local_model.available ? "status ready" : "status"}><i /> AI {data.local_model.available ? "ready" : "offline"}</span><a className="secondary top-action test-link" href="#test-lab"><Icon name="chart" /> Tests</a><button className="secondary top-action" onClick={() => setUploadOpen(true)}><Icon name="upload" /> Upload video</button><button className="primary top-action" onClick={() => setRecordOpen(true)} disabled={data.calibration.stage === "review_baseline"}><Icon name="record" /> {data.calibration.ready ? "New practice" : data.calibration.stage === "record_baseline" ? "Record baseline" : "Record repeat"}</button></div></header>
     <main className="dashboard"><section className="welcome"><div><span className="eyebrow">PRESENTATION LAB</span><h1>Welcome back, {data.profile.name}.</h1><p>Every observation below is tied to a measured number and a moment in your recording.</p></div><div className="privacy"><Icon name="lock" /><span><strong>Runs entirely on this Mac</strong><small>Flask • MediaPipe • whisper.cpp • Ollama</small></span></div></section><CalibrationPanel calibration={data.calibration} csrf={csrf} profileId={data.profile.id} onChanged={() => load(data.profile.id)} /><SessionView item={selected} onGenerateFeedback={async sessionId => { await api(`/api/profiles/${encodeURIComponent(data.profile.id)}/sessions/${encodeURIComponent(sessionId)}/feedback`, { method: "POST", body: "{}" }, csrf); await load(data.profile.id); setToast("Local evidence summary generated."); setTimeout(() => setToast(""), 4000); }} />
     <TestLab lab={data.test_lab} />
-    {!!sessions.length && <section className="history"><div className="section-head"><div><span className="eyebrow">SESSION HISTORY</span><h2>Compare your runs</h2></div><strong>{sessions.length} saved locally</strong></div><div className="history-list">{[...sessions].reverse().map(item => <button key={item.session.session_id} className={selected?.session.session_id === item.session.session_id ? "selected" : ""} onClick={() => setSelectedId(item.session.session_id)}><span className={`kind ${item.session.session_kind}`}>{item.session.session_kind}</span><strong>{new Date(item.session.start_time).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</strong><small>{new Date(item.session.start_time).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })} • {formatTime(item.session.duration_seconds)}</small><div><span>{item.session.quality_flags?.eye_contact === "good" ? `${item.metrics.aggregate.eye_contact_percent}% contact` : "Contact insufficient"}</span><span>{item.metrics.aggregate.overall_words_per_minute} WPM</span><span>{item.metrics.aggregate.strict_filler_count ?? item.metrics.aggregate.filler_count} um/uh</span></div><Icon name="play" size={15} /></button>)}</div></section>}<footer><span><Icon name="lock" size={14} /> Encrypted session history and replays</span><span>Evidence-based coaching—never a score or judgment of you.</span></footer></main>
+    {!!sessions.length && <section className="history"><div className="section-head"><div><span className="eyebrow">SESSION HISTORY</span><h2>Compare your runs</h2></div><strong>{sessions.length} saved locally</strong></div><div className="history-list">{[...sessions].reverse().map(item => {
+      const historyKind = sessionHistoryKind(item, data.calibration);
+      const quality = item.metrics?.quality_flags || item.session.quality_flags || {};
+      const aggregate = item.metrics?.aggregate || {};
+      return <button key={item.session.session_id} className={selected?.session.session_id === item.session.session_id ? "selected" : ""} onClick={() => setSelectedId(item.session.session_id)}>
+        <span className={`kind ${historyKind.className}`}>{historyKind.label}</span>
+        <strong>{new Date(item.session.start_time).toLocaleDateString(undefined, { month: "short", day: "numeric" })}</strong>
+        <small>{new Date(item.session.start_time).toLocaleTimeString(undefined, { hour: "numeric", minute: "2-digit" })} • {formatTime(item.session.duration_seconds)}</small>
+        <div><span>{quality.eye_contact === "good" ? `Camera: ${aggregate.eye_contact_percent}%` : "Camera: insufficient"}</span><span>{quality.audio_clear === "good" ? `Pace: ${aggregate.overall_words_per_minute} WPM` : "Pace: insufficient"}</span><span>{quality.audio_clear === "good" ? `Um/uh: ${aggregate.strict_filler_count ?? aggregate.filler_count}` : "Um/uh: insufficient"}</span></div><Icon name="play" size={15} />
+      </button>;
+    })}</div></section>}<footer><span><Icon name="lock" size={14} /> Encrypted session history and replays</span><span>Evidence-based coaching—never a score or judgment of you.</span></footer></main>
     {recordOpen && <RecordingModal profileId={data.profile.id} csrf={csrf} calibration={data.calibration} previousSessionIds={sessions.map(item => item.session.session_id)} onClose={() => setRecordOpen(false)} onRecover={async ({ previousSessionIds, failureMessage }) => {
       setRecordOpen(false);
       const fresh = await load(data.profile.id);

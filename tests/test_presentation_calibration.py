@@ -1,4 +1,4 @@
-from stroke_screening.presentation_calibration import calibration_status, prepare_feedback_metrics
+from stroke_screening.presentation_calibration import REPEATABILITY_TOLERANCES, calibration_status, prepare_feedback_metrics
 from stroke_screening.presentation_core import TranscriptWord, VisionSample, analyze_session, compute_metrics
 from stroke_screening.presentation_coaching import general_coaching_hints
 from stroke_screening.presentation_store import PresentationArchive, StoredPresentation
@@ -40,6 +40,41 @@ def test_short_baseline_can_be_re_recorded():
         {"baseline_session_id": short.session.session_id, "baseline_confirmed": False},
     )
     assert calibration_status(archive)["stage"] == "record_baseline"
+
+
+def test_newest_baseline_attempt_is_used_and_older_repeats_do_not_count():
+    old_baseline = stored("baseline")
+    old_repeat = stored("repeat")
+    new_baseline = stored("baseline")
+    archive = PresentationArchive("a" * 32, "Test", (old_baseline, old_repeat, new_baseline), {})
+    status = calibration_status(archive)
+    assert status["baseline_session_id"] == new_baseline.session.session_id
+
+    archive = PresentationArchive(
+        archive.profile_id,
+        archive.name,
+        archive.sessions,
+        {"baseline_session_id": new_baseline.session.session_id, "baseline_confirmed": True},
+    )
+    assert calibration_status(archive)["repeat_count"] == 0
+
+
+def test_repeatability_compares_both_repeats_to_the_baseline():
+    baseline = stored("baseline", eye=True)
+    first = stored("repeat", eye=False)
+    second = stored("repeat", eye=False)
+    archive = PresentationArchive(
+        "a" * 32,
+        "Test",
+        (baseline, first, second),
+        {"baseline_session_id": baseline.session.session_id, "baseline_confirmed": True},
+    )
+    status = calibration_status(archive)
+    assert status["stage"] == "repeatability_failed"
+    assert status["repeatability"]["eye_contact_percent"]["baseline"] == 100.0
+    assert status["repeatability"]["eye_contact_percent"]["delta"] == 100.0
+    assert "strict_filler_rate_per_minute" in REPEATABILITY_TOLERANCES
+    assert "filler_count" not in REPEATABILITY_TOLERANCES
 
 
 def test_uncalibrated_feedback_uses_ranked_general_practice_hints():
@@ -114,6 +149,7 @@ def test_personal_reference_hints_exclude_quality_insufficient_metrics():
         "face_presence_percent": 0.0,
         "overall_words_per_minute": 120.0,
         "filler_count": 0,
+        "strict_filler_rate_per_minute": 0.0,
         "pauses_over_2_seconds": 0,
     }
     metrics = {
@@ -146,7 +182,7 @@ def test_personal_reference_hints_exclude_quality_insufficient_metrics():
 
     assert prepared["feedback_mode"] == "personal_reference"
     assert {hint["metric"] for hint in prepared["role_hints"]} == {
-        "overall_words_per_minute",
-        "filler_count",
+            "overall_words_per_minute",
+            "strict_filler_rate_per_minute",
         "pauses_over_2_seconds",
     }

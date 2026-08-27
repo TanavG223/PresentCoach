@@ -16,7 +16,10 @@ REPEATABILITY_TOLERANCES: dict[str, float] = {
     "expression_variety_index": 3.0,
     "face_presence_percent": 5.0,
     "overall_words_per_minute": 12.0,
-    "filler_count": 2.0,
+    # Compare a duration-normalized rate so otherwise identical talks of
+    # different lengths are not declared inconsistent merely because one has
+    # more words and therefore more opportunities for a filler.
+    "strict_filler_rate_per_minute": 2.0,
     "pauses_over_2_seconds": 2.0,
 }
 
@@ -40,7 +43,7 @@ def calibration_status(archive: PresentationArchive) -> dict[str, object]:
     )
     if baseline is None:
         candidate = next(
-            (item for item in archive.sessions if item.session.session_kind == "baseline"),
+            (item for item in reversed(archive.sessions) if item.session.session_kind == "baseline"),
             None,
         )
         candidate_approved = candidate is not None and _quality_approved(candidate)
@@ -73,8 +76,9 @@ def calibration_status(archive: PresentationArchive) -> dict[str, object]:
             "baseline_session_id": baseline.session.session_id,
             "message": "Review the raw baseline numbers, then confirm this reference.",
         }
+    baseline_index = archive.sessions.index(baseline)
     repeats = [
-        item for item in archive.sessions
+        item for item in archive.sessions[baseline_index + 1:]
         if item.session.session_kind == "repeat" and _quality_approved(item)
     ]
     if len(repeats) < 2:
@@ -87,17 +91,20 @@ def calibration_status(archive: PresentationArchive) -> dict[str, object]:
             "message": f"Record two nearly identical repeats; {len(repeats)}/2 quality-approved.",
         }
     left, right = repeats[-2:]
+    baseline_aggregate = baseline.metrics.get("aggregate", {})
     left_aggregate = left.metrics.get("aggregate", {})
     right_aggregate = right.metrics.get("aggregate", {})
     deltas: dict[str, dict[str, object]] = {}
     passed = True
     for metric, tolerance in REPEATABILITY_TOLERANCES.items():
+        reference = float(baseline_aggregate.get(metric, 0))
         first = float(left_aggregate.get(metric, 0))
         second = float(right_aggregate.get(metric, 0))
-        delta = abs(second - first)
+        delta = max(reference, first, second) - min(reference, first, second)
         item_passed = delta <= tolerance
         passed = passed and item_passed
         deltas[metric] = {
+            "baseline": round(reference, 2),
             "first": round(first, 2),
             "second": round(second, 2),
             "delta": round(delta, 2),
@@ -114,7 +121,7 @@ def calibration_status(archive: PresentationArchive) -> dict[str, object]:
         "message": (
             "Personal baseline and repeatability check are ready."
             if passed
-            else "The last two repeats were not close enough; record another matched repeat."
+            else "The baseline and two matched repeats were not close enough; record another repeat."
         ),
     }
 
@@ -141,7 +148,7 @@ def prepare_feedback_metrics(
     positive_high = {"eye_contact_percent", "face_presence_percent"}
     negative_low = {
         "head_rotation_std_degrees", "head_position_std_percent",
-        "filler_count", "pauses_over_2_seconds",
+        "strict_filler_rate_per_minute", "pauses_over_2_seconds",
     }
     role_hints: list[dict[str, object]] = []
     for metric, tolerance in REPEATABILITY_TOLERANCES.items():

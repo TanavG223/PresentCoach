@@ -1,0 +1,2277 @@
+{
+  "schema_version": "presentcoach.api-e2e.v1",
+  "generated_at": "2026-08-20T06:15:20Z",
+  "evaluation_only": true,
+  "used_for_training": false,
+  "identity_recognition": false,
+  "landmarks_persisted": false,
+  "selected_dataset_role": "development",
+  "holdout_default": "sealed_not_run",
+  "target_analyzed_fps": 15.0,
+  "local_model": {
+    "name": "presentcoach-local",
+    "digest": "c1170a85745314ec402225035cdfe27f723a73c285b702039727d618d028771c",
+    "available": true
+  },
+  "artifacts": {
+    "manifest_sha256": "5be040db72535e76b6fbdfc422b5c2aa76e5d6d060ae2b0e5f456504fe2ad819",
+    "evaluator_sha256": "73e4fd584eb8fe696f1f1ae68f666b391217c6809514453860fb7e04934c47b5",
+    "mediapipe_model_sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+    "whisper_model_sha256": "4baf70dd0d7c4247ba2b81fafd9c01005ac77c2f9ef064e00dcf195d0e2fdd2f",
+    "feedback_schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c"
+  },
+  "overall": {
+    "status": "passed",
+    "case_count": 10,
+    "passed": 10,
+    "pass_rate_percent": 100.0
+  },
+  "results": {
+    "development": {
+      "dataset_role": "development",
+      "status": "passed",
+      "case_count": 10,
+      "passed": 10,
+      "pass_rate_percent": 100.0,
+      "cases": [
+        {
+          "case_id": "dynamic-david-roberts",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-d57f97f373fc8912b597c7d46174db5f74894994",
+          "media": {
+            "filename": "dynamic-david-roberts-60s.mp4",
+            "sha256": "cfb418ac4280a6c3f34083ec6ca785b2319ed6a8e309b213c0df9529507f7593",
+            "annotation_sha256": "4f5503791458827d083afd0b87ea98e6bc4bc398163182299d89c2b4bd980840",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:Climate_change_is_simple_David_Roberts_at_TEDxTheEvergreenStateCollege.webm",
+            "license_spdx": "CC-BY-3.0",
+            "excerpt_start_seconds_in_source": 60.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "7c8e9b5fb2749453b804968c63784431",
+          "wall_seconds": 14.436,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 100,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 86.7,
+              "eye_contact_percent": 21.3,
+              "overall_words_per_minute": 100.0,
+              "strict_filler_count": 1,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "good",
+              "eye_contact": "good",
+              "face_detected": "good",
+              "head_stability": "good"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice_with_deterministic_completion",
+            "strength_metrics": [
+              "overall_words_per_minute",
+              "strict_filler_rate_per_minute"
+            ],
+            "improvement_metrics": [
+              "eye_contact_percent",
+              "longest_gaze_break_seconds"
+            ],
+            "insufficient_data": []
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 8,
+              "expression_movement": 1,
+              "face_tracking_gap": 4,
+              "pace_spike": 2,
+              "quality": 0,
+              "strict_filler": 1,
+              "transcript_gap": 0,
+              "verified_coaching": 4
+            },
+            "cue_count": 20
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "eb4eda11f4072d40dd1c5c6291cfaafa59dc02cf8d7bd7361c75897ad2a71317",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "4d0062f4fdb1c2be78ecb27080dd9c0b8cb2a0cef91b0bd047ada00bd334bc67"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 100,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "good",
+                "eye_contact": "good",
+                "face_detected": "good",
+                "head_stability": "good"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 52
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "4 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "20 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/3136338"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        },
+        {
+          "case_id": "dynamic-jack-andraka",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-5ab2a87703c03cda017a9cf2a4e214555d3bc16f",
+          "media": {
+            "filename": "dynamic-jack-andraka-60s.mp4",
+            "sha256": "25c878e2ce3d8918078d2224de4346c1cf3cacaa0cc8da81f6564c16459dea68",
+            "annotation_sha256": "90cfab79abc5f8a0407ffb6cb666543f9270c9a0d2680cf36c4301a6e68947c0",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:Jack_Andraka_-_Detecting_pancreatic_cancer_at_15.webm",
+            "license_spdx": "CC-BY-2.5",
+            "excerpt_start_seconds_in_source": 60.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "b63958baa2bb01116f706b914aae896e",
+          "wall_seconds": 16.723,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 125,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 59.1,
+              "eye_contact_percent": 78.3,
+              "overall_words_per_minute": 125.0,
+              "strict_filler_count": 0,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "bad",
+              "eye_contact": "bad",
+              "face_detected": "bad",
+              "head_stability": "bad"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice",
+            "strength_metrics": [
+              "overall_words_per_minute",
+              "strict_filler_rate_per_minute"
+            ],
+            "improvement_metrics": [],
+            "insufficient_data": [
+              "expression_variety",
+              "eye_contact",
+              "face_detected",
+              "head_stability"
+            ]
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 0,
+              "expression_movement": 0,
+              "face_tracking_gap": 2,
+              "pace_spike": 1,
+              "quality": 4,
+              "strict_filler": 0,
+              "transcript_gap": 0,
+              "verified_coaching": 2
+            },
+            "cue_count": 9
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "913e64ca73b86c43e5c597ea48e7b2e89ca16d4168cde7444aafe7c7168286f1",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "7975052a84e2059614c67b4b560d8c9b959e47ed94a83b0096ea5dab12b0e590"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 125,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "bad",
+                "eye_contact": "bad",
+                "face_detected": "bad",
+                "head_stability": "bad"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 35
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "2 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "9 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/3358127"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        },
+        {
+          "case_id": "dynamic-richard-gill",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-3d4be9987e2257b118d84d2c49124dfa671a28e8",
+          "media": {
+            "filename": "dynamic-richard-gill-60s.mp4",
+            "sha256": "098531cb0b7dc42299ac9c1bc60d41f9f9cfaeddce7a2cf05975dc27754ed974",
+            "annotation_sha256": "1e66dee271a255cc646cdd23dcc2d6d94e22b50a62aa82161e253a29c82528fa",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:TEDxSydney_-_Richard_Gill_-_The_Value_of_Music_Education.webm",
+            "license_spdx": "CC-BY-3.0",
+            "excerpt_start_seconds_in_source": 120.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "ef96a4c9357b0f1c49f99b72264a1e8a",
+          "wall_seconds": 14.154,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 106,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 72.8,
+              "eye_contact_percent": 37.0,
+              "overall_words_per_minute": 106.0,
+              "strict_filler_count": 0,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "bad",
+              "eye_contact": "bad",
+              "face_detected": "bad",
+              "head_stability": "bad"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice",
+            "strength_metrics": [
+              "overall_words_per_minute",
+              "strict_filler_rate_per_minute"
+            ],
+            "improvement_metrics": [],
+            "insufficient_data": [
+              "expression_variety",
+              "eye_contact",
+              "face_detected",
+              "head_stability"
+            ]
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 0,
+              "expression_movement": 0,
+              "face_tracking_gap": 3,
+              "pace_spike": 1,
+              "quality": 4,
+              "strict_filler": 0,
+              "transcript_gap": 0,
+              "verified_coaching": 2
+            },
+            "cue_count": 10
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "1b93e874fb0f7ba9e4f8ac5cdf6f3efddb6241a8a2c0f6bec961df059b46a26c",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "031029a1f9866d474a8fd6ee72da0dc617e0ba52f668a36742be0c40794ebf29"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 106,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "bad",
+                "eye_contact": "bad",
+                "face_detected": "bad",
+                "head_stability": "bad"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 44
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "2 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "10 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/3415328"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        },
+        {
+          "case_id": "dynamic-leslie-cannold",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-a7c0ce0ebab8705f7d662f3a00d09e595c6b7fc3",
+          "media": {
+            "filename": "dynamic-leslie-cannold-60s.mp4",
+            "sha256": "1938e1920d58561a69807b4e30a92f1647ad099f3ec778bd39fa3d84291e99a5",
+            "annotation_sha256": "f0cc45d4236a3e6d0eb651674a967eac91253f39c45de1be6d778c30bde0053a",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:I_had_an_abortion..._Or_maybe_I_didn%27t_Leslie_Cannold_at_TEDxCanberra_2012.webm",
+            "license_spdx": "CC-BY-3.0",
+            "excerpt_start_seconds_in_source": 120.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "020956ea876140645f5c81cc671ba30a",
+          "wall_seconds": 14.014,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 150,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 84.1,
+              "eye_contact_percent": 85.1,
+              "overall_words_per_minute": 150.0,
+              "strict_filler_count": 0,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "good",
+              "eye_contact": "good",
+              "face_detected": "good",
+              "head_stability": "good"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice",
+            "strength_metrics": [
+              "eye_contact_percent",
+              "overall_words_per_minute"
+            ],
+            "improvement_metrics": [],
+            "insufficient_data": []
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 4,
+              "expression_movement": 1,
+              "face_tracking_gap": 2,
+              "pace_spike": 1,
+              "quality": 0,
+              "strict_filler": 0,
+              "transcript_gap": 0,
+              "verified_coaching": 2
+            },
+            "cue_count": 10
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "716d005bb374be0c99fb0f140c9f77c292af22a17f08e9de89132e61b23c4dc4",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "44ab619cb37654ba4b0e21bb47f56caedd0bf92e3e4eb378683bc7503c525279"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 150,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "good",
+                "eye_contact": "good",
+                "face_detected": "good",
+                "head_stability": "good"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 50
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "2 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "10 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/3557735"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        },
+        {
+          "case_id": "dynamic-you-should-speak",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-17bbd20a7e4f7306e1db2ba29faa0a8f17e758f4",
+          "media": {
+            "filename": "dynamic-you-should-speak-60s.mp4",
+            "sha256": "277eb60f8288f21586c9fdf881af08764b5ba03d2faf1743236bc2f70452fbd8",
+            "annotation_sha256": "e5ee5cb54350e7bba7b9fad5bef32add9991d96080e7963b875d8d0cbc978157",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:You_Should_Speak.webm",
+            "license_spdx": "CC-BY-3.0",
+            "excerpt_start_seconds_in_source": 180.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "adfceced95187e0f2321a356e32c52f4",
+          "wall_seconds": 20.585,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 185,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 97.9,
+              "eye_contact_percent": 26.3,
+              "overall_words_per_minute": 185.0,
+              "strict_filler_count": 1,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "good",
+              "eye_contact": "good",
+              "face_detected": "good",
+              "head_stability": "good"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice_with_deterministic_completion",
+            "strength_metrics": [
+              "strict_filler_rate_per_minute",
+              "face_presence_percent"
+            ],
+            "improvement_metrics": [
+              "eye_contact_percent",
+              "overall_words_per_minute",
+              "longest_gaze_break_seconds"
+            ],
+            "insufficient_data": []
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 12,
+              "expression_movement": 1,
+              "face_tracking_gap": 0,
+              "pace_spike": 1,
+              "quality": 0,
+              "strict_filler": 1,
+              "transcript_gap": 0,
+              "verified_coaching": 5
+            },
+            "cue_count": 20
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "61315fd638d5573812b5d4548ecd2f7dd023830cd6d5879f7d7a1b832ae76939",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "6f116d41807911e6306476c6613472fc47dc8dcd00ddd60ff8307c5a1c9b8c6b"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 185,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "good",
+                "eye_contact": "good",
+                "face_detected": "good",
+                "head_stability": "good"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 60
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "5 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "20 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/3138121"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        },
+        {
+          "case_id": "dynamic-constance-adams",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-2aacce82ffbb646abe7abf0fe9eafb88f7310dfd",
+          "media": {
+            "filename": "dynamic-constance-adams-60s.mp4",
+            "sha256": "fc6ab8a665a8da7f3b617c34ce8ba10651e9a391a8dccefbccce5e25a19c0eef",
+            "annotation_sha256": "d67257dfcfdd447f443616994eb1c0324e8bf3a3821fa1347b6a19921580e3c4",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:TEDxHouston_2011_-_Constance_Adams_-_Space_Architect.webm",
+            "license_spdx": "CC-BY-3.0",
+            "excerpt_start_seconds_in_source": 180.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "75e381b40ec9d77aa428dfdfe3d97ba8",
+          "wall_seconds": 16.049,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 164,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 49.9,
+              "eye_contact_percent": 31.9,
+              "overall_words_per_minute": 164.0,
+              "strict_filler_count": 3,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "bad",
+              "eye_contact": "bad",
+              "face_detected": "bad",
+              "head_stability": "bad"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice",
+            "strength_metrics": [
+              "overall_words_per_minute"
+            ],
+            "improvement_metrics": [],
+            "insufficient_data": [
+              "expression_variety",
+              "eye_contact",
+              "face_detected",
+              "head_stability"
+            ]
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 0,
+              "expression_movement": 0,
+              "face_tracking_gap": 6,
+              "pace_spike": 1,
+              "quality": 4,
+              "strict_filler": 3,
+              "transcript_gap": 0,
+              "verified_coaching": 1
+            },
+            "cue_count": 15
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "735069167ba5b0b6702f95765e80bba179b8aacf7d4061af2b2f78987c5e3d87",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "789f2b3fb846a415f5ab08f28ce9faf9f46323a072f9b234f10f09125ffa6fe2"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 164,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "bad",
+                "eye_contact": "bad",
+                "face_detected": "bad",
+                "head_stability": "bad"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 30
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "1 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "15 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/2967328"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        },
+        {
+          "case_id": "dynamic-simon-stone",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-1fc4290c456a6c7696b13cea6c92fd0d54bf8b90",
+          "media": {
+            "filename": "dynamic-simon-stone-60s.mp4",
+            "sha256": "359ab9cf4e99fd5c14802397f28c82e150a34f45b39fa2a130cf373c8e1d5f4e",
+            "annotation_sha256": "0dc40328035140a3dc46a4dede0864e06be09197c40dfdbb28d5c18e7c50789a",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:What_is_theatre_capable_of_Simon_Stone_at_TEDxSydney.webm",
+            "license_spdx": "CC-BY-3.0",
+            "excerpt_start_seconds_in_source": 120.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "c7306387a06ebad39b688434c36503a6",
+          "wall_seconds": 16.894,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 106,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 9.6,
+              "eye_contact_percent": 100.0,
+              "overall_words_per_minute": 106.0,
+              "strict_filler_count": 0,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "bad",
+              "eye_contact": "bad",
+              "face_detected": "bad",
+              "head_stability": "bad"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice",
+            "strength_metrics": [
+              "overall_words_per_minute",
+              "strict_filler_rate_per_minute"
+            ],
+            "improvement_metrics": [],
+            "insufficient_data": [
+              "expression_variety",
+              "eye_contact",
+              "face_detected",
+              "head_stability"
+            ]
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 0,
+              "expression_movement": 0,
+              "face_tracking_gap": 3,
+              "pace_spike": 0,
+              "quality": 4,
+              "strict_filler": 0,
+              "transcript_gap": 0,
+              "verified_coaching": 2
+            },
+            "cue_count": 9
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "414f205145ade38b993b30b812b903ce7bdcb6f7aeff1c834ef1a3e01f451499",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "9cd90a3e5adf7ff8c0f37be3fdf288a063677e11374e796062e4b5bf6f9c5c04"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 106,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "bad",
+                "eye_contact": "bad",
+                "face_detected": "bad",
+                "head_stability": "bad"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 6
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "2 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "9 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/1530375"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        },
+        {
+          "case_id": "dynamic-sujiwo-tejo",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-4e2b142abbde00bddbba60f3de65bf7d6d7ce4a3",
+          "media": {
+            "filename": "dynamic-sujiwo-tejo-60s.mp4",
+            "sha256": "933a780afd4052218abbf64dfea1bc3cace3a59a0ce92c3e9b8291e41e9d2254",
+            "annotation_sha256": "5f37349e8f19978a43949ffefe588d887396f9865c748e799fdf0aa67d02f023",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:TEDxBandung_-_Sujiwo_Tejo_-_Math_Finding_Harmony_In_Chaos.webm",
+            "license_spdx": "CC-BY-3.0",
+            "excerpt_start_seconds_in_source": 120.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "d320576cb5a55659948a2501ddc932fd",
+          "wall_seconds": 14.671,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 3,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 11.6,
+              "eye_contact_percent": 39.2,
+              "overall_words_per_minute": 3.0,
+              "strict_filler_count": 0,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "bad",
+              "eye_contact": "bad",
+              "face_detected": "bad",
+              "head_stability": "bad"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice",
+            "strength_metrics": [
+              "strict_filler_rate_per_minute"
+            ],
+            "improvement_metrics": [
+              "overall_words_per_minute"
+            ],
+            "insufficient_data": [
+              "expression_variety",
+              "eye_contact",
+              "face_detected",
+              "head_stability"
+            ]
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 0,
+              "expression_movement": 0,
+              "face_tracking_gap": 3,
+              "pace_spike": 0,
+              "quality": 4,
+              "strict_filler": 0,
+              "transcript_gap": 0,
+              "verified_coaching": 2
+            },
+            "cue_count": 9
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "f88ee33985dc6e427af55fe124e215970f63b8642ec82d719ce94f0345816907",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "fdd173ff2ab0c72e253944c6625ab905428263a3a27884cf780e601ce5b3bab2"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 3,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "bad",
+                "eye_contact": "bad",
+                "face_detected": "bad",
+                "head_stability": "bad"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 5
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "2 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "9 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/3018535"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        },
+        {
+          "case_id": "dynamic-find-link-lightning-talk",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-8e8d2dd804dea5d027664615a3f58271e2bf9951",
+          "media": {
+            "filename": "dynamic-find-link-lightning-talk-60s.mp4",
+            "sha256": "2cf2ab523951cc774317d18c7a4eb6a50217c2e310990f5291680cc3f76cf8fd",
+            "annotation_sha256": "b69eb099c04800f31b13e5851a4d3b29bc79e7a079c24576bd847e96cbc727c2",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:Find_link_-_lightning_talk.webm",
+            "license_spdx": "CC-BY-3.0",
+            "excerpt_start_seconds_in_source": 159.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "a1cefd19cd22480463eae4222fae020b",
+          "wall_seconds": 17.237,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 78,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 16.7,
+              "eye_contact_percent": 65.7,
+              "overall_words_per_minute": 78.0,
+              "strict_filler_count": 0,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "bad",
+              "eye_contact": "bad",
+              "face_detected": "bad",
+              "head_stability": "bad"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice",
+            "strength_metrics": [
+              "strict_filler_rate_per_minute"
+            ],
+            "improvement_metrics": [
+              "overall_words_per_minute"
+            ],
+            "insufficient_data": [
+              "expression_variety",
+              "eye_contact",
+              "face_detected",
+              "head_stability"
+            ]
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 0,
+              "expression_movement": 0,
+              "face_tracking_gap": 5,
+              "pace_spike": 2,
+              "quality": 4,
+              "strict_filler": 0,
+              "transcript_gap": 1,
+              "verified_coaching": 2
+            },
+            "cue_count": 14
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "769608ac10ab068d7c3a593f50f606061a4bace76206315a9ace995dcf7f9008",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "985b272943fc882d615f5eb32f1d6f50a567cbacf3814247f0155d0bc7e796b1"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 78,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "bad",
+                "eye_contact": "bad",
+                "face_detected": "bad",
+                "head_stability": "bad"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 11
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "2 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "14 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/1917824"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        },
+        {
+          "case_id": "dynamic-martha-forsyth",
+          "dataset_role": "development",
+          "split_group_id": "commons-sha1-d80f1a8d77030e500a622b5504a0c26dea73c95f",
+          "media": {
+            "filename": "dynamic-martha-forsyth-60s.mp4",
+            "sha256": "8ca9b3621209507740750d2bb15437fcf8c3fe516ce895b0b0f976ba46889e33",
+            "annotation_sha256": "a32fa59bb554bb50d53b1cbdd1814ef6fa947718bce28b98763da3252d6d9221",
+            "source_page_url": "https://commons.wikimedia.org/wiki/File:Martha_Forsyth_lightning_talk.webm",
+            "license_spdx": "CC-BY-4.0",
+            "excerpt_start_seconds_in_source": 60.0,
+            "excerpt_duration_seconds": 60.0
+          },
+          "session_id": "8b3b85e4e3a4761a04a691237fb66e73",
+          "wall_seconds": 17.462,
+          "measurements": {
+            "duration_seconds": 60.0,
+            "transcript_word_count": 181,
+            "vision_bucket_count": 60,
+            "aggregate": {
+              "analyzed_vision_fps": 15.0,
+              "face_presence_percent": 44.7,
+              "eye_contact_percent": 71.3,
+              "overall_words_per_minute": 181.0,
+              "strict_filler_count": 0,
+              "pauses_over_3_seconds": 0
+            },
+            "quality_flags": {
+              "audio_clear": "good",
+              "expression_variety": "bad",
+              "eye_contact": "bad",
+              "face_detected": "bad",
+              "head_stability": "bad"
+            }
+          },
+          "feedback": {
+            "status": "ready",
+            "source": "local_llm_verified_general_practice",
+            "strength_metrics": [
+              "strict_filler_rate_per_minute"
+            ],
+            "improvement_metrics": [
+              "overall_words_per_minute"
+            ],
+            "insufficient_data": [
+              "expression_variety",
+              "eye_contact",
+              "face_detected",
+              "head_stability"
+            ]
+          },
+          "coaching_cues": {
+            "status": "ready",
+            "counts": {
+              "camera_contact_break": 0,
+              "expression_movement": 0,
+              "face_tracking_gap": 1,
+              "pace_spike": 0,
+              "quality": 4,
+              "strict_filler": 0,
+              "transcript_gap": 0,
+              "verified_coaching": 2
+            },
+            "cue_count": 7
+          },
+          "llm_calls": [
+            {
+              "system_sha256": "3e64e326bc9165b458f42f329764268cbd1427ec2bf1f929d9f3d6bb46d50330",
+              "prompt_sha256": "4d976acd56f9c7d55100f16fbdbaaac17da072bab466863d13c0fcd46774bb51",
+              "schema_sha256": "51bdca11f78c68fb6630973350a5a50e569cbc69ebc3e11aa7f401072cdbaf3c",
+              "completed": true,
+              "response_sha256": "2e3cd2cbbcbd226fa761215611079bced6446decab678e9c9a43ba3ef3aeb3fa"
+            }
+          ],
+          "passed": true,
+          "checks": [
+            {
+              "label": "POST /api/videos/analyze",
+              "passed": true,
+              "actual": 201,
+              "expected": "201 Created"
+            },
+            {
+              "label": "Imported session kind",
+              "passed": true,
+              "actual": "imported",
+              "expected": "imported"
+            },
+            {
+              "label": "Canonical excerpt duration",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 ± 0.35 seconds"
+            },
+            {
+              "label": "Metric/session duration identity",
+              "passed": true,
+              "actual": 60.0,
+              "expected": "60 seconds"
+            },
+            {
+              "label": "Analyzed media cadence",
+              "passed": true,
+              "actual": 15.0,
+              "expected": "14.5-15.5 sampled media FPS"
+            },
+            {
+              "label": "Vision timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 60,
+              "expected": ">= 1 strictly increasing second buckets"
+            },
+            {
+              "label": "Whisper timestamps monotonic and bounded",
+              "passed": true,
+              "actual": 181,
+              "expected": ">= 1 ordered words within the session"
+            },
+            {
+              "label": "Five derived quality flags",
+              "passed": true,
+              "actual": {
+                "audio_clear": "good",
+                "expression_variety": "bad",
+                "eye_contact": "bad",
+                "face_detected": "bad",
+                "head_stability": "bad"
+              },
+              "expected": "exact face/contact/stability/expression/audio good|bad flags"
+            },
+            {
+              "label": "Anonymous face tracking path executed",
+              "passed": true,
+              "actual": {
+                "bucket_decisions": 60,
+                "detected_buckets": 26
+              },
+              "expected": "every one-second bucket has an explicit face/no-face decision; zero detections is valid abstention"
+            },
+            {
+              "label": "Metric-grounded local-LLM feedback",
+              "passed": true,
+              "actual": "2 claims matched exact stored facts",
+              "expected": "ready verified claims exactly match stored facts"
+            },
+            {
+              "label": "One successful real Ollama call",
+              "passed": true,
+              "actual": 1,
+              "expected": "exactly 1 hashed request/response"
+            },
+            {
+              "label": "Coaching cue bounds",
+              "passed": true,
+              "actual": "7 cues stayed inside 0-60 seconds",
+              "expected": "ordered cue timestamps stay within the video"
+            },
+            {
+              "label": "Encrypted replay grant returned",
+              "passed": true,
+              "actual": {
+                "available": true,
+                "mime_type": "video/mp4",
+                "source": "upload"
+              },
+              "expected": "available signed upload replay as video/mp4"
+            },
+            {
+              "label": "Encrypted storage permissions",
+              "passed": true,
+              "actual": {
+                "directory": "0o700",
+                "profile": "0o600",
+                "media": "0o600"
+              },
+              "expected": "directory 0700; files 0600"
+            },
+            {
+              "label": "No plaintext media/profile signature at rest",
+              "passed": true,
+              "actual": {
+                "encrypted_container_magic": "PCMEDIA2",
+                "source_probe_present": false,
+                "profile_name_present": false
+              },
+              "expected": "PCMEDIA2 container only; no MP4/WebM probe or profile name"
+            },
+            {
+              "label": "Playback URL is session-scoped and signed",
+              "passed": true,
+              "actual": {
+                "path_matches": true,
+                "token_present": true
+              },
+              "expected": "session path plus non-empty signed token"
+            },
+            {
+              "label": "Signed HTTP Range replay",
+              "passed": true,
+              "actual": {
+                "status": 206,
+                "bytes": 64,
+                "content_range": "bytes 0-63/2750099"
+              },
+              "expected": "206 with exact first 64 authenticated plaintext bytes"
+            },
+            {
+              "label": "Unsigned replay denied",
+              "passed": true,
+              "actual": 403,
+              "expected": "403 media_access_denied"
+            },
+            {
+              "label": "Bootstrap reload persistence",
+              "passed": true,
+              "actual": {
+                "bootstrap_status": 200,
+                "session_found": true,
+                "fresh_signed_media": true
+              },
+              "expected": "session reloads from encrypted history with a fresh signed replay grant"
+            }
+          ]
+        }
+      ]
+    },
+    "model_output_holdout": {
+      "dataset_role": "model_output_holdout",
+      "status": "not_run",
+      "case_count": 0,
+      "passed": 0,
+      "pass_rate_percent": null,
+      "cases": []
+    }
+  },
+  "limitations": [
+    "This is a bounded scenario/API evaluation, not population accuracy or model training.",
+    "Natural presentation video has no independently labeled camera-contact gaze truth.",
+    "The report stores aggregates and hashes only; no transcript, landmark array, video, key, or access capability is retained."
+  ]
+}

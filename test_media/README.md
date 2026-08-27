@@ -1,7 +1,8 @@
 # Licensed test videos
 
-The 11 unique media files used by the video and face-tracking evaluations are
-downloaded locally and excluded from Git. Run the pinned
+The 26 unique Commons source files plus 15 deterministic moving-talk excerpts
+used by the video, continuity, and observed-state evaluations are downloaded
+locally and excluded from Git. Run the pinned
 [downloader](../scripts/download_test_videos.sh) to reproduce and SHA-256-check
 the exact inputs:
 
@@ -86,6 +87,28 @@ PresentCoach's anonymous temporal tracking/quality logic. It is not identity
 recognition, face enrollment, or deep-model retraining. The harness does not
 persist face templates, identities, or landmark arrays, and no claim should be
 made about the people shown.
+
+## Moving-presenter corpus and one-shot result
+
+The [moving-presenter manifest](dynamic_presentation_manifest.json) pins fifteen
+60-second H.264/AAC excerpts derived from TEDx and community lightning-talk
+videos. All show real presenters or production transitions rather than a
+static talking-head image with a voice-over. The manifest records each source
+page, license, derivative digest, canonical-excerpt digest, split group, and
+single-curator interval annotation.
+
+- Development: 10 clips, two exact non-runtime runs, all six pooled gates pass.
+- Iteration-2 holdout: 5 separately sourced clips, exactly one run, overall gate
+  fails because false-valid and dropout thresholds failed and the split had no
+  annotated multi-face interval.
+- Privacy: evaluation only; no names are inferred, no identity or face
+  embeddings are created, and raw landmark arrays are not written to reports.
+
+The failed holdout remains the checked-in evidence; it was not tuned against or
+rerun. The iteration-1 manifest and reports remain archived so neither failed
+iteration is rewritten as a success. The Test Lab displays both the passing
+development gate and failed holdout gate, including canonical videos, source
+licenses, and per-case measured results.
 
 ## Licensing and reuse
 
