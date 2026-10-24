@@ -8,10 +8,10 @@ import hashlib
 import json
 from pathlib import Path
 
-from stroke_screening.presentation_audio import WhisperCppTranscriber
-from stroke_screening.presentation_core import compute_metrics
-from stroke_screening.presentation_test_lab import TEST_MEDIA
-from stroke_screening.presentation_video import LocalVideoAnalyzer
+from presentcoach.presentation_audio import WhisperCppTranscriber
+from presentcoach.presentation_core import compute_metrics
+from presentcoach.presentation_test_lab import TEST_MEDIA
+from presentcoach.presentation_video import LocalVideoAnalyzer
 
 
 ROOT = Path(__file__).resolve().parents[1]

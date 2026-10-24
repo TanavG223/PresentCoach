@@ -25,4 +25,4 @@ if [[ ! -x "${PYTHON_BIN}" ]]; then
 fi
 
 /bin/mkdir -p "${LOG_DIR}"
-exec "${PYTHON_BIN}" -m stroke_screening.presentation_server >>"${LOG_PATH}" 2>&1
+exec "${PYTHON_BIN}" -m presentcoach.presentation_server >>"${LOG_PATH}" 2>&1

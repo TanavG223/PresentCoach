@@ -2,7 +2,7 @@ import json
 
 import requests
 
-from stroke_screening.presentation_ai import (
+from presentcoach.presentation_ai import (
     OLLAMA_CHAT_URL,
     OLLAMA_TAGS_URL,
     OllamaPresentationLLM,

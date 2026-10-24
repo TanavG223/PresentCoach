@@ -6,7 +6,7 @@ import shutil
 import numpy as np
 import pytest
 
-from stroke_screening.presentation_dynamic_eval import (
+from presentcoach.presentation_dynamic_eval import (
     DynamicEvaluationError,
     aggregate_ground_truth_metrics,
     apply_acceptance_policy,
@@ -14,8 +14,8 @@ from stroke_screening.presentation_dynamic_eval import (
     build_dynamic_evaluation_report,
     load_dynamic_manifest,
 )
-from stroke_screening.presentation_tracking_eval import TrackingObservation
-from stroke_screening.presentation_tracking_ground_truth import (
+from presentcoach.presentation_tracking_eval import TrackingObservation
+from presentcoach.presentation_tracking_ground_truth import (
     GroundTruthPowerPolicy,
     parse_ground_truth_annotations,
 )

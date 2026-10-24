@@ -20,13 +20,14 @@ models/whisper/
 /gopro_runtime/
 /research_samples/
 /ui-previews/
+/src/stroke_screening/
 
 # Publish only the standalone PresentCoach package surface.
-/src/stroke_screening/*.py
-!/src/stroke_screening/__init__.py
-!/src/stroke_screening/local_camera.py
-!/src/stroke_screening/landmarks.py
-!/src/stroke_screening/presentation_*.py
+/src/presentcoach/*.py
+!/src/presentcoach/__init__.py
+!/src/presentcoach/local_camera.py
+!/src/presentcoach/landmarks.py
+!/src/presentcoach/presentation_*.py
 /tests/*
 !/tests/test_presentation_*.py
 !/tests/test_presentcoach_e2e_report.py

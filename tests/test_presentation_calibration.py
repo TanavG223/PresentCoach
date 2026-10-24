@@ -1,7 +1,7 @@
-from stroke_screening.presentation_calibration import REPEATABILITY_TOLERANCES, calibration_status, prepare_feedback_metrics
-from stroke_screening.presentation_core import TranscriptWord, VisionSample, analyze_session, compute_metrics
-from stroke_screening.presentation_coaching import general_coaching_hints
-from stroke_screening.presentation_store import PresentationArchive, StoredPresentation
+from presentcoach.presentation_calibration import REPEATABILITY_TOLERANCES, calibration_status, prepare_feedback_metrics
+from presentcoach.presentation_core import TranscriptWord, VisionSample, analyze_session, compute_metrics
+from presentcoach.presentation_coaching import general_coaching_hints
+from presentcoach.presentation_store import PresentationArchive, StoredPresentation
 
 
 def stored(kind, *, eye=True, wpm_words=80):

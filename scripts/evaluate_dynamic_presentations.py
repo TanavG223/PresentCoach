@@ -7,7 +7,7 @@ import argparse
 import json
 from pathlib import Path
 
-from stroke_screening.presentation_dynamic_eval import (
+from presentcoach.presentation_dynamic_eval import (
     DynamicEvaluationError,
     atomic_write_json,
     build_dynamic_evaluation_report,

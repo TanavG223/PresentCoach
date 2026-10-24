@@ -3,8 +3,8 @@ import threading
 import numpy as np
 import pytest
 
-import stroke_screening.presentation_camera as presentation_camera_module
-from stroke_screening.presentation_camera import (
+import presentcoach.presentation_camera as presentation_camera_module
+from presentcoach.presentation_camera import (
     CameraSessionError,
     PresentationCameraService,
 )

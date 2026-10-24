@@ -9,16 +9,16 @@ import time
 
 import pytest
 
-import stroke_screening.presentation_video as presentation_video_module
-from stroke_screening.presentation_audio import SAMPLE_RATE
-from stroke_screening.presentation_core import analyze_session
-from stroke_screening.presentation_video import (
+import presentcoach.presentation_video as presentation_video_module
+from presentcoach.presentation_audio import SAMPLE_RATE
+from presentcoach.presentation_core import analyze_session
+from presentcoach.presentation_video import (
     LocalVideoAnalyzer,
     VideoImportError,
     VideoNormalizationError,
     VideoProbe,
 )
-from stroke_screening.presentation_video_timing import frame_timestamp_seconds
+from presentcoach.presentation_video_timing import frame_timestamp_seconds
 
 
 class NeverTranscribe:

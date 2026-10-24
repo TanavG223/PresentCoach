@@ -1,8 +1,8 @@
 import numpy as np
 import pytest
 
-import stroke_screening.presentation_audio as presentation_audio_module
-from stroke_screening.presentation_audio import (
+import presentcoach.presentation_audio as presentation_audio_module
+from presentcoach.presentation_audio import (
     AudioCaptureError,
     LocalAudioRecorder,
     audio_signal_metrics,

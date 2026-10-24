@@ -2,14 +2,14 @@ from dataclasses import replace
 
 import pytest
 
-from stroke_screening.presentation_core import (
+from presentcoach.presentation_core import (
     TranscriptWord,
     VisionSample,
     analyze_session,
     compute_metrics,
     generate_feedback,
 )
-from stroke_screening.presentation_calibration import prepare_feedback_metrics
+from presentcoach.presentation_calibration import prepare_feedback_metrics
 
 
 def vision_samples(seconds=40):

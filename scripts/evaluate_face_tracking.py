@@ -9,7 +9,7 @@ from importlib.metadata import version as package_version
 import json
 from pathlib import Path
 
-from stroke_screening.presentation_tracking_eval import (
+from presentcoach.presentation_tracking_eval import (
     TrackingEvaluationError,
     analyze_tracking_clip,
     build_tracking_checks,

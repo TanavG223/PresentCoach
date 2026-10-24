@@ -27,6 +27,6 @@ jobs:
       - run: npm --prefix frontend ci
       - run: npm --prefix frontend test
       - run: npm --prefix frontend run build
-      - run: git diff --exit-code -- src/stroke_screening/static
+      - run: git diff --exit-code -- src/presentcoach/static
       - run: python -m pytest
       - run: python -m pip check

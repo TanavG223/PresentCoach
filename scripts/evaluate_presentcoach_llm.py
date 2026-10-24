@@ -12,10 +12,10 @@ import os
 from pathlib import Path
 import sys
 
-from stroke_screening.presentation_ai import OllamaPresentationLLM
-from stroke_screening.presentation_coaching import general_coaching_hints
-from stroke_screening.presentation_core import generate_feedback
-from stroke_screening.presentation_test_lab import (
+from presentcoach.presentation_ai import OllamaPresentationLLM
+from presentcoach.presentation_coaching import general_coaching_hints
+from presentcoach.presentation_core import generate_feedback
+from presentcoach.presentation_test_lab import (
     LLM_ARTIFACT_KEYS,
     LLM_CASE_CATEGORY_COUNTS,
     LLM_CASE_LIMIT,

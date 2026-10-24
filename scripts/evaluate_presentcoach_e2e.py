@@ -31,22 +31,22 @@ import time
 from typing import Mapping, Sequence
 from urllib.parse import parse_qs, urlsplit
 
-from stroke_screening.presentation_ai import OllamaPresentationLLM
-from stroke_screening.presentation_audio import WhisperCppTranscriber
-from stroke_screening.presentation_core import (
+from presentcoach.presentation_ai import OllamaPresentationLLM
+from presentcoach.presentation_audio import WhisperCppTranscriber
+from presentcoach.presentation_core import (
     FEEDBACK_METRIC_QUALITY_FLAGS,
     FEEDBACK_SCHEMA,
     PROHIBITED_FEEDBACK_TERMS,
 )
-from stroke_screening.presentation_server import create_app
-from stroke_screening.presentation_store import MEDIA_MAGIC, PresentationStore
-from stroke_screening.presentation_tracking_ground_truth import (
+from presentcoach.presentation_server import create_app
+from presentcoach.presentation_store import MEDIA_MAGIC, PresentationStore
+from presentcoach.presentation_tracking_ground_truth import (
     GroundTruthPowerPolicy,
     GroundTruthValidationError,
     load_ground_truth_annotations,
     validate_split_group_isolation,
 )
-from stroke_screening.presentation_video import LocalVideoAnalyzer
+from presentcoach.presentation_video import LocalVideoAnalyzer
 
 
 ROOT = Path(__file__).resolve().parents[1]

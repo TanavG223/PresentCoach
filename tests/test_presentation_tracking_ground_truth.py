@@ -4,8 +4,8 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from stroke_screening.presentation_tracking_eval import TrackingObservation
-from stroke_screening.presentation_tracking_ground_truth import (
+from presentcoach.presentation_tracking_eval import TrackingObservation
+from presentcoach.presentation_tracking_ground_truth import (
     GroundTruthPowerPolicy,
     GroundTruthValidationError,
     load_ground_truth_annotations,

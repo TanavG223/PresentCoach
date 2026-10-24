@@ -33,7 +33,7 @@ session data. That capability should not be shared or bookmarked.
 To run directly from source:
 
 ```bash
-.venv/bin/python -m stroke_screening.presentation_server
+.venv/bin/python -m presentcoach.presentation_server
 ```
 
 The same private `access-url` file is created for a source run and removed when
@@ -101,7 +101,7 @@ speaker was reading. It can report a prolonged camera-contact break or measured
 facial-landmark movement, but it cannot prove the hidden reason for either.
 
 The main public functions live in
-`src/stroke_screening/presentation_core.py`:
+`src/presentcoach/presentation_core.py`:
 
 1. `analyze_session(video_frames, audio)` creates a session record.
 2. `compute_metrics(session)` creates aggregates and notable moments.

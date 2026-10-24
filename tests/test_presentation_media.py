@@ -10,22 +10,22 @@ import time
 import numpy as np
 import pytest
 
-import stroke_screening.presentation_recording as presentation_recording_module
-from stroke_screening.presentation_core import (
+import presentcoach.presentation_recording as presentation_recording_module
+from presentcoach.presentation_core import (
     TranscriptWord,
     VisionSample,
     analyze_session,
     compute_metrics,
 )
-from stroke_screening.presentation_recording import (
+from presentcoach.presentation_recording import (
     LocalRecordingMediaCapture,
     PresentationRecordingError,
     PresentationRecordingService,
     RecordingMedia,
 )
-from stroke_screening.presentation_audio import AudioCaptureError, TranscriptionError
-from stroke_screening.presentation_camera import CameraSessionError
-from stroke_screening.presentation_store import (
+from presentcoach.presentation_audio import AudioCaptureError, TranscriptionError
+from presentcoach.presentation_camera import CameraSessionError
+from presentcoach.presentation_store import (
     MEDIA_CHUNK_BYTES,
     MEDIA_TAG_BYTES,
     MacOSKeychainKeyStore,

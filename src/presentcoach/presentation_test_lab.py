@@ -392,9 +392,9 @@ def llm_evidence_artifacts(
     ).hexdigest()
     policy = hashlib.sha256()
     for relative in (
-        Path("src/stroke_screening/presentation_ai.py"),
-        Path("src/stroke_screening/presentation_coaching.py"),
-        Path("src/stroke_screening/presentation_core.py"),
+        Path("src/presentcoach/presentation_ai.py"),
+        Path("src/presentcoach/presentation_coaching.py"),
+        Path("src/presentcoach/presentation_core.py"),
     ):
         path = root / relative
         try:
@@ -1498,7 +1498,7 @@ def _read_dynamic_report(path: Path) -> tuple[bool, dict[str, object] | None]:
 
 
 def _dynamic_source_hashes(project_root: Path) -> dict[str, str] | None:
-    package = project_root / "src" / "stroke_screening"
+    package = project_root / "src" / "presentcoach"
     paths = {
         "presentation_dynamic_eval.py": package / "presentation_dynamic_eval.py",
         "presentation_tracking_eval.py": package / "presentation_tracking_eval.py",

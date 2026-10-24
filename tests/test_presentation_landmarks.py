@@ -3,7 +3,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-from stroke_screening.landmarks import (
+from presentcoach.landmarks import (
     FaceLandmarkEngine,
     _FaceCandidate,
     _deduplicate_candidates,

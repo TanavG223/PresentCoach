@@ -264,7 +264,7 @@ final class PresentCoachAppDelegate: NSObject, NSApplicationDelegate, WKNavigati
             try handle.seekToEnd()
             let process = Process()
             process.executableURL = pythonURL
-            process.arguments = ["-m", "stroke_screening.presentation_server"]
+            process.arguments = ["-m", "presentcoach.presentation_server"]
             process.currentDirectoryURL = URL(fileURLWithPath: projectRoot)
             var environment = ProcessInfo.processInfo.environment
             environment["PYTHONUNBUFFERED"] = "1"

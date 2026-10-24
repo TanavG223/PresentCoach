@@ -4,7 +4,7 @@ import shutil
 
 import pytest
 
-from stroke_screening.presentation_test_lab import (
+from presentcoach.presentation_test_lab import (
     test_lab_payload as build_test_lab_payload,
 )
 

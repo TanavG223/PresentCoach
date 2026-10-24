@@ -1,7 +1,7 @@
 from copy import deepcopy
 
-from stroke_screening.presentation_core import FeedbackClaim, StructuredFeedback
-from stroke_screening.presentation_review import build_review_cues
+from presentcoach.presentation_core import FeedbackClaim, StructuredFeedback
+from presentcoach.presentation_review import build_review_cues
 
 
 def measured_metrics():

@@ -26,7 +26,7 @@ dev = [
 ]
 
 [project.scripts]
-presentcoach = "stroke_screening.presentation_server:main"
+presentcoach = "presentcoach.presentation_server:main"
 
 [tool.setuptools.packages.find]
 where = ["src"]

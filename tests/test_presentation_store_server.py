@@ -10,29 +10,29 @@ import time
 import itsdangerous.timed
 import pytest
 
-from stroke_screening.presentation_audio import AudioCaptureError
-from stroke_screening.presentation_calibration import prepare_feedback_metrics
-from stroke_screening.presentation_camera import CameraSessionError
-from stroke_screening.presentation_core import (
+from presentcoach.presentation_audio import AudioCaptureError
+from presentcoach.presentation_calibration import prepare_feedback_metrics
+from presentcoach.presentation_camera import CameraSessionError
+from presentcoach.presentation_core import (
     TranscriptWord,
     VisionSample,
     analyze_session,
     compute_metrics,
     generate_feedback,
 )
-from stroke_screening.presentation_recording import (
+from presentcoach.presentation_recording import (
     PresentationRecordingError,
     RecordedPresentation,
     RecordingMedia,
 )
-from stroke_screening.presentation_server import (
+from presentcoach.presentation_server import (
     MEDIA_PLAYBACK_RANGE_BYTES,
     _remove_access_url,
     _serialize_archive,
     _write_access_url,
     create_app,
 )
-from stroke_screening.presentation_store import (
+from presentcoach.presentation_store import (
     MEDIA_CHUNK_BYTES,
     MEDIA_TAG_BYTES,
     PresentationArchive,
@@ -40,8 +40,8 @@ from stroke_screening.presentation_store import (
     PresentationStore,
     StoredPresentation,
 )
-from stroke_screening.presentation_test_lab import TEST_MEDIA_BY_ID
-from stroke_screening.presentation_video import ImportedVideoResult, PlaybackVideo
+from presentcoach.presentation_test_lab import TEST_MEDIA_BY_ID
+from presentcoach.presentation_video import ImportedVideoResult, PlaybackVideo
 
 
 ROOT = Path(__file__).resolve().parents[1]
