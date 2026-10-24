@@ -1,0 +1,50 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-v2-wade-adams",
+  "split_group_id": "commons-sha1-185f8a5c82dbbb963ca9021b97c25d2afbe09059",
+  "duration_seconds": 60,
+  "intervals": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 10,
+      "face_state": "no_face",
+      "motion": "unknown",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 10,
+      "end_seconds": 24,
+      "face_state": "occluded_or_tiny",
+      "motion": "unknown",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 24,
+      "end_seconds": 27,
+      "face_state": "single_trackable",
+      "motion": "mixed",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 27,
+      "end_seconds": 38,
+      "face_state": "occluded_or_tiny",
+      "motion": "unknown",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 38,
+      "end_seconds": 52,
+      "face_state": "single_trackable",
+      "motion": "mixed",
+      "gaze_truth": "unknown"
+    },
+    {
+      "start_seconds": 52,
+      "end_seconds": 60,
+      "face_state": "occluded_or_tiny",
+      "motion": "unknown",
+      "gaze_truth": "unknown"
+    }
+  ]
+}

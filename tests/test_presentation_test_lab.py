@@ -1,7 +1,10 @@
 import json
 from pathlib import Path
+import shutil
 
-from stroke_screening.presentation_test_lab import (
+import pytest
+
+from presentcoach.presentation_test_lab import (
     test_lab_payload as build_test_lab_payload,
 )
 
@@ -28,7 +31,224 @@ def _payload(media: Path, reports: Path, report: dict[str, object]):
     (reports / "presentcoach_tracking_eval.json").write_text(
         json.dumps(report), encoding="utf-8"
     )
-    return build_test_lab_payload(media_dir=media, reports_dir=reports)["tracking_eval"]
+    return build_test_lab_payload(
+        media_dir=media,
+        reports_dir=reports,
+        local_model_status={
+            "available": False,
+            "installed": False,
+            "model": "presentcoach-local",
+            "digest": "",
+        },
+    )["tracking_eval"]
+
+
+def _dynamic_fixture(tmp_path: Path) -> tuple[Path, Path]:
+    media = tmp_path / "media"
+    reports = tmp_path / "reports"
+    (media / "annotations").mkdir(parents=True)
+    reports.mkdir()
+    shutil.copy2(
+        ROOT / "test_media" / "dynamic_presentation_manifest.json",
+        media / "dynamic_presentation_manifest.json",
+    )
+    for annotation in (ROOT / "test_media" / "annotations").glob("*.json"):
+        shutil.copy2(annotation, media / "annotations" / annotation.name)
+    return media, reports
+
+
+def test_dynamic_split_absence_preserves_untouched_holdout_state(tmp_path: Path):
+    media, reports = _dynamic_fixture(tmp_path)
+
+    dynamic = build_test_lab_payload(
+        media_dir=media,
+        reports_dir=reports,
+        local_model_status={
+            "available": False,
+            "installed": False,
+            "model": "presentcoach-local",
+            "digest": "",
+        },
+    )["dynamic_eval"]
+
+    assert dynamic["development"]["state"] == "not_run"
+    assert dynamic["development"]["trusted"] is False
+    assert dynamic["development"]["expected_case_count"] == 10
+    assert dynamic["holdout"]["state"] == "untouched"
+    assert dynamic["holdout"]["trusted"] is False
+    assert dynamic["holdout"]["case_count"] == 0
+    assert dynamic["holdout"]["expected_case_count"] == 5
+    assert "no report has been run or read" in dynamic["holdout"]["trust_message"]
+    assert all(item["result"] is None for item in dynamic["holdout"]["cases"])
+    assert dynamic["claim_boundary"].startswith("Single-curator observed-state")
+    assert "population accuracy" in dynamic["claim_boundary"]
+    assert "gaze accuracy" in dynamic["claim_boundary"]
+    assert "training evidence" in dynamic["claim_boundary"]
+    assert str(media) not in json.dumps(dynamic)
+
+
+def test_dynamic_report_presence_fails_closed_without_changing_holdout(tmp_path: Path):
+    media, reports = _dynamic_fixture(tmp_path)
+    (reports / "presentcoach_dynamic_development.json").write_text(
+        '{"schema_version":1,"case_count":5}', encoding="utf-8"
+    )
+
+    dynamic = build_test_lab_payload(
+        media_dir=media,
+        reports_dir=reports,
+        local_model_status={},
+    )["dynamic_eval"]
+
+    assert dynamic["development"]["state"] == "untrusted"
+    assert dynamic["development"]["case_count"] == 0
+    assert dynamic["development"]["aggregate"] == {}
+    assert all(item["result"] is None for item in dynamic["development"]["cases"])
+    assert dynamic["holdout"]["state"] == "untouched"
+
+
+def test_dynamic_development_report_recomputes_and_exposes_bounded_evidence(
+    tmp_path: Path,
+):
+    media, reports = _dynamic_fixture(tmp_path)
+    shutil.copy2(
+        ROOT / "reports" / "presentcoach_dynamic_development.json",
+        reports / "presentcoach_dynamic_development.json",
+    )
+
+    dynamic = build_test_lab_payload(
+        media_dir=media,
+        reports_dir=reports,
+        local_model_status={},
+    )["dynamic_eval"]
+    development = dynamic["development"]
+
+    assert development["trusted"] is True
+    assert development["manifest_verified"] is True
+    assert development["model_verified"] is True
+    assert development["annotations_verified"] is True
+    assert development["case_count"] == development["expected_case_count"] == 10
+    assert development["state"] in {"pass", "fail", "not_evaluated"}
+    assert len(development["checks"]) == 6
+    assert set(development["aggregate"]) == {
+        "observation_count",
+        "labeled_observation_count",
+        "reacquisition_event_count",
+        "trackable_coverage",
+        "false_valid_rate",
+        "multi_face_abstention",
+        "dropouts_per_annotated_minute",
+        "reacquisition_success_rate",
+        "max_reacquisition_latency_seconds",
+    }
+    first = development["cases"][0]
+    assert first["result"] is not None
+    assert set(first["result"]) == {
+        "evaluation_duration_seconds", "tracking", "observed_state",
+        "repeatability",
+    }
+    serialized = json.dumps(development)
+    assert str(media) not in serialized
+    assert "annotation_file" not in serialized
+    assert "filename" not in serialized
+    assert "dropout_runs" not in serialized
+    assert "landmarks" not in serialized
+    assert dynamic["holdout"]["state"] == "untouched"
+    assert dynamic["holdout"]["case_count"] == 0
+
+
+def test_dynamic_one_shot_holdout_failure_remains_trusted_and_visible(tmp_path: Path):
+    media, reports = _dynamic_fixture(tmp_path)
+    shutil.copy2(
+        ROOT / "reports" / "presentcoach_dynamic_holdout.json",
+        reports / "presentcoach_dynamic_holdout.json",
+    )
+
+    holdout = build_test_lab_payload(
+        media_dir=media,
+        reports_dir=reports,
+        local_model_status={},
+    )["dynamic_eval"]["holdout"]
+
+    assert holdout["trusted"] is True
+    assert holdout["state"] == holdout["release_gate_status"] == "fail"
+    assert holdout["case_count"] == holdout["expected_case_count"] == 5
+    assert holdout["failed_required_metrics"] == [
+        "false_valid_rate",
+        "dropouts_per_annotated_minute",
+    ]
+    assert holdout["underpowered_required_metrics"] == [
+        "multi_face_abstention"
+    ]
+    assert all(item["result"] is not None for item in holdout["cases"])
+
+
+@pytest.mark.parametrize("tamper", ["aggregate", "gate", "configuration", "source"])
+def test_dynamic_development_report_fails_closed_on_tampering(
+    tmp_path: Path, tamper: str,
+):
+    media, reports = _dynamic_fixture(tmp_path)
+    report = json.loads(
+        (ROOT / "reports" / "presentcoach_dynamic_development.json").read_text(
+            encoding="utf-8"
+        )
+    )
+    if tamper == "aggregate":
+        report["aggregate"]["observation_count"] += 1
+    elif tamper == "gate":
+        report["release_gate"]["checks"][0]["passed"] = not bool(
+            report["release_gate"]["checks"][0]["passed"]
+        )
+    elif tamper == "configuration":
+        report["configuration"]["face_landmarker"][
+            "min_tracking_confidence"
+        ] = 0.01
+    else:
+        report["source_sha256"]["landmarks.py"] = "0" * 64
+    (reports / "presentcoach_dynamic_development.json").write_text(
+        json.dumps(report), encoding="utf-8"
+    )
+
+    development = build_test_lab_payload(
+        media_dir=media,
+        reports_dir=reports,
+        local_model_status={},
+    )["dynamic_eval"]["development"]
+
+    assert development["trusted"] is False
+    assert development["state"] == "untrusted"
+    assert development["case_count"] == 0
+    assert development["aggregate"] == {}
+    assert development["checks"] == []
+    assert all(item["result"] is None for item in development["cases"])
+
+
+def test_dynamic_report_rejects_an_installed_media_hash_mismatch(tmp_path: Path):
+    media, reports = _dynamic_fixture(tmp_path)
+    shutil.copy2(
+        ROOT / "reports" / "presentcoach_dynamic_development.json",
+        reports / "presentcoach_dynamic_development.json",
+    )
+    manifest = json.loads(
+        (media / "dynamic_presentation_manifest.json").read_text(encoding="utf-8")
+    )
+    development_clip = next(
+        item for item in manifest["clips"] if item["dataset_role"] == "development"
+    )
+    (media / development_clip["filename"]).write_bytes(b"tampered canonical media")
+
+    development = build_test_lab_payload(
+        media_dir=media,
+        reports_dir=reports,
+        local_model_status={},
+    )["dynamic_eval"]["development"]
+
+    assert development["trusted"] is False
+    assert development["state"] == "untrusted"
+    matching = next(
+        item for item in development["cases"] if item["id"] == development_clip["id"]
+    )
+    assert matching["media"]["installed"] is False
+    assert matching["media"]["video_url"] is None
 
 
 def test_tracking_report_is_manifest_locked_bounded_and_redacted(tmp_path: Path):

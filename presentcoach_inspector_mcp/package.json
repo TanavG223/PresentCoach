@@ -1,0 +1,24 @@
+{
+  "name": "presentcoach-inspector-mcp",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "evidence": "node scripts/generate-evidence.mjs",
+    "check": "npm run evidence && tsc --noEmit",
+    "smoke": "node scripts/smoke.mjs",
+    "dev": "npm run evidence && wrangler dev --port 8788",
+    "deploy": "npm run check && wrangler deploy",
+    "deploy:temporary": "npm run check && wrangler deploy --temporary"
+  },
+  "dependencies": {
+    "@modelcontextprotocol/sdk": "1.30.0",
+    "@modelcontextprotocol/server": "2.0.0",
+    "agents": "0.21.0"
+  },
+  "devDependencies": {
+    "@cloudflare/workers-types": "5.20260820.1",
+    "typescript": "6.0.3",
+    "wrangler": "4.125.0"
+  }
+}

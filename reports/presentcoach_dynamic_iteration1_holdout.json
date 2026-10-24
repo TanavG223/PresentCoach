@@ -1,0 +1,1296 @@
+{
+  "schema_version": 1,
+  "generated_at": "2026-08-20T04:48:25.675327Z",
+  "split": "model_output_holdout",
+  "split_isolation": "one report contains exactly one dataset_role",
+  "case_count": 5,
+  "manifest_sha256": "e470d7034a02f58f858582e4cbdf1da581f44690d6600430c0884c802f12a8fc",
+  "model": {
+    "filename": "face_landmarker.task",
+    "sha256": "64184e229b263107bc2b804c6625db1341ff2bb731874b0bcc2fe6544e0bc9ff",
+    "matches_manifest": true
+  },
+  "configuration": {
+    "target_fps": 15.0,
+    "start_seconds": 0.0,
+    "transform": {
+      "type": "identity"
+    },
+    "sampler": "presentation_tracking_eval.sample_tracking_clip",
+    "development_repeatability_runs": 2,
+    "holdout_repeatability_runs": 1,
+    "repeatability_projection": "all aggregate model outputs excluding runtime-only metrics",
+    "face_landmarker": {
+      "max_face_count": 2,
+      "min_face_detection_confidence": 0.55,
+      "min_face_presence_confidence": 0.55,
+      "min_tracking_confidence": 0.55,
+      "landmark_smoothing_time_constant_ms": 80.0,
+      "reacquisition_gap_ms": 250,
+      "multiscale_fallback_enabled": true,
+      "multiscale_tile_size": 0.5,
+      "multiscale_tile_offsets": [
+        0.0,
+        0.25,
+        0.5
+      ],
+      "multiscale_tile_count": 9,
+      "multiscale_deduplication_iou": 0.25
+    }
+  },
+  "configuration_sha256": "51203552cacba74c680087c664ff19400999824986cadd80efd6c278ba535718",
+  "policy": {
+    "power_policy": {
+      "minimum_trackable_frames": 15,
+      "minimum_nontrackable_frames": 15,
+      "minimum_multi_face_frames": 15,
+      "minimum_trackable_seconds": 10.0,
+      "minimum_reacquisition_events": 3,
+      "minimum_sampling_coverage_ratio": 0.8
+    },
+    "scoring_policy": {
+      "scope": "one_global_policy_for_development_and_model_output_holdout",
+      "thresholds_frozen_before_model_output_holdout": true,
+      "aggregation": "Pool labeled observations and reacquisition events within each dataset_role while also reporting every clip; never tune or set thresholds per clip.",
+      "uncertain_and_unlabeled_intervals": "excluded",
+      "underpowered_metric_behavior": "Return null with a reason and fail the overall gate closed.",
+      "gaze_metric_behavior": "Do not score gaze because the corpus has no independently labeled contact/away truth.",
+      "required_metrics": [
+        "trackable_coverage",
+        "false_valid_rate",
+        "multi_face_abstention",
+        "dropouts_per_annotated_minute",
+        "reacquisition_success_rate",
+        "max_reacquisition_latency_seconds"
+      ],
+      "acceptance_thresholds": {
+        "trackable_coverage_min": 0.75,
+        "false_valid_rate_max": 0.1,
+        "multi_face_abstention_min": 0.9,
+        "dropouts_per_annotated_minute_max": 6.0,
+        "reacquisition_success_rate_min": 0.8,
+        "max_reacquisition_latency_seconds_max": 2.0
+      },
+      "claim_boundary": "These are pre-registered engineering gates for this ten-clip scenario corpus, not population accuracy, generalization, identity recognition, or model-training evidence."
+    }
+  },
+  "policy_sha256": "b72979178c926c72da8f9be7145e3d9c77fbd1b01d9da9b97e755194476008e5",
+  "source_sha256": {
+    "presentation_dynamic_eval.py": "df053898342a3f6dc5460cf46619a4fc900eba47e628225ee65f0fc2d50923cb",
+    "presentation_tracking_eval.py": "1c886ad3dda8a94610eaef1b3ea72c63770995543fec36ce354cc81017e35513",
+    "presentation_tracking_ground_truth.py": "c0c64dffc931e2607ef259c7df4b2b09dd3af0247d304f47a999b185f2d11ca3",
+    "landmarks.py": "626030b5b35a9163ff1638bd618849c2714481a3059f3f47ad309622aab3d92b",
+    "presentation_video_timing.py": "613b39c03ccedc3657f1b5b822d57fffaceec0b03269839ce19965f28455e4b8",
+    "scripts/evaluate_dynamic_presentations.py": "c567fdf026c4ff981235d8ecd29ba7b3463d032907d04c2d0b787058afcadc16"
+  },
+  "git": {
+    "commit": "68171ef3d132f8bb01ae6f2b801869e6bbe71402",
+    "dirty": true,
+    "status_sha256": "7bc42d2e68af872c2a064bcc07c6d5e01f372a37686af0edf564fc24f0ef5749"
+  },
+  "evaluation_only": true,
+  "used_for_training": false,
+  "identity_recognition": false,
+  "face_embeddings_created": false,
+  "landmarks_persisted": false,
+  "gaze_accuracy_evaluated": false,
+  "annotation_evidence": "single-curator coarse observed-state intervals; not independently adjudicated accuracy",
+  "aggregate": {
+    "observation_count": 4500,
+    "labeled_observation_count": 4500,
+    "trackable_valid_observation_count": 453,
+    "trackable_observation_count": 1680,
+    "nontrackable_false_valid_observation_count": 88,
+    "nontrackable_observation_count": 2820,
+    "multi_face_abstained_observation_count": 165,
+    "multi_face_observation_count": 165,
+    "dropout_run_count": 23,
+    "annotated_trackable_seconds": 112.0,
+    "annotated_nontrackable_seconds": 188.0,
+    "annotated_multi_face_seconds": 11.0,
+    "trackable_sampling_coverage": 1.0,
+    "nontrackable_sampling_coverage": 1.0,
+    "multi_face_sampling_coverage": 1.0,
+    "trackable_coverage": 0.269643,
+    "false_valid_rate": 0.031206,
+    "multi_face_abstention": 1.0,
+    "dropouts_per_annotated_minute": 12.321429,
+    "reacquisition_success_count": 1,
+    "reacquisition_event_count": 3,
+    "reacquisition_success_rate": 0.333333,
+    "mean_reacquisition_latency_seconds": null,
+    "max_reacquisition_latency_seconds": null,
+    "gaze_accuracy": null,
+    "underpowered_reasons": {
+      "mean_reacquisition_latency_seconds": "2 of 3 events never produced three consecutive valid frames",
+      "max_reacquisition_latency_seconds": "2 of 3 events never produced three consecutive valid frames",
+      "gaze_accuracy": "natural multi-camera presentation clips have no reliable camera-contact ground truth"
+    }
+  },
+  "release_gate": {
+    "status": "fail",
+    "failed_required_metrics": [
+      "trackable_coverage",
+      "dropouts_per_annotated_minute",
+      "reacquisition_success_rate"
+    ],
+    "underpowered_required_metrics": [
+      "max_reacquisition_latency_seconds"
+    ],
+    "checks": [
+      {
+        "metric": "trackable_coverage",
+        "required": true,
+        "status": "fail",
+        "passed": false,
+        "actual": 0.269643,
+        "comparison": ">=",
+        "threshold": 0.75
+      },
+      {
+        "metric": "false_valid_rate",
+        "required": true,
+        "status": "pass",
+        "passed": true,
+        "actual": 0.031206,
+        "comparison": "<=",
+        "threshold": 0.1
+      },
+      {
+        "metric": "multi_face_abstention",
+        "required": true,
+        "status": "pass",
+        "passed": true,
+        "actual": 1.0,
+        "comparison": ">=",
+        "threshold": 0.9
+      },
+      {
+        "metric": "dropouts_per_annotated_minute",
+        "required": true,
+        "status": "fail",
+        "passed": false,
+        "actual": 12.321429,
+        "comparison": "<=",
+        "threshold": 6.0
+      },
+      {
+        "metric": "reacquisition_success_rate",
+        "required": true,
+        "status": "fail",
+        "passed": false,
+        "actual": 0.333333,
+        "comparison": ">=",
+        "threshold": 0.8
+      },
+      {
+        "metric": "max_reacquisition_latency_seconds",
+        "required": true,
+        "status": "not_evaluated",
+        "passed": null,
+        "actual": null,
+        "comparison": "<=",
+        "threshold": 2.0
+      }
+    ]
+  },
+  "cases": [
+    {
+      "clip_id": "dynamic-constance-adams",
+      "dataset_role": "model_output_holdout",
+      "split_group_id": "commons-sha1-2aacce82ffbb646abe7abf0fe9eafb88f7310dfd",
+      "filename": "dynamic-constance-adams-60s.mp4",
+      "media_sha256": "fc6ab8a665a8da7f3b617c34ce8ba10651e9a391a8dccefbccce5e25a19c0eef",
+      "annotation_file": "annotations/dynamic-constance-adams.json",
+      "annotation_sha256": "d67257dfcfdd447f443616994eb1c0324e8bf3a3821fa1347b6a19921580e3c4",
+      "source_title": "Constance Adams \u2014 Space Architect",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:TEDxHouston_2011_-_Constance_Adams_-_Space_Architect.webm",
+      "license_spdx": "CC-BY-3.0",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 315,
+        "valid_face_frame_ratio": 0.35,
+        "no_face_frame_count": 584,
+        "no_face_frame_ratio": 0.648889,
+        "multi_face_frame_count": 1,
+        "multi_face_frame_ratio": 0.001111,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 3,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 3.0667,
+            "end_seconds": 30.5333,
+            "duration_seconds": 27.5333,
+            "frame_count": 413,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 27.5333
+          },
+          {
+            "kind": "multiple_faces",
+            "start_seconds": 43.7333,
+            "end_seconds": 43.7333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 48.6,
+            "end_seconds": 59.9333,
+            "duration_seconds": 11.4,
+            "frame_count": 171,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 27.5333,
+        "reacquisition_event_count": 2,
+        "mean_reacquisition_seconds": 13.8,
+        "max_reacquisition_seconds": 27.5333,
+        "stable_segment_count": 10,
+        "stable_transition_count": 257,
+        "landmark_jitter_median": 0.050287,
+        "landmark_jitter_p95": 0.144479,
+        "mean_inference_ms": 8.098,
+        "p95_inference_ms": 20.457,
+        "wall_clock_seconds": 7.725,
+        "processing_throughput_fps": 116.503
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-constance-adams",
+        "split_group_id": "commons-sha1-2aacce82ffbb646abe7abf0fe9eafb88f7310dfd",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 330,
+        "trackable_valid_observation_count": 309,
+        "nontrackable_observation_count": 570,
+        "false_valid_observation_count": 6,
+        "multi_face_observation_count": 165,
+        "multi_face_abstained_observation_count": 165,
+        "motion_observation_counts": {
+          "head_turn": 0,
+          "mixed": 330,
+          "scale": 0,
+          "static": 0,
+          "translate": 0
+        },
+        "annotated_trackable_seconds": 22.0,
+        "trackable_sampling_coverage": 1.0,
+        "nontrackable_sampling_coverage": 1.0,
+        "multi_face_sampling_coverage": 1.0,
+        "trackable_coverage": 0.936364,
+        "false_valid_rate": 0.010526,
+        "multi_face_abstention": 1.0,
+        "dropout_run_count": 2,
+        "dropouts_per_annotated_minute": 5.454545,
+        "reacquisition_event_count": 1,
+        "reacquisition_success_count": 1,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [
+          {
+            "onset_seconds": 31.0,
+            "reacquired": true,
+            "latency_seconds": 0.0
+          }
+        ],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 1",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 1,
+        "status": "not_run_for_holdout",
+        "exact_non_runtime_metrics": null
+      }
+    },
+    {
+      "clip_id": "dynamic-simon-stone",
+      "dataset_role": "model_output_holdout",
+      "split_group_id": "commons-sha1-1fc4290c456a6c7696b13cea6c92fd0d54bf8b90",
+      "filename": "dynamic-simon-stone-60s.mp4",
+      "media_sha256": "359ab9cf4e99fd5c14802397f28c82e150a34f45b39fa2a130cf373c8e1d5f4e",
+      "annotation_file": "annotations/dynamic-simon-stone.json",
+      "annotation_sha256": "0dc40328035140a3dc46a4dede0864e06be09197c40dfdbb28d5c18e7c50789a",
+      "source_title": "Simon Stone \u2014 What is theatre capable of?",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:What_is_theatre_capable_of_Simon_Stone_at_TEDxSydney.webm",
+      "license_spdx": "CC-BY-3.0",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 30,
+        "valid_face_frame_ratio": 0.033333,
+        "no_face_frame_count": 870,
+        "no_face_frame_ratio": 0.966667,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 10,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.0,
+            "end_seconds": 19.4667,
+            "duration_seconds": 19.5333,
+            "frame_count": 293,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 19.6667,
+            "end_seconds": 20.9333,
+            "duration_seconds": 1.3333,
+            "frame_count": 20,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.3333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 21.0667,
+            "end_seconds": 21.2667,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 22.6667,
+            "end_seconds": 23.8667,
+            "duration_seconds": 1.2667,
+            "frame_count": 19,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 24.0,
+            "end_seconds": 24.1333,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 24.2667,
+            "end_seconds": 24.4,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 24.5333,
+            "end_seconds": 24.5333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 24.6667,
+            "end_seconds": 24.8667,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 25.0,
+            "end_seconds": 25.3333,
+            "duration_seconds": 0.4,
+            "frame_count": 6,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 25.5333,
+            "end_seconds": 59.9333,
+            "duration_seconds": 34.4667,
+            "frame_count": 517,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 34.4667,
+        "reacquisition_event_count": 8,
+        "mean_reacquisition_seconds": 0.5,
+        "max_reacquisition_seconds": 1.3333,
+        "stable_segment_count": 1,
+        "stable_transition_count": 15,
+        "landmark_jitter_median": 0.045371,
+        "landmark_jitter_p95": 0.139241,
+        "mean_inference_ms": 8.248,
+        "p95_inference_ms": 13.371,
+        "wall_clock_seconds": 7.821,
+        "processing_throughput_fps": 115.08
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-simon-stone",
+        "split_group_id": "commons-sha1-1fc4290c456a6c7696b13cea6c92fd0d54bf8b90",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 90,
+        "trackable_valid_observation_count": 0,
+        "nontrackable_observation_count": 810,
+        "false_valid_observation_count": 30,
+        "multi_face_observation_count": 0,
+        "multi_face_abstained_observation_count": 0,
+        "motion_observation_counts": {
+          "head_turn": 0,
+          "mixed": 90,
+          "scale": 0,
+          "static": 0,
+          "translate": 0
+        },
+        "annotated_trackable_seconds": 6.0,
+        "trackable_sampling_coverage": 1.0,
+        "nontrackable_sampling_coverage": 1.0,
+        "multi_face_sampling_coverage": 0.0,
+        "trackable_coverage": 0.0,
+        "false_valid_rate": 0.037037,
+        "multi_face_abstention": null,
+        "dropout_run_count": 1,
+        "dropouts_per_annotated_minute": null,
+        "reacquisition_event_count": 1,
+        "reacquisition_success_count": 0,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [
+          {
+            "onset_seconds": 51.0,
+            "reacquired": false,
+            "latency_seconds": null
+          }
+        ],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "multi_face_abstention": "needs at least 15 labeled multiple-face frames; found 0 with 0.0% sampling coverage",
+          "dropouts_per_annotated_minute": "needs at least 10 annotated trackable seconds with sufficient samples; found 6.000 seconds and 100.0% sampling coverage",
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 1",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 1,
+        "status": "not_run_for_holdout",
+        "exact_non_runtime_metrics": null
+      }
+    },
+    {
+      "clip_id": "dynamic-sujiwo-tejo",
+      "dataset_role": "model_output_holdout",
+      "split_group_id": "commons-sha1-4e2b142abbde00bddbba60f3de65bf7d6d7ce4a3",
+      "filename": "dynamic-sujiwo-tejo-60s.mp4",
+      "media_sha256": "933a780afd4052218abbf64dfea1bc3cace3a59a0ce92c3e9b8291e41e9d2254",
+      "annotation_file": "annotations/dynamic-sujiwo-tejo.json",
+      "annotation_sha256": "5f37349e8f19978a43949ffefe588d887396f9865c748e799fdf0aa67d02f023",
+      "source_title": "Sujiwo Tejo \u2014 Math: Finding Harmony in Chaos",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:TEDxBandung_-_Sujiwo_Tejo_-_Math_Finding_Harmony_In_Chaos.webm",
+      "license_spdx": "CC-BY-3.0",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 50,
+        "valid_face_frame_ratio": 0.055556,
+        "no_face_frame_count": 850,
+        "no_face_frame_ratio": 0.944444,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 31,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.0,
+            "end_seconds": 6.8667,
+            "duration_seconds": 6.9333,
+            "frame_count": 104,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 7.1333,
+            "end_seconds": 7.5333,
+            "duration_seconds": 0.4667,
+            "frame_count": 7,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 7.6667,
+            "end_seconds": 7.6667,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 7.8667,
+            "end_seconds": 8.4,
+            "duration_seconds": 0.6,
+            "frame_count": 9,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.6
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 8.5333,
+            "end_seconds": 9.5333,
+            "duration_seconds": 1.0667,
+            "frame_count": 16,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 9.7333,
+            "end_seconds": 12.2,
+            "duration_seconds": 2.5333,
+            "frame_count": 38,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 2.5333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 12.3333,
+            "end_seconds": 12.3333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 12.5333,
+            "end_seconds": 12.5333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 12.7333,
+            "end_seconds": 16.8,
+            "duration_seconds": 4.1333,
+            "frame_count": 62,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 4.1333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 17.1333,
+            "end_seconds": 17.1333,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 17.3333,
+            "end_seconds": 18.3333,
+            "duration_seconds": 1.0667,
+            "frame_count": 16,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 18.4667,
+            "end_seconds": 18.6667,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 18.8,
+            "end_seconds": 19.1333,
+            "duration_seconds": 0.4,
+            "frame_count": 6,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 19.4,
+            "end_seconds": 19.4,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 19.5333,
+            "end_seconds": 25.6667,
+            "duration_seconds": 6.2,
+            "frame_count": 93,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 6.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 25.8,
+            "end_seconds": 26.1333,
+            "duration_seconds": 0.4,
+            "frame_count": 6,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 26.2667,
+            "end_seconds": 26.4667,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 26.6,
+            "end_seconds": 30.1333,
+            "duration_seconds": 3.6,
+            "frame_count": 54,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 3.6
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 30.2667,
+            "end_seconds": 30.4,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 30.5333,
+            "end_seconds": 30.6667,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 31.0,
+            "end_seconds": 40.0,
+            "duration_seconds": 9.0667,
+            "frame_count": 136,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 9.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 40.1333,
+            "end_seconds": 47.4667,
+            "duration_seconds": 7.4,
+            "frame_count": 111,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 7.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 47.6,
+            "end_seconds": 47.7333,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 47.8667,
+            "end_seconds": 50.1333,
+            "duration_seconds": 2.3333,
+            "frame_count": 35,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 2.3333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 50.2667,
+            "end_seconds": 50.3333,
+            "duration_seconds": 0.1333,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.1333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 50.4667,
+            "end_seconds": 50.6,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 50.9333,
+            "end_seconds": 52.9333,
+            "duration_seconds": 2.0667,
+            "frame_count": 31,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 2.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 53.1333,
+            "end_seconds": 53.6667,
+            "duration_seconds": 0.6,
+            "frame_count": 9,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.6
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 53.8667,
+            "end_seconds": 56.7333,
+            "duration_seconds": 2.9333,
+            "frame_count": 44,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 2.9333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 56.8667,
+            "end_seconds": 56.8667,
+            "duration_seconds": 0.0667,
+            "frame_count": 1,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.0667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 57.0,
+            "end_seconds": 59.9333,
+            "duration_seconds": 3.0,
+            "frame_count": 45,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 9.0667,
+        "reacquisition_event_count": 29,
+        "mean_reacquisition_seconds": 1.6115,
+        "max_reacquisition_seconds": 9.0667,
+        "stable_segment_count": 0,
+        "stable_transition_count": 0,
+        "landmark_jitter_median": null,
+        "landmark_jitter_p95": null,
+        "mean_inference_ms": 10.203,
+        "p95_inference_ms": 16.445,
+        "wall_clock_seconds": 9.585,
+        "processing_throughput_fps": 93.894
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-sujiwo-tejo",
+        "split_group_id": "commons-sha1-4e2b142abbde00bddbba60f3de65bf7d6d7ce4a3",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 0,
+        "trackable_valid_observation_count": 0,
+        "nontrackable_observation_count": 900,
+        "false_valid_observation_count": 50,
+        "multi_face_observation_count": 0,
+        "multi_face_abstained_observation_count": 0,
+        "motion_observation_counts": {
+          "head_turn": 0,
+          "mixed": 0,
+          "scale": 0,
+          "static": 0,
+          "translate": 0
+        },
+        "annotated_trackable_seconds": 0,
+        "trackable_sampling_coverage": 0.0,
+        "nontrackable_sampling_coverage": 1.0,
+        "multi_face_sampling_coverage": 0.0,
+        "trackable_coverage": null,
+        "false_valid_rate": 0.055556,
+        "multi_face_abstention": null,
+        "dropout_run_count": 0,
+        "dropouts_per_annotated_minute": null,
+        "reacquisition_event_count": 0,
+        "reacquisition_success_count": 0,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "trackable_coverage": "needs at least 15 labeled trackable frames; found 0 with 0.0% sampling coverage",
+          "multi_face_abstention": "needs at least 15 labeled multiple-face frames; found 0 with 0.0% sampling coverage",
+          "dropouts_per_annotated_minute": "needs at least 10 annotated trackable seconds with sufficient samples; found 0.000 seconds and 0.0% sampling coverage",
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 0",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 0",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 0",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 1,
+        "status": "not_run_for_holdout",
+        "exact_non_runtime_metrics": null
+      }
+    },
+    {
+      "clip_id": "dynamic-find-link-lightning-talk",
+      "dataset_role": "model_output_holdout",
+      "split_group_id": "commons-sha1-8e8d2dd804dea5d027664615a3f58271e2bf9951",
+      "filename": "dynamic-find-link-lightning-talk-60s.mp4",
+      "media_sha256": "2cf2ab523951cc774317d18c7a4eb6a50217c2e310990f5291680cc3f76cf8fd",
+      "annotation_file": "annotations/dynamic-find-link-lightning-talk.json",
+      "annotation_sha256": "b69eb099c04800f31b13e5851a4d3b29bc79e7a079c24576bd847e96cbc727c2",
+      "source_title": "Find link \u2014 lightning talk",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:Find_link_-_lightning_talk.webm",
+      "license_spdx": "CC-BY-3.0",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 22,
+        "valid_face_frame_ratio": 0.024444,
+        "no_face_frame_count": 878,
+        "no_face_frame_ratio": 0.975556,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 5,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 0.0,
+            "end_seconds": 30.0,
+            "duration_seconds": 30.0667,
+            "frame_count": 451,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 30.2,
+            "end_seconds": 30.6,
+            "duration_seconds": 0.4667,
+            "frame_count": 7,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 30.8,
+            "end_seconds": 57.0,
+            "duration_seconds": 26.2667,
+            "frame_count": 394,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 26.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 57.8667,
+            "end_seconds": 58.2,
+            "duration_seconds": 0.4,
+            "frame_count": 6,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 58.6667,
+            "end_seconds": 59.9333,
+            "duration_seconds": 1.3333,
+            "frame_count": 20,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 30.0667,
+        "reacquisition_event_count": 3,
+        "mean_reacquisition_seconds": 9.0445,
+        "max_reacquisition_seconds": 26.2667,
+        "stable_segment_count": 0,
+        "stable_transition_count": 0,
+        "landmark_jitter_median": null,
+        "landmark_jitter_p95": null,
+        "mean_inference_ms": 10.844,
+        "p95_inference_ms": 15.992,
+        "wall_clock_seconds": 10.16,
+        "processing_throughput_fps": 88.579
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-find-link-lightning-talk",
+        "split_group_id": "commons-sha1-8e8d2dd804dea5d027664615a3f58271e2bf9951",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 900,
+        "trackable_valid_observation_count": 22,
+        "nontrackable_observation_count": 0,
+        "false_valid_observation_count": 0,
+        "multi_face_observation_count": 0,
+        "multi_face_abstained_observation_count": 0,
+        "motion_observation_counts": {
+          "head_turn": 0,
+          "mixed": 780,
+          "scale": 0,
+          "static": 0,
+          "translate": 120
+        },
+        "annotated_trackable_seconds": 60.0,
+        "trackable_sampling_coverage": 1.0,
+        "nontrackable_sampling_coverage": 0.0,
+        "multi_face_sampling_coverage": 0.0,
+        "trackable_coverage": 0.024444,
+        "false_valid_rate": null,
+        "multi_face_abstention": null,
+        "dropout_run_count": 6,
+        "dropouts_per_annotated_minute": 6.0,
+        "reacquisition_event_count": 0,
+        "reacquisition_success_count": 0,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "false_valid_rate": "needs at least 15 labeled non-trackable frames; found 0 with 0.0% sampling coverage",
+          "multi_face_abstention": "needs at least 15 labeled multiple-face frames; found 0 with 0.0% sampling coverage",
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 0",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 0",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 0",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 1,
+        "status": "not_run_for_holdout",
+        "exact_non_runtime_metrics": null
+      }
+    },
+    {
+      "clip_id": "dynamic-martha-forsyth",
+      "dataset_role": "model_output_holdout",
+      "split_group_id": "commons-sha1-d80f1a8d77030e500a622b5504a0c26dea73c95f",
+      "filename": "dynamic-martha-forsyth-60s.mp4",
+      "media_sha256": "8ca9b3621209507740750d2bb15437fcf8c3fe516ce895b0b0f976ba46889e33",
+      "annotation_file": "annotations/dynamic-martha-forsyth.json",
+      "annotation_sha256": "a32fa59bb554bb50d53b1cbdd1814ef6fa947718bce28b98763da3252d6d9221",
+      "source_title": "Martha Forsyth lightning talk \u2014 Did I just publish fake news?",
+      "source_page_url": "https://commons.wikimedia.org/wiki/File:Martha_Forsyth_lightning_talk.webm",
+      "license_spdx": "CC-BY-4.0",
+      "evaluation_duration_seconds": 60.0,
+      "tracking_metrics": {
+        "analyzed_frame_count": 900,
+        "analyzed_fps": 15.0,
+        "valid_face_frame_count": 124,
+        "valid_face_frame_ratio": 0.137778,
+        "no_face_frame_count": 776,
+        "no_face_frame_ratio": 0.862222,
+        "multi_face_frame_count": 0,
+        "multi_face_frame_ratio": 0.0,
+        "inconsistent_detection_count": 0,
+        "multi_face_abstention_violations": 0,
+        "dropout_run_count": 15,
+        "dropout_runs": [
+          {
+            "kind": "no_face",
+            "start_seconds": 6.7333,
+            "end_seconds": 6.8,
+            "duration_seconds": 0.1333,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.1333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 7.5333,
+            "end_seconds": 7.6667,
+            "duration_seconds": 0.2,
+            "frame_count": 3,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 7.8,
+            "end_seconds": 8.1333,
+            "duration_seconds": 0.4,
+            "frame_count": 6,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 8.2667,
+            "end_seconds": 43.2,
+            "duration_seconds": 35.0,
+            "frame_count": 525,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 35.0
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 43.3333,
+            "end_seconds": 45.0,
+            "duration_seconds": 1.7333,
+            "frame_count": 26,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.7333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 45.1333,
+            "end_seconds": 50.8,
+            "duration_seconds": 5.7333,
+            "frame_count": 86,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 5.7333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 50.9333,
+            "end_seconds": 51.2667,
+            "duration_seconds": 0.4,
+            "frame_count": 6,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 51.4,
+            "end_seconds": 53.1333,
+            "duration_seconds": 1.8,
+            "frame_count": 27,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.8
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 53.2667,
+            "end_seconds": 53.7333,
+            "duration_seconds": 0.5333,
+            "frame_count": 8,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.5333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 53.8667,
+            "end_seconds": 54.0667,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 54.2,
+            "end_seconds": 54.2667,
+            "duration_seconds": 0.1333,
+            "frame_count": 2,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.1333
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 54.4,
+            "end_seconds": 54.6,
+            "duration_seconds": 0.2667,
+            "frame_count": 4,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.2667
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 54.7333,
+            "end_seconds": 56.4667,
+            "duration_seconds": 1.8,
+            "frame_count": 27,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 1.8
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 56.6,
+            "end_seconds": 56.9333,
+            "duration_seconds": 0.4,
+            "frame_count": 6,
+            "bracketed_by_valid_track": true,
+            "reacquisition_seconds": 0.4
+          },
+          {
+            "kind": "no_face",
+            "start_seconds": 57.0667,
+            "end_seconds": 59.9333,
+            "duration_seconds": 2.9333,
+            "frame_count": 44,
+            "bracketed_by_valid_track": false,
+            "reacquisition_seconds": null
+          }
+        ],
+        "longest_dropout_seconds": 35.0,
+        "reacquisition_event_count": 14,
+        "mean_reacquisition_seconds": 3.4857,
+        "max_reacquisition_seconds": 35.0,
+        "stable_segment_count": 3,
+        "stable_transition_count": 105,
+        "landmark_jitter_median": 0.029143,
+        "landmark_jitter_p95": 0.084412,
+        "mean_inference_ms": 9.535,
+        "p95_inference_ms": 14.874,
+        "wall_clock_seconds": 8.989,
+        "processing_throughput_fps": 100.126
+      },
+      "ground_truth_metrics": {
+        "schema_version": 1,
+        "clip_id": "dynamic-martha-forsyth",
+        "split_group_id": "commons-sha1-d80f1a8d77030e500a622b5504a0c26dea73c95f",
+        "target_fps": 15.0,
+        "observation_count": 900,
+        "labeled_observation_count": 900,
+        "unlabeled_observation_count": 0,
+        "uncertain_observation_count": 0,
+        "trackable_observation_count": 360,
+        "trackable_valid_observation_count": 122,
+        "nontrackable_observation_count": 540,
+        "false_valid_observation_count": 2,
+        "multi_face_observation_count": 0,
+        "multi_face_abstained_observation_count": 0,
+        "motion_observation_counts": {
+          "head_turn": 0,
+          "mixed": 360,
+          "scale": 0,
+          "static": 0,
+          "translate": 0
+        },
+        "annotated_trackable_seconds": 24.0,
+        "trackable_sampling_coverage": 1.0,
+        "nontrackable_sampling_coverage": 1.0,
+        "multi_face_sampling_coverage": 0.0,
+        "trackable_coverage": 0.338889,
+        "false_valid_rate": 0.003704,
+        "multi_face_abstention": null,
+        "dropout_run_count": 14,
+        "dropouts_per_annotated_minute": 35.0,
+        "reacquisition_event_count": 1,
+        "reacquisition_success_count": 0,
+        "reacquisition_success_rate": null,
+        "mean_reacquisition_latency_seconds": null,
+        "max_reacquisition_latency_seconds": null,
+        "reacquisition_events": [
+          {
+            "onset_seconds": 44.0,
+            "reacquired": false,
+            "latency_seconds": null
+          }
+        ],
+        "explicit_gaze_labels": false,
+        "gaze_accuracy": null,
+        "power_policy": {
+          "minimum_trackable_frames": 15,
+          "minimum_nontrackable_frames": 15,
+          "minimum_multi_face_frames": 15,
+          "minimum_trackable_seconds": 10.0,
+          "minimum_reacquisition_events": 3,
+          "minimum_sampling_coverage_ratio": 0.8
+        },
+        "underpowered_reasons": {
+          "multi_face_abstention": "needs at least 15 labeled multiple-face frames; found 0 with 0.0% sampling coverage",
+          "reacquisition_success_rate": "needs at least 3 annotated reacquisition events; found 1",
+          "mean_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "max_reacquisition_latency_seconds": "needs at least 3 annotated reacquisition events; found 1",
+          "gaze_accuracy": "tracking annotations contain no explicit contact/away labels"
+        }
+      },
+      "repeatability": {
+        "runs": 1,
+        "status": "not_run_for_holdout",
+        "exact_non_runtime_metrics": null
+      }
+    }
+  ]
+}

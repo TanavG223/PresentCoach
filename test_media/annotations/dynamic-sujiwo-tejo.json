@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-sujiwo-tejo",
+  "split_group_id": "commons-sha1-4e2b142abbde00bddbba60f3de65bf7d6d7ce4a3",
+  "duration_seconds": 60,
+  "intervals": [
+    {"start_seconds": 0, "end_seconds": 20, "face_state": "occluded_or_tiny", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 20, "end_seconds": 40, "face_state": "occluded_or_tiny", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 40, "end_seconds": 60, "face_state": "occluded_or_tiny", "motion": "unknown", "gaze_truth": "unknown"}
+  ]
+}

@@ -3,15 +3,31 @@
 
 from __future__ import annotations
 
+from collections import Counter
 from concurrent.futures import ThreadPoolExecutor, as_completed
 from dataclasses import dataclass
+from datetime import datetime, timezone
 import json
+import os
 from pathlib import Path
 import sys
 
-from stroke_screening.presentation_ai import OllamaPresentationLLM
-from stroke_screening.presentation_coaching import general_coaching_hints
-from stroke_screening.presentation_core import PROHIBITED_FEEDBACK_TERMS, generate_feedback
+from presentcoach.presentation_ai import OllamaPresentationLLM
+from presentcoach.presentation_coaching import general_coaching_hints
+from presentcoach.presentation_core import generate_feedback
+from presentcoach.presentation_test_lab import (
+    LLM_ARTIFACT_KEYS,
+    LLM_CASE_CATEGORY_COUNTS,
+    LLM_CASE_LIMIT,
+    LLM_MODEL_NAME,
+    LLM_REPORT_SCHEMA_VERSION,
+    SHA256_PATTERN,
+    llm_case_category,
+    llm_cases_sha256,
+    llm_evidence_artifacts,
+    llm_expected_case_contracts,
+    llm_feedback_matches_expected,
+)
 
 
 @dataclass(frozen=True)
@@ -122,28 +138,81 @@ def build_cases() -> list[EvalCase]:
 
 
 def run_case(case: EvalCase) -> dict[str, object]:
+    category = llm_case_category(case.name)
+    if category is None:
+        return {
+            "name": case.name,
+            "category": "unknown",
+            "passed": False,
+            "expected": case.expected_feedback_claim,
+            "error": "EvaluatorContractError: case name is not allowlisted",
+        }
     try:
         feedback = generate_feedback(case.metrics, OllamaPresentationLLM()).to_dict()
         expected = case.expected_feedback_claim
-        passed = feedback["status"] == expected["status"]
-        strength_metrics = {item["metric"] for item in feedback["strengths"]}
-        improvement_metrics = {item["metric"] for item in feedback["improvements"]}
-        if "strength_metrics" in expected:
-            passed = passed and strength_metrics == set(expected["strength_metrics"])
-        if "improvement_metrics" in expected:
-            passed = passed and improvement_metrics == set(expected["improvement_metrics"])
-        if expected.get("insufficient"):
-            passed = passed and feedback["insufficient_data"] == [expected["insufficient"]]
-        combined = json.dumps(feedback).casefold()
-        if expected.get("no_prohibited_terms"):
-            passed = passed and not any(term in combined for term in PROHIBITED_FEEDBACK_TERMS)
-        return {"name": case.name, "passed": passed, "expected": expected, "feedback": feedback}
+        passed = llm_feedback_matches_expected(feedback, expected)
+        return {
+            "name": case.name,
+            "category": category,
+            "passed": passed,
+            "expected": expected,
+            "feedback": feedback,
+        }
     except Exception as error:
-        return {"name": case.name, "passed": False, "expected": case.expected_feedback_claim, "error": f"{type(error).__name__}: {error}"}
+        return {
+            "name": case.name,
+            "category": category,
+            "passed": False,
+            "expected": case.expected_feedback_claim,
+            "error": f"{type(error).__name__}: {error}"[:1_000],
+        }
 
 
 def main() -> int:
+    root = Path(__file__).resolve().parents[1]
     cases = build_cases()
+    contracts = llm_expected_case_contracts()
+    declared_contracts = {
+        case.name: {
+            "category": llm_case_category(case.name),
+            "expected": case.expected_feedback_claim,
+        }
+        for case in cases
+    }
+    declared_categories = dict(Counter(
+        str(contract["category"]) for contract in declared_contracts.values()
+    ))
+    if (
+        len(cases) != LLM_CASE_LIMIT
+        or declared_contracts != contracts
+        or declared_categories != LLM_CASE_CATEGORY_COUNTS
+    ):
+        print("Evaluator contract mismatch; no report was written.", file=sys.stderr)
+        return 2
+    model_status = OllamaPresentationLLM().status()
+    model_digest = model_status.get("digest")
+    if (
+        model_status.get("available") is not True
+        or model_status.get("installed") is not True
+        or model_status.get("model") not in {"presentcoach-local", LLM_MODEL_NAME}
+        or not isinstance(model_digest, str)
+        or SHA256_PATTERN.fullmatch(model_digest) is None
+    ):
+        print(
+            "Exact local PresentCoach model digest unavailable; no report was written.",
+            file=sys.stderr,
+        )
+        return 2
+    artifacts = llm_evidence_artifacts(root)
+    if (
+        set(artifacts) != LLM_ARTIFACT_KEYS
+        or any(SHA256_PATTERN.fullmatch(value) is None for value in artifacts.values())
+    ):
+        print(
+            "Local evaluator artifacts could not be hashed; no report was written.",
+            file=sys.stderr,
+        )
+        return 2
     results: list[dict[str, object]] = []
     with ThreadPoolExecutor(max_workers=2) as pool:
         futures = {pool.submit(run_case, case): case for case in cases}
@@ -154,15 +223,25 @@ def main() -> int:
     results.sort(key=lambda item: item["name"])
     passed = sum(bool(item["passed"]) for item in results)
     report = {
-        "model": "presentcoach-local:latest",
+        "schema_version": LLM_REPORT_SCHEMA_VERSION,
+        "generated_at": datetime.now(timezone.utc).isoformat(timespec="seconds"),
+        "evaluation_only": True,
+        "used_for_training": False,
+        "model": LLM_MODEL_NAME,
+        "model_digest": model_digest,
+        "artifacts": artifacts,
+        "case_categories": dict(LLM_CASE_CATEGORY_COUNTS),
         "case_count": len(results),
         "passed": passed,
         "pass_rate_percent": round(passed * 100.0 / len(results), 1),
+        "cases_sha256": llm_cases_sha256(results),
         "cases": results,
     }
-    output = Path(__file__).resolve().parents[1] / "reports" / "presentcoach_llm_eval.json"
+    output = root / "reports" / "presentcoach_llm_eval.json"
     output.parent.mkdir(parents=True, exist_ok=True)
-    output.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    temporary = output.with_name(f".{output.name}.tmp")
+    temporary.write_text(json.dumps(report, indent=2) + "\n", encoding="utf-8")
+    os.replace(temporary, output)
     print(json.dumps({key: report[key] for key in ("case_count", "passed", "pass_rate_percent")}), flush=True)
     return 0 if passed == len(results) else 1
 

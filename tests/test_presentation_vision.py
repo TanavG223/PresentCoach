@@ -4,7 +4,7 @@ from types import SimpleNamespace
 import numpy as np
 import pytest
 
-import stroke_screening.presentation_vision as presentation_vision
+import presentcoach.presentation_vision as presentation_vision
 
 
 class TimestampEngine:

@@ -4,7 +4,7 @@ from pathlib import Path
 import numpy as np
 import pytest
 
-from stroke_screening.presentation_tracking_eval import (
+from presentcoach.presentation_tracking_eval import (
     TrackingEvaluationError,
     TrackingObservation,
     build_tracking_checks,

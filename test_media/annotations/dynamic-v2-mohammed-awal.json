@@ -1,0 +1,15 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-v2-mohammed-awal",
+  "split_group_id": "commons-sha1-2e26c1379add1f7a62f30f733a5c61553e19de36",
+  "duration_seconds": 60,
+  "intervals": [
+    {
+      "start_seconds": 0,
+      "end_seconds": 60,
+      "face_state": "single_trackable",
+      "motion": "mixed",
+      "gaze_truth": "unknown"
+    }
+  ]
+}

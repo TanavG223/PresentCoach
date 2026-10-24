@@ -1,0 +1,11 @@
+{
+  "schema_version": 1,
+  "clip_id": "dynamic-leslie-cannold",
+  "split_group_id": "commons-sha1-a7c0ce0ebab8705f7d662f3a00d09e595c6b7fc3",
+  "duration_seconds": 60,
+  "intervals": [
+    {"start_seconds": 0, "end_seconds": 8, "face_state": "no_face", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 8, "end_seconds": 9, "face_state": "occluded_or_tiny", "motion": "unknown", "gaze_truth": "unknown"},
+    {"start_seconds": 9, "end_seconds": 60, "face_state": "single_trackable", "motion": "mixed", "gaze_truth": "unknown"}
+  ]
+}
